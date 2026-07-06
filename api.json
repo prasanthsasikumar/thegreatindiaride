@@ -1,7 +1,7 @@
 {
   "name": "ride-assets",
   "description": "Media hosting for prasanthsasikumar.com ride pages",
-  "baseUrl": "https://media.prasanthsasikumar.com",
+  "baseUrl": "https://thegreatindiaride.prasanthsasikumar.com",
   "assets": {
     "stories": {
       "path": "/media/stories",
@@ -21,7 +21,7 @@
     }
   },
   "usage": {
-    "example": "https://ride-assets.netlify.app/media/stories/202501/story.mp4",
+    "example": "https://thegreatindiaride.prasanthsasikumar.com/media/stories/202501/story.mp4",
     "cors": "enabled",
     "cache": "31536000 seconds (1 year) for media, 3600 seconds (1 hour) for HTML"
   }

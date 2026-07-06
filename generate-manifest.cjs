@@ -36,7 +36,7 @@ function scanDirectory(dir, folderName) {
 
 const manifest = {
   generated: new Date().toISOString(),
-  baseUrl: process.env.BASE_URL || 'https://great-india-ride.netlify.app',
+  baseUrl: process.env.BASE_URL || 'https://thegreatindiaride.prasanthsasikumar.com',
   stories: scanDirectory('./media/stories', 'stories'),
   reels: scanDirectory('./media/reels', 'reels'),
   profile: scanDirectory('./media/profile', 'profile'),
