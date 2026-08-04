@@ -3,2055 +3,946 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Media Library — Rides &amp; Garage</title>
-<meta name="description" content="Static media host for rides (stories + reels) and garage (vehicles + tours), served with a machine-readable manifest.">
+<title>The Great India Ride — 93 nights, one motorcycle</title>
+<meta name="description" content="Kanyakumari to Ladakh to the Arunachal border and home again. 93 nights, 31 regions, 222 clips, told in the order it happened.">
 <meta name="color-scheme" content="light">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%230a1628'/><path d='M13 10.5l9 5.5-9 5.5z' fill='%232dd4bf'/></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%23201e1d'/><path d='M13 10.5l9 5.5-9 5.5z' fill='%23ec3013'/></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Public+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
-/* Hallmark · macrostructure: Workbench · tone: utilitarian · anchor hue: teal (cool)
- * theme: studied-DNA · studied: yes
- * DNA-source: "Writing Hub Options.dc.html" #15a — Claude Design project
- *             792d7882-cf54-42e6-9ba7-6c65707ba7ff
- * paper: #fafbfc · ink: #10233b · accent: #2dd4bf (teal) · alt-accent: #f0abfc (reels)
- * display: Space Grotesk · body: Public Sans · mono: IBM Plex Mono
- * Palette is carried as hex rather than OKLCH: the values are fixed by the approved mock,
- * and re-encoding them would drift the design away from what was signed off.
- * pre-emit critique: P5 H5 E4 S5 R5 V4
+/* Hallmark · macrostructure: Atlas Split (desktop) / Long Document (mobile)
+ * tone: modernist-editorial · anchor hue: vermilion
+ * theme: studied-DNA — "Great India Ride redesign", design system `modernist`
+ *        (project 1e0800a2-c2e8-4968-b522-14d1c29aad8e). Desktop A - Atlas Split
+ *        above 900px, Journey below it, one DOM and one data layer.
+ * paper: #f3f2f2 · ink: #201e1d · accent: #ec3013 · type: Archivo (single family)
+ * pre-emit critique: P5 H5 E4 S5 R4 V5
  */
 
-/* ---------- tokens ---------- */
+/* ─── tokens, from the modernist design system ─────────────────────────── */
 :root {
-  /* paper + ink */
-  --color-paper:          #fafbfc;
-  --color-surface:        #ffffff;
-  --color-surface-sunken: #eef2f6;
-  --color-ink:            #10233b;
-  --color-ink-soft:       #33415c;
-  --color-muted:          #64748b;
-  --color-line:           #e2e8f0;
-  --color-line-dashed:    #cbd5e1;
+  --color-bg:      #f3f2f2;
+  --color-surface: #eae9e9;
+  --color-text:    #201e1d;
+  --color-accent:  #ec3013;
+  --color-divider: color-mix(in srgb, #201e1d 40%, transparent);
 
-  /* navy masthead */
-  --color-navy-1:         #0a1628;
-  --color-navy-2:         #0e2846;
-  --color-navy-3:         #0f3a5c;
-  --color-navy-4:         #10516b;
-  --color-on-navy:        #ffffff;
-  --color-on-navy-dim:    rgba(255, 255, 255, 0.9);
-  --color-on-navy-faint:  rgba(255, 255, 255, 0.75);
-  --color-navy-card:      rgba(255, 255, 255, 0.07);
-  --color-navy-card-hi:   rgba(255, 255, 255, 0.13);
-  --color-navy-card-line: rgba(255, 255, 255, 0.18);
-  --color-navy-glow:      rgba(45, 212, 191, 0.12);
+  --color-neutral-100: #f8f4f4;
+  --color-neutral-300: #d7d3d3;
+  --color-neutral-400: #bab6b6;
+  --color-neutral-600: #7d7979;
+  --color-neutral-700: #605d5d;
 
-  /* accents */
-  --color-accent:         #2dd4bf;
-  --color-accent-deep:    #0d9488;
-  --color-accent-line:    rgba(45, 212, 191, 0.4);
-  --color-accent-alt:     #f0abfc;
-  --color-accent-alt-deep:#a21caf;
-  --color-chip:           rgba(10, 18, 32, 0.8);
-  --color-scrim:          rgba(6, 16, 30, 0.92);
-  --color-backdrop:       rgba(6, 16, 30, 0.86);
-  --color-danger:         #b91c1c;
-  --color-danger-bg:      #fef2f2;
+  --color-accent-100: #fff2ef;
+  --color-accent-400: #ff9783;
+  --color-accent-600: #dd2b0f;
+  --color-accent-700: #ae1800;
 
-  /* type */
-  --font-display: 'Space Grotesk', 'Segoe UI', system-ui, sans-serif;
-  --font-body:    'Public Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-  --font-mono:    'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --font-heading: "Archivo", system-ui, sans-serif;
+  --font-body:    "Archivo", system-ui, sans-serif;
+  --fw-bold: 800;
 
-  --text-2xs:     10px;
-  --text-xs:      11px;
-  --text-sm:      12px;
-  --text-md:      13px;
-  --text-base:    14px;
-  --text-lg:      16px;
-  --text-xl:      24px;
-  --text-display: clamp(30px, 5.2vw, 40px);
+  --space-1: 4px;  --space-2: 8px;  --space-3: 12px;
+  --space-4: 16px; --space-6: 24px; --space-8: 32px;
 
-  /* 4pt space scale */
-  --space-2xs: 4px;
-  --space-xs:  8px;
-  --space-sm:  12px;
-  --space-md:  16px;
-  --space-lg:  20px;
-  --space-xl:  32px;
-  --space-2xl: 48px;
-  --space-3xl: 58px;
-  --pad-x:     clamp(20px, 5.6vw, 72px);
-
-  --radius-sm:   4px;
-  --radius-md:   10px;
-  --radius-lg:   12px;
-  --radius-pill: 999px;
-
-  --shadow-tile:       0 2px 8px rgba(16, 35, 59, 0.08);
-  --shadow-tile-hover: 0 10px 26px rgba(16, 35, 59, 0.18);
-  --shadow-panel:      0 4px 32px rgba(0, 0, 0, 0.15);
-
-  --ease-out:    cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-in:     cubic-bezier(0.7, 0, 0.84, 0);
-  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
-  --dur-fast:    120ms;
-  --dur-base:    200ms;
-  --dur-slow:    320ms;
-
-  --grid-cols: 2;
+  --rule: 2px solid var(--color-divider);
 }
 
-/* ---------- base ---------- */
 *, *::before, *::after { box-sizing: border-box; }
-
-html, body {
-  margin: 0;
-  padding: 0;
-  overflow-x: clip;
-}
+html, body { margin: 0; padding: 0; overflow-x: clip; }
 
 body {
-  background: var(--color-paper);
-  color: var(--color-ink);
+  background: var(--color-bg);
+  color: var(--color-text);
   font-family: var(--font-body);
-  font-size: var(--text-base);
-  line-height: 1.6;
+  font-size: 15px;
+  line-height: 1.55;
   -webkit-font-smoothing: antialiased;
 }
 
-h1, h2, h3 {
-  margin: 0;
-  font-family: var(--font-display);
-  font-style: normal;
-  overflow-wrap: anywhere;
-  min-width: 0;
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading); font-weight: var(--fw-bold);
+  line-height: 1.12; letter-spacing: -0.015em; margin: 0;
+  font-style: normal; overflow-wrap: anywhere; min-width: 0;
 }
-
+p { margin: 0; }
+a { color: var(--color-accent); text-underline-offset: 3px; }
+a:hover { color: var(--color-accent-600); }
 button { font: inherit; color: inherit; }
-
-:where(a, button, input, [tabindex]):focus-visible {
-  outline: 2px solid var(--color-accent-deep);
-  outline-offset: 2px;
-  border-radius: var(--radius-sm);
-}
-
-.on-navy :where(a, button, input):focus-visible {
-  outline-color: var(--color-accent);
-}
+:focus { outline: none; }
+:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+::selection { background: color-mix(in srgb, var(--color-accent) 30%, transparent); }
 
 .sr-only {
-  position: absolute;
-  width: 1px; height: 1px;
-  padding: 0; margin: -1px;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  clip-path: inset(50%);
-  white-space: nowrap;
-  border: 0;
-}
-
-.mono { font-family: var(--font-mono); }
-
-/* ---------- masthead ---------- */
-.masthead {
-  position: relative;
-  color: var(--color-on-navy);
-  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 90%);
-  isolation: isolate;
-}
-
-.masthead::before,
-.masthead::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-}
-
-.masthead::before {
-  background: linear-gradient(115deg,
-    var(--color-navy-1) 0%,
-    var(--color-navy-2) 45%,
-    var(--color-navy-3) 75%,
-    var(--color-navy-4) 100%);
-}
-
-.masthead::after {
-  background: radial-gradient(600px 300px at 85% 70%, var(--color-navy-glow), transparent 70%);
-}
-
-.masthead__bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: var(--space-sm);
-  flex-wrap: wrap;
-  padding: var(--space-lg) var(--pad-x);
-}
-
-.wordmark {
-  font-weight: 700;
-  font-size: var(--text-lg);
-  overflow-wrap: anywhere;
-}
-
-.wordmark span {
-  opacity: 0.6;
-  font-weight: 400;
-}
-
-.masthead__links {
-  display: flex;
-  align-items: center;
-  gap: var(--space-xs);
-  flex-wrap: wrap;
-}
-
-.badge-cors {
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  color: var(--color-accent);
-  border: 1px solid var(--color-accent-line);
-  border-radius: var(--radius-pill);
-  padding: var(--space-2xs) var(--space-sm);
-  white-space: nowrap;
-}
-
-.badge-journey {
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  color: var(--color-navy-1);
-  background: var(--color-accent);
-  border: 1px solid var(--color-accent);
-  border-radius: var(--radius-pill);
-  padding: var(--space-2xs) var(--space-sm);
-  white-space: nowrap;
-  font-weight: 700;
-  text-decoration: none;
-  transition: transform var(--dur-fast) var(--ease-out);
-}
-
-.badge-journey:hover { transform: translateY(-1px); }
-
-.masthead__body {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: var(--space-xl);
-  flex-wrap: wrap;
-  padding: var(--space-xs) var(--pad-x) var(--space-3xl);
-}
-
-.masthead__lede { min-width: 0; }
-
-.eyebrow {
-  margin: 0;
-  font-size: var(--text-sm);
-  letter-spacing: 0.18em;
-  font-weight: 700;
-  color: var(--color-accent);
-}
-
-.masthead h1 {
-  font-size: var(--text-display);
-  font-weight: 700;
-  line-height: 1.05;
-  margin-top: var(--space-xs);
-  letter-spacing: -0.01em;
-}
-
-.masthead__blurb {
-  font-size: var(--text-base);
-  line-height: 1.6;
-  margin: var(--space-xs) 0 0;
-  color: var(--color-on-navy-dim);
-  max-width: 54ch;
-}
-
-/* ---------- endpoint cards ---------- */
-.endpoints {
-  display: flex;
-  gap: var(--space-sm);
-  flex-wrap: wrap;
-}
-
-.endpoint {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: var(--space-2xs);
-  background: var(--color-navy-card);
-  border: 1px solid var(--color-navy-card-line);
-  border-radius: var(--radius-md);
-  padding: var(--space-sm) var(--space-md);
-  min-width: 150px;
-  flex: 1 1 auto;
-  transition: background var(--dur-base) var(--ease-out);
-}
-
-.endpoint:hover { background: var(--color-navy-card-hi); }
-
-.endpoint__path {
-  font-family: var(--font-mono);
-  font-size: var(--text-sm);
-  color: var(--color-accent);
-  text-decoration: none;
-  white-space: nowrap;
-}
-
-.endpoint__path:hover { text-decoration: underline; }
-
-.endpoint__desc {
-  font-size: var(--text-xs);
-  color: var(--color-on-navy-faint);
-  line-height: 1.4;
-}
-
-.copy-btn {
-  margin-top: var(--space-2xs);
-  background: none;
-  border: 0;
-  padding: 0;
-  font-size: var(--text-xs);
-  font-weight: 700;
-  color: var(--color-accent);
-  cursor: pointer;
-  white-space: nowrap;
-  transition: transform var(--dur-fast) var(--ease-out), opacity var(--dur-fast) var(--ease-out);
-}
-
-.copy-btn:hover { opacity: 0.8; }
-.copy-btn:active { transform: translateY(1px); }
-.copy-btn[data-state="copied"] { color: var(--color-accent); }
-.copy-btn[disabled] { opacity: 0.45; cursor: not-allowed; }
-
-/* ---------- filter + search bar ---------- */
-.workbench {
-  position: relative;
-  margin-top: -22px;
-  padding: 0 var(--pad-x) var(--space-2xl);
-}
-
-.filters {
-  display: flex;
-  gap: var(--space-sm);
-  flex-wrap: wrap;
-  align-items: stretch;
-}
-
-.statcard {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 2px;
-  background: var(--color-surface);
-  border: 1px solid var(--color-line);
-  border-radius: var(--radius-lg);
-  padding: var(--space-sm) var(--space-lg);
-  min-width: 104px;
-  text-align: left;
-  cursor: pointer;
-  transition: transform var(--dur-base) var(--ease-out),
-              box-shadow var(--dur-base) var(--ease-out),
-              border-color var(--dur-base) var(--ease-out);
-}
-
-.statcard:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-tile);
-  border-color: var(--color-line-dashed);
-}
-
-.statcard:active { transform: translateY(0); }
-
-.statcard[aria-pressed="true"] {
-  background: var(--color-ink);
-  border-color: var(--color-ink);
-  color: var(--color-on-navy);
-}
-
-.statcard__n {
-  font-family: var(--font-display);
-  font-size: var(--text-xl);
-  font-weight: 700;
-  line-height: 1.1;
-  color: var(--color-accent-deep);
-  font-variant-numeric: tabular-nums;
-}
-
-.statcard[aria-pressed="true"] .statcard__n { color: var(--color-on-navy); }
-
-.statcard__label {
-  font-size: var(--text-xs);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--color-muted);
-}
-
-.statcard[aria-pressed="true"] .statcard__label {
-  color: var(--color-on-navy-dim);
-}
-
-.search {
-  margin-left: auto;
-  align-self: center;
-  display: flex;
-  align-items: center;
-  gap: var(--space-xs);
-  border: 1px dashed var(--color-line-dashed);
-  border-radius: var(--radius-pill);
-  padding: 9px var(--space-md);
-  background: var(--color-surface);
-  flex: 0 1 260px;
-  transition: border-color var(--dur-base) var(--ease-out);
-}
-
-.search:focus-within {
-  border-style: solid;
-  border-color: var(--color-accent-deep);
-}
-
-.search__icon {
-  color: var(--color-muted);
-  font-size: var(--text-base);
-  line-height: 1;
-}
-
-.search input {
-  border: 0;
-  outline: 0;
-  background: none;
-  font-family: var(--font-mono);
-  font-size: var(--text-md);
-  color: var(--color-ink);
-  width: 100%;
-  min-width: 0;
-}
-
-.search input::placeholder { color: var(--color-muted); }
-
-.search__clear {
-  background: none;
-  border: 0;
-  padding: 0 var(--space-2xs);
-  cursor: pointer;
-  color: var(--color-muted);
-  font-size: var(--text-lg);
-  line-height: 1;
-}
-
-.search__clear:hover { color: var(--color-ink); }
-.search__clear[hidden] { display: none; }
-
-.filters__note {
-  font-size: 12.5px;
-  color: var(--color-muted);
-  margin: var(--space-sm) 0 0;
-}
-
-/* ---------- region chips ---------- */
-.regions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: var(--space-sm);
-  align-items: center;
-}
-
-.regions__label {
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--color-muted);
-  margin-right: var(--space-2xs);
-}
-
-.chip {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 6px;
-  background: var(--color-surface);
-  border: 1px solid var(--color-line);
-  border-radius: var(--radius-pill);
-  padding: 5px var(--space-sm);
-  font-size: var(--text-md);
-  color: var(--color-ink-soft);
-  cursor: pointer;
-  white-space: nowrap;
-  transition: border-color var(--dur-base) var(--ease-out),
-              transform var(--dur-fast) var(--ease-out);
-}
-
-.chip:hover {
-  border-color: var(--color-accent-deep);
-  transform: translateY(-1px);
-}
-
-.chip:active { transform: translateY(0); }
-
-.chip[aria-pressed="true"] {
-  background: var(--color-ink);
-  border-color: var(--color-ink);
-  color: var(--color-on-navy);
-}
-
-.chip__n {
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  color: var(--color-muted);
-  font-variant-numeric: tabular-nums;
-}
-
-.chip[aria-pressed="true"] .chip__n { color: var(--color-accent); }
-
-.chip__country {
-  font-size: var(--text-2xs);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--color-accent-deep);
-}
-
-.chip[aria-pressed="true"] .chip__country { color: var(--color-accent); }
-
-/* ---------- region badge on tiles ---------- */
-.tile__region {
-  position: absolute;
-  top: var(--space-xs);
-  right: var(--space-xs);
-  z-index: 2;
-  max-width: calc(100% - 78px);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  background: var(--color-chip);
-  color: var(--color-on-navy);
-  font-family: var(--font-mono);
-  font-size: 9px;
-  padding: 3px 7px;
-  border-radius: var(--radius-sm);
-}
-
-/* "~" marks a state interpolated from the nearest timestamp, not measured. */
-.tile__region[data-inferred="true"] {
-  color: var(--color-on-navy-faint);
-  border: 1px dashed rgba(255, 255, 255, 0.35);
-  padding: 2px 6px;
-}
-
-.entry dd .inferred-note {
-  display: block;
-  font-family: var(--font-body);
-  font-size: var(--text-xs);
-  color: var(--color-muted);
-  margin-top: 2px;
-}
-
-/* ---------- region correction ---------- */
-.region-edit {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2xs);
-}
-
-.region-edit select {
-  font-family: var(--font-body);
-  font-size: var(--text-md);
-  color: var(--color-ink);
-  background: var(--color-surface);
-  border: 1px solid var(--color-line);
-  border-radius: var(--radius-sm);
-  padding: 6px var(--space-xs);
-  width: 100%;
-  max-width: 100%;
-  cursor: pointer;
-}
-
-.region-edit select:hover { border-color: var(--color-ink); }
-
-.region-edit select[data-source="time"] { border-color: var(--color-line-dashed); border-style: dashed; }
-.region-edit select[data-source="manual"] { border-color: var(--color-accent-deep); }
-
-.source-note {
-  font-family: var(--font-body);
-  font-size: var(--text-xs);
-  color: var(--color-muted);
-}
-
-.source-note b { color: var(--color-accent-deep); font-weight: 600; }
-
-/* ---------- corrections bar ---------- */
-.corrections {
-  position: sticky;
-  bottom: 0;
-  z-index: 50;
-  display: flex;
-  align-items: center;
-  gap: var(--space-md);
-  flex-wrap: wrap;
-  margin-top: var(--space-lg);
-  padding: var(--space-sm) var(--space-md);
-  background: var(--color-ink);
-  color: var(--color-on-navy);
-  border-radius: var(--radius-lg);
-  box-shadow: 0 6px 24px rgba(16, 35, 59, 0.28);
-  font-size: var(--text-md);
-}
-
-.corrections[hidden] { display: none; }
-
-.corrections__n {
-  font-family: var(--font-display);
-  font-weight: 700;
-  color: var(--color-accent);
-}
-
-.corrections__actions {
-  margin-left: auto;
-  display: flex;
-  gap: var(--space-xs);
-  flex-wrap: wrap;
-}
-
-.corrections button {
-  border-radius: var(--radius-sm);
-  padding: 6px var(--space-md);
-  font-size: var(--text-md);
-  font-weight: 600;
-  cursor: pointer;
-  white-space: nowrap;
-  border: 1px solid var(--color-navy-card-line);
-  background: var(--color-navy-card);
-  color: var(--color-on-navy);
-  transition: background var(--dur-base) var(--ease-out);
-}
-
-.corrections button:hover { background: var(--color-navy-card-hi); }
-
-.corrections button.is-primary {
-  background: var(--color-accent);
-  border-color: var(--color-accent);
-  color: var(--color-navy-1);
-}
-
-.corrections button.is-primary:hover { background: var(--color-accent-deep); color: var(--color-on-navy); }
-
-.tile__region[data-source="manual"] {
-  background: var(--color-accent-deep);
-  color: var(--color-on-navy);
-  border: 0;
-}
-
-/* ---------- media grid ---------- */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr));
-  gap: var(--space-sm);
-  margin-top: var(--space-lg);
-  padding: 0;
-  list-style: none;
-}
-
-.tile {
-  position: relative;
-  display: block;
-  width: 100%;
-  aspect-ratio: 1;
-  padding: 0;
-  border: 0;
-  border-radius: var(--radius-md);
-  overflow: hidden;
-  background: var(--color-surface-sunken);
-  box-shadow: var(--shadow-tile);
-  cursor: pointer;
-  opacity: 0;
-  animation: tile-fade var(--dur-slow) var(--ease-out) forwards;
-  transition: transform var(--dur-base) var(--ease-out),
-              box-shadow var(--dur-base) var(--ease-out);
-}
-
-@keyframes tile-fade { to { opacity: 1; } }
-
-.tile:hover,
-.tile:focus-visible {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-tile-hover);
-}
-
-.tile:active { transform: translateY(0); }
-
-.tile img,
-.tile video {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  background: var(--color-navy-1);
-}
-
-.tile__badge {
-  position: absolute;
-  top: var(--space-xs);
-  left: var(--space-xs);
-  z-index: 2;
-  background: var(--color-chip);
-  color: var(--color-accent);
-  font-family: var(--font-mono);
-  font-size: 9px;
-  letter-spacing: 0.06em;
-  padding: 3px 7px;
-  border-radius: var(--radius-sm);
-}
-
-.tile__badge[data-cat="reels"] { color: var(--color-accent-alt); }
-
-.tile__play {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  pointer-events: none;
-}
-
-.tile__play span {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: rgba(10, 18, 32, 0.7);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--color-on-navy);
-  font-size: 15px;
-  padding-left: 2px;
-}
-
-.tile__caption {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 2;
-  background: linear-gradient(transparent, var(--color-scrim));
-  padding: 22px var(--space-xs) var(--space-xs);
-  color: var(--color-on-navy);
-  font-family: var(--font-mono);
-  font-size: var(--text-2xs);
-  line-height: 1.45;
-  text-align: left;
-}
-
-.tile__name {
-  display: block;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.tile__meta {
-  display: block;
-  color: var(--color-on-navy-dim);
-}
-
-/* ---------- grid status / load more ---------- */
-.grid-status {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-md);
-  flex-wrap: wrap;
-  margin-top: var(--space-lg);
-  font-size: var(--text-md);
-  color: var(--color-muted);
-}
-
-.grid-status[hidden] { display: none; }
-
-.load-more {
-  background: var(--color-surface);
-  border: 1px solid var(--color-line);
-  border-radius: var(--radius-pill);
-  padding: var(--space-xs) var(--space-lg);
-  font-size: var(--text-md);
-  font-weight: 600;
-  color: var(--color-ink);
-  cursor: pointer;
-  transition: transform var(--dur-base) var(--ease-out),
-              border-color var(--dur-base) var(--ease-out);
-}
-
-.load-more:hover {
-  transform: translateY(-1px);
-  border-color: var(--color-accent-deep);
-}
-
-.load-more:active { transform: translateY(0); }
-
-/* ---------- panels: loading / empty / error ---------- */
-.panel {
-  border-radius: var(--radius-lg);
-  padding: var(--space-lg);
-  margin-top: var(--space-lg);
-  font-size: 13.5px;
-  line-height: 1.6;
-}
-
-.panel[hidden] { display: none; }
-
-.panel--note {
-  background: var(--color-surface);
-  border: 1px solid var(--color-line);
-  color: var(--color-ink-soft);
-}
-
-.panel--empty {
-  background: var(--color-surface-sunken);
-  border: 1px dashed var(--color-line-dashed);
-  color: var(--color-ink-soft);
-  text-align: center;
-  padding: var(--space-2xl) var(--space-lg);
-}
-
-.panel--error {
-  background: var(--color-danger-bg);
-  border: 1px solid var(--color-danger);
-  color: var(--color-danger);
-}
-
-.panel code {
-  font-family: var(--font-mono);
-  font-size: 0.92em;
-  background: var(--color-surface-sunken);
-  color: var(--color-ink);
-  padding: 2px 6px;
-  border-radius: var(--radius-sm);
-}
-
-.skeleton {
-  display: grid;
-  grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr));
-  gap: var(--space-sm);
-  margin-top: var(--space-lg);
-}
-
-.skeleton[hidden] { display: none; }
-
-.skeleton span {
-  aspect-ratio: 1;
-  border-radius: var(--radius-md);
-  background: var(--color-surface-sunken);
-  animation: skeleton-pulse 1.4s var(--ease-in-out) infinite;
-}
-
-@keyframes skeleton-pulse { 50% { opacity: 0.45; } }
-
-/* The mock's #94a3b8 lands at 2.5:1 on this paper — stepped to --color-muted for AA. */
-.site-footer {
-  padding-top: var(--space-xl);
-  text-align: center;
-  font-size: var(--text-md);
-  color: var(--color-muted);
-}
-
-/* ---------- lightbox ---------- */
-.lightbox {
-  border: 0;
-  padding: 0;
-  max-width: min(1100px, 94vw);
-  max-height: 94vh;
-  width: 100%;
-  background: var(--color-surface);
-  color: var(--color-ink);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-}
-
-.lightbox::backdrop { background: var(--color-backdrop); }
-
-.lightbox[open] {
-  display: grid;
-  grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
-}
-
-.lightbox__stage {
-  background: var(--color-navy-1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 220px;
-  max-height: 94vh;
-  overflow: hidden;
-}
-
-.lightbox__stage img,
-.lightbox__stage video {
-  max-width: 100%;
-  max-height: 94vh;
-  width: auto;
-  height: auto;
-  display: block;
-}
-
-.lightbox__side {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-md);
-  padding: var(--space-lg);
-  overflow-y: auto;
-  max-height: 94vh;
-}
-
-.lightbox__head {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: var(--space-sm);
-}
-
-.lightbox__title {
-  font-family: var(--font-mono);
-  font-size: var(--text-md);
-  font-weight: 500;
-  overflow-wrap: anywhere;
-}
-
-.icon-btn {
-  background: none;
-  border: 1px solid var(--color-line);
-  border-radius: var(--radius-sm);
-  width: 30px;
-  height: 30px;
-  flex: 0 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: var(--text-lg);
-  line-height: 1;
-  color: var(--color-muted);
-  cursor: pointer;
-  transition: border-color var(--dur-base) var(--ease-out), color var(--dur-base) var(--ease-out);
-}
-
-.icon-btn:hover { border-color: var(--color-ink); color: var(--color-ink); }
-.icon-btn[disabled] { opacity: 0.35; cursor: not-allowed; }
-.icon-btn[disabled]:hover { border-color: var(--color-line); color: var(--color-muted); }
-
-.entry {
-  margin: 0;
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  gap: var(--space-xs) var(--space-sm);
-  font-size: var(--text-md);
-}
-
-.entry dt {
-  font-size: var(--text-xs);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--color-muted);
-  padding-top: 2px;
-}
-
-.entry dd {
-  margin: 0;
-  font-family: var(--font-mono);
-  overflow-wrap: anywhere;
-  color: var(--color-ink-soft);
-}
-
-.lightbox__actions {
-  display: flex;
-  gap: var(--space-xs);
-  flex-wrap: wrap;
-  margin-top: auto;
-  padding-top: var(--space-md);
-  border-top: 1px solid var(--color-line);
-}
-
-.action {
-  flex: 1 1 auto;
-  text-align: center;
-  border-radius: var(--radius-sm);
-  padding: var(--space-xs) var(--space-md);
-  font-size: var(--text-md);
-  font-weight: 600;
-  text-decoration: none;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: transform var(--dur-fast) var(--ease-out), background var(--dur-base) var(--ease-out);
-}
-
-.action:active { transform: translateY(1px); }
-
-.action--primary {
-  background: var(--color-ink);
-  border: 1px solid var(--color-ink);
-  color: var(--color-on-navy);
-}
-
-.action--primary:hover { background: var(--color-navy-2); }
-.action--primary[disabled] { opacity: 0.45; cursor: not-allowed; }
-
-.action--ghost {
-  background: var(--color-surface);
-  border: 1px solid var(--color-line);
-  color: var(--color-ink);
-}
-
-.action--ghost:hover { border-color: var(--color-ink); }
-
-.lightbox__nav {
-  display: flex;
-  gap: var(--space-xs);
-  align-items: center;
-  font-size: var(--text-sm);
-  color: var(--color-muted);
-}
-
-/* ---------- responsive ---------- */
-@media (min-width: 480px)  { :root { --grid-cols: 3; } }
-@media (min-width: 720px)  { :root { --grid-cols: 4; } }
-@media (min-width: 1024px) { :root { --grid-cols: 5; } }
-@media (min-width: 1320px) { :root { --grid-cols: 6; } }
-
-@media (max-width: 900px) {
-  .lightbox[open] { grid-template-columns: minmax(0, 1fr); }
-  .lightbox__stage { max-height: 52vh; }
-  .lightbox__stage img,
-  .lightbox__stage video { max-height: 52vh; }
-  .lightbox__side { max-height: none; }
-}
-
-@media (max-width: 768px) {
-  .masthead { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 97%); }
-  .masthead__body { padding-bottom: var(--space-2xl); }
-  .endpoints { width: 100%; }
-  .endpoint { flex: 1 1 150px; }
-  .search {
-    margin-left: 0;
-    flex: 1 1 100%;
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; border: 0;
+}
+
+.kicker {
+  font-family: var(--font-heading); font-weight: var(--fw-bold);
+  font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+}
+.grayscale { filter: grayscale(1) contrast(1.08); }
+
+/* ─── shell ────────────────────────────────────────────────────────────── */
+.shell { min-height: 100vh; }
+
+/* ─── the left pane (desktop) / hero stack (mobile) ─────────────────────── */
+.pane__brand {
+  display: flex; justify-content: space-between; align-items: baseline;
+  gap: var(--space-3); border-bottom: var(--rule); padding-bottom: 14px;
+}
+.pane__brand a { text-decoration: none; }
+.brandmark { font-family: var(--font-heading); font-weight: var(--fw-bold); font-size: 13px; letter-spacing: 0.08em; }
+
+.eyebrow { color: var(--color-accent-700); }
+
+.stats {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-3);
+  border-top: var(--rule); padding-top: 10px;
+}
+.stat__n { font-family: var(--font-heading); font-weight: var(--fw-bold); font-size: 24px; line-height: 1; font-variant-numeric: tabular-nums; }
+.stat__l { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-neutral-700); }
+
+/* ─── map ──────────────────────────────────────────────────────────────── */
+.mapwrap { position: relative; width: 100%; }
+.atlas { display: block; width: 100%; height: auto; }
+.atlas .neighbour { fill: none; stroke: var(--color-neutral-400); stroke-width: 1; }
+.atlas .india { fill: var(--color-surface); stroke: var(--color-text); stroke-width: 1.25; }
+.atlas .route { fill: none; stroke: var(--color-accent); stroke-width: 1.75; stroke-linejoin: round; stroke-linecap: round; }
+.atlas .stop { fill: var(--color-bg); stroke: var(--color-text); stroke-width: 1.5; }
+.atlas .stop[data-active="true"] { fill: var(--color-accent); stroke: var(--color-accent); stroke-width: 2; }
+.atlas .hit { fill: transparent; cursor: pointer; }
+
+.map__badge {
+  position: absolute; left: 0; top: 0;
+  background: var(--color-text); color: var(--color-bg);
+  font-family: var(--font-heading); font-weight: var(--fw-bold);
+  font-size: 11px; letter-spacing: 0.08em; padding: 4px 8px; text-transform: uppercase;
+}
+.map__badge[hidden] { display: none; }
+
+/* ─── legs + regions ───────────────────────────────────────────────────── */
+.leg__head { background: var(--color-accent); color: #f8f4f4; }
+.leg__meta { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-3); }
+.leg__meta span { font-family: var(--font-heading); font-weight: var(--fw-bold); font-size: 12px; letter-spacing: 0.09em; opacity: 0.75; }
+.leg__head h2 { color: inherit; margin: 10px 0 6px; }
+.leg__sub { font-size: 14px; opacity: 0.85; }
+
+.region { border-bottom: var(--rule); }
+
+.region__bar {
+  display: flex; align-items: baseline; gap: var(--space-4);
+  width: 100%; background: transparent; border: 0; text-align: left;
+  font-family: var(--font-body); color: var(--color-text);
+}
+.region__num { font-family: var(--font-heading); font-weight: var(--fw-bold); font-size: 13px; color: var(--color-accent-700); min-width: 24px; }
+.region__name { font-family: var(--font-heading); font-weight: var(--fw-bold); flex: 1; }
+.region__meta { font-size: 12px; letter-spacing: 0.04em; color: var(--color-neutral-700); text-align: right; }
+.region__sign { font-family: var(--font-heading); font-weight: var(--fw-bold); font-size: 18px; color: var(--color-accent); width: 18px; text-align: center; }
+
+.clips { display: grid; gap: 2px; }
+
+.clip {
+  position: relative; padding: 0; border: 0; cursor: pointer;
+  background: var(--color-neutral-300); display: block; width: 100%;
+}
+.clip:hover, .clip:focus-visible { outline: 2px solid var(--color-accent); outline-offset: -2px; }
+.clip video, .clip img {
+  width: 100%; aspect-ratio: 9 / 16; object-fit: cover; display: block; background: var(--color-neutral-300);
+}
+.clip__date {
+  position: absolute; left: 6px; bottom: 6px;
+  background: var(--color-text); color: var(--color-bg);
+  font-family: var(--font-heading); font-weight: var(--fw-bold);
+  font-size: 10px; letter-spacing: 0.06em; padding: 2px 6px;
+  max-width: calc(100% - 12px); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
+/* ─── close ────────────────────────────────────────────────────────────── */
+.close { background: var(--color-accent); color: #fff; }
+.close h2 { color: inherit; margin: 0 0 10px; }
+.close p { font-size: 14px; margin: 0 0 18px; opacity: 0.9; }
+.close a {
+  display: inline-flex; background: #fff; color: var(--color-accent-700);
+  font-family: var(--font-heading); font-weight: var(--fw-bold);
+  font-size: 13px; letter-spacing: 0.06em; text-decoration: none; padding: 12px 18px;
+}
+.close a:hover { background: var(--color-accent-100); color: var(--color-accent-700); }
+
+.state-msg { font-size: 13px; color: var(--color-neutral-700); }
+.state-msg[hidden] { display: none; }
+
+/* ─── lightbox ─────────────────────────────────────────────────────────── */
+.lb {
+  position: fixed; inset: 0; z-index: 50; border: 0; padding: 0; margin: 0;
+  width: 100vw; max-width: 100vw; height: 100vh; max-height: 100vh;
+  background: rgba(24, 22, 21, 0.97); color: #f3f2f2;
+}
+.lb[open] { display: flex; flex-direction: column; }
+.lb::backdrop { background: rgba(24, 22, 21, 0.9); }
+
+.lb__top { display: flex; justify-content: space-between; align-items: center; gap: var(--space-3); padding: 14px 16px; }
+.lb__title { font-family: var(--font-heading); font-weight: var(--fw-bold); font-size: 12px; letter-spacing: 0.08em; }
+.lb__right { display: flex; align-items: center; gap: 14px; }
+.lb__count { font-size: 12px; color: var(--color-neutral-400); font-variant-numeric: tabular-nums; }
+
+.lb__btn {
+  background: transparent; border: 1px solid var(--color-neutral-600); color: #f3f2f2;
+  font-family: var(--font-heading); font-weight: var(--fw-bold); cursor: pointer;
+}
+.lb__btn:hover { border-color: #f3f2f2; }
+.lb__btn[disabled] { opacity: 0.35; cursor: not-allowed; }
+.lb__btn--close { font-size: 14px; width: 32px; height: 32px; }
+.lb__btn--nav { font-size: 15px; width: 44px; height: 40px; }
+
+.lb__stage { flex: 1; min-height: 0; width: 100%; display: flex; background: #000; }
+.lb__stage video, .lb__stage img { width: 100%; height: 100%; object-fit: contain; }
+
+.lb__foot { padding: 12px 16px 16px; }
+.lb__cap { font-size: 13px; line-height: 1.5; margin: 0 0 12px; max-width: 60ch; white-space: pre-line; }
+.lb__cap[hidden] { display: none; }
+.lb__nav { display: flex; align-items: center; gap: 10px; }
+.lb__nav a { color: var(--color-accent-400); font-family: var(--font-heading); font-weight: var(--fw-bold); font-size: 12px; letter-spacing: 0.06em; text-decoration: none; }
+.lb__spacer { flex: 1; }
+
+/* ══ MOBILE — "Journey" ══════════════════════════════════════════════════ */
+.shell { max-width: 600px; margin: 0 auto; padding: 0 20px 64px; }
+
+.pane__brand { padding-top: 18px; }
+.pane__foot { display: none; }
+
+.strip {
+  position: sticky; top: 0; z-index: 20;
+  background: var(--color-bg); border-bottom: var(--rule);
+  margin: 0 -20px; padding: 0 12px;
+  overflow-x: auto; scrollbar-width: none; display: flex; gap: 2px;
+}
+.strip::-webkit-scrollbar { display: none; }
+.strip__btn {
+  flex: 0 0 auto; background: transparent; color: var(--color-text); border: 0; cursor: pointer;
+  font-family: var(--font-heading); font-weight: var(--fw-bold);
+  font-size: 11px; letter-spacing: 0.06em; padding: 12px 10px;
+  white-space: nowrap; text-transform: uppercase;
+}
+.strip__btn:hover { background: var(--color-accent-100); color: var(--color-accent-700); }
+.strip__btn[aria-current="true"] { background: var(--color-accent); color: #fff; }
+
+.hero { padding: 40px 0 0; }
+.hero h1 { font-size: clamp(44px, 11vw, 64px); line-height: 0.98; letter-spacing: -0.02em; margin: 12px 0 16px; }
+.hero__blurb { font-size: 16px; max-width: 44ch; margin: 0 0 28px; }
+.hero .stats { gap: var(--space-4); padding-top: 12px; }
+.hero .stat__n { font-size: 30px; }
+.hero .stat__l { font-size: 11px; }
+
+.mapsection { margin-top: 32px; border-top: var(--rule); padding-top: 14px; }
+.mapsection__head { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-3); }
+.mapsection__head h2 { font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; margin: 0 0 10px; }
+.mapsection__hint { font-size: 11px; color: var(--color-neutral-700); }
+
+.legs { display: block; }
+.leg { margin-top: 48px; }
+.leg__head { padding: 20px 20px 24px; }
+.leg__head h2 { font-size: clamp(26px, 7vw, 34px); line-height: 1.05; }
+.leg__sub { font-size: 13px; }
+
+.region { scroll-margin-top: 46px; }   /* clears the sticky state strip */
+.region__bar { min-height: 56px; padding: 12px 0; cursor: pointer; gap: 14px; align-items: center; }
+.region__bar:hover { background: var(--color-accent-100); }
+.region__name { font-size: 16px; }
+.region__meta { font-size: 11px; }
+.region { border-bottom: 1px solid var(--color-divider); }
+
+.clips { grid-template-columns: repeat(3, minmax(0, 1fr)); padding: 0 0 20px; }
+.region[data-expanded="false"] .clips { display: none; }
+
+.close { margin-top: 56px; padding: 28px 20px 32px; }
+.close h2 { font-size: clamp(28px, 8vw, 40px); line-height: 1.02; }
+
+.pagefoot { margin-top: 32px; border-top: var(--rule); padding-top: 12px; font-size: 11px; color: var(--color-neutral-700); }
+
+/* ══ DESKTOP — "Atlas Split" ═════════════════════════════════════════════ */
+@media (min-width: 900px) {
+  .shell {
+    max-width: none; margin: 0; padding: 0;
+    display: grid; grid-template-columns: 460px minmax(0, 1fr);
   }
-  .statcard { flex: 1 1 auto; min-width: 92px; }
-}
 
-@media (max-width: 420px) {
-  .statcard { padding: var(--space-xs) var(--space-sm); }
-  .statcard__n { font-size: 20px; }
+  .pane {
+    position: sticky; top: 0; height: 100vh;
+    display: flex; flex-direction: column;
+    border-right: var(--rule); padding: 24px 28px; overflow: hidden;
+  }
+  .pane__brand { padding-top: 0; }
+  .pane__head { padding: 20px 0 0; }
+  .pane__head h1 { font-size: 38px; line-height: 1; letter-spacing: -0.02em; margin: 10px 0 12px; }
+  .hero__blurb { display: none; }              /* the pane is tight; the legs carry the story */
+  .mapsection { flex: 1; min-height: 0; margin-top: 0; border-top: 0; padding-top: 16px; }
+  .mapsection__head { display: none; }
+  .pane__foot {
+    display: block; border-top: var(--rule); padding-top: 10px;
+    font-size: 11px; color: var(--color-neutral-700);
+  }
+  .strip { display: none; }                     /* the map itself is the desktop index */
+
+  .legs { min-width: 0; padding: 0 40px 80px; }
+  .leg { margin-top: 40px; }
+  .leg__head { padding: 24px 28px 28px; }
+  .leg__head h2 { font-size: 40px; line-height: 1.02; }
+  .leg__sub { font-size: 14px; }
+
+  .region { padding: 20px 0 28px; border-bottom: var(--rule); scroll-margin-top: 16px; }
+  .region__bar { cursor: default; padding: 0; min-height: 0; margin-bottom: 14px; gap: 16px; align-items: baseline; }
+  .region__bar:hover { background: transparent; }
+  .region__name { font-size: 24px; }
+  .region__sign { display: none; }              /* nothing collapses on desktop */
+  .clips { grid-template-columns: repeat(6, minmax(0, 1fr)); padding: 0; }
+  .region[data-expanded="false"] .clips { display: grid; }
+
+  .close { margin: 56px 0 0; padding: 32px 28px 36px; }
+  .close h2 { font-size: 44px; line-height: 1; }
+  .pagefoot { display: none; }
+
+  .lb__top { padding: 14px 24px; }
+  .lb__foot { padding: 12px 24px 18px; display: flex; align-items: center; gap: 16px; }
+  .lb__cap { margin: 0; flex: 1; }
+  .lb__nav { gap: 16px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-  .tile { opacity: 1; }
+  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }
 </style>
 </head>
 <body>
 
-<header class="masthead on-navy">
-  <div class="masthead__bar">
-    <div class="wordmark"><span id="host-name">thegreatindiaride</span><span id="host-domain">.prasanthsasikumar.com</span></div>
-    <span class="masthead__links">
-      <a class="badge-journey" href="journey.html">THE RIDE, IN ORDER →</a>
-      <span class="badge-cors">CORS ENABLED · LONG-TERM CACHE</span>
-    </span>
-  </div>
-  <div class="masthead__body">
-    <div class="masthead__lede">
-      <p class="eyebrow">STATIC MEDIA HOST</p>
-      <h1>Media Library</h1>
-      <p class="masthead__blurb">Rides (stories&nbsp;+&nbsp;reels) and Garage (vehicles&nbsp;+&nbsp;tours), served with a machine-readable manifest — nothing bundled in the Nuxt repo.</p>
+<div class="shell">
+
+  <aside class="pane">
+    <div class="pane__brand">
+      <div class="brandmark">THE GREAT INDIA RIDE</div>
+      <a class="kicker" href="manifest.json">MANIFEST ↗</a>
     </div>
-    <div class="endpoints" id="endpoints">
-      <div class="endpoint">
-        <a class="endpoint__path" href="manifest.json">/manifest.json</a>
-        <span class="endpoint__desc">all files · sizes · timestamps</span>
-        <button type="button" class="copy-btn" data-copy-path="manifest.json">⧉ copy URL</button>
-      </div>
-      <div class="endpoint">
-        <a class="endpoint__path" href="api.json">/api.json</a>
-        <span class="endpoint__desc">endpoint descriptions</span>
-        <button type="button" class="copy-btn" data-copy-path="api.json">⧉ copy URL</button>
-      </div>
-      <div class="endpoint">
-        <a class="endpoint__path" href="media/">/media/*</a>
-        <span class="endpoint__desc">raw files · immutable cache</span>
-        <button type="button" class="copy-btn" data-copy-path="media/">⧉ copy URL</button>
+
+    <div class="strip" id="strip" role="group" aria-label="Jump to a region"></div>
+
+    <div class="pane__head hero">
+      <p class="kicker eyebrow">JAN – APR 2025 · ONE MOTORCYCLE</p>
+      <h1>The Great India Ride</h1>
+      <p class="hero__blurb">Home in Trivandrum to Kanyakumari, up to Ladakh, across to the Arunachal border, and back down the east coast — told in the order it happened.</p>
+      <div class="stats">
+        <div><div class="stat__n">93</div><div class="stat__l">Nights</div></div>
+        <div><div class="stat__n" id="stat-regions">—</div><div class="stat__l">Regions</div></div>
+        <div><div class="stat__n" id="stat-clips">—</div><div class="stat__l">Clips</div></div>
       </div>
     </div>
-  </div>
-</header>
 
-<main class="workbench">
-  <div class="filters" role="group" aria-label="Filter media by category">
-    <button type="button" class="statcard" data-filter="all" aria-pressed="true">
-      <span class="statcard__n" data-count="all">—</span>
-      <span class="statcard__label">All files</span>
-    </button>
-    <button type="button" class="statcard" data-filter="rides" aria-pressed="false">
-      <span class="statcard__n" data-count="rides">—</span>
-      <span class="statcard__label">Rides</span>
-    </button>
-    <button type="button" class="statcard" data-filter="stories" aria-pressed="false">
-      <span class="statcard__n" data-count="stories">—</span>
-      <span class="statcard__label">Stories</span>
-    </button>
-    <button type="button" class="statcard" data-filter="reels" aria-pressed="false">
-      <span class="statcard__n" data-count="reels">—</span>
-      <span class="statcard__label">Reels</span>
-    </button>
-    <button type="button" class="statcard" data-filter="garage" aria-pressed="false">
-      <span class="statcard__n" data-count="garage">—</span>
-      <span class="statcard__label">Garage</span>
-    </button>
-    <button type="button" class="statcard" data-filter="profile" aria-pressed="false">
-      <span class="statcard__n" data-count="profile">—</span>
-      <span class="statcard__label">Profile</span>
-    </button>
+    <section class="mapsection">
+      <div class="mapsection__head">
+        <h2>The whole route</h2>
+        <span class="mapsection__hint">tap a stop to jump</span>
+      </div>
+      <div class="mapwrap">
+        <svg class="atlas" id="atlas" role="img" aria-label="Map of the route across India, Nepal and Bhutan"></svg>
+        <div class="map__badge" id="map-badge" hidden></div>
+      </div>
+    </section>
 
-    <div class="search">
-      <span class="search__icon" aria-hidden="true">⌕</span>
-      <label class="sr-only" for="filename-filter">Filter by filename, caption, or place</label>
-      <input id="filename-filter" type="search" autocomplete="off" spellcheck="false" placeholder="name, caption, place…">
-      <button type="button" class="search__clear" id="search-clear" hidden aria-label="Clear filename filter">×</button>
+    <div class="pane__foot">Click a stop to jump. The map follows your scroll.</div>
+  </aside>
+
+  <main class="legs" id="legs">
+    <p class="state-msg" id="loading" style="padding: 40px 0;">Loading the route…</p>
+    <p class="state-msg" id="error" hidden style="padding: 40px 0;">
+      Couldn’t load the route. <a href="manifest.json">Open the manifest ↗</a>
+    </p>
+
+    <section class="close" id="close" hidden>
+      <h2>93 nights.<br>One motorcycle.</h2>
+      <p>Every clip above is served straight from this host, CORS enabled, with a machine-readable manifest.</p>
+      <a href="https://www.instagram.com/thegreatindiaride/" target="_blank" rel="noopener">THE RIDE ON INSTAGRAM ↗</a>
+    </section>
+
+    <footer class="pagefoot">thegreatindiaride.prasanthsasikumar.com</footer>
+  </main>
+</div>
+
+<dialog class="lb" id="lb" aria-label="Clip">
+  <div class="lb__top">
+    <div class="lb__title" id="lb-title"></div>
+    <div class="lb__right">
+      <span class="lb__count" id="lb-count"></span>
+      <button type="button" class="lb__btn lb__btn--close" id="lb-close" aria-label="Close">✕</button>
     </div>
   </div>
-
-  <div class="regions" id="regions" role="group" aria-label="Filter by region" hidden></div>
-
-  <p class="filters__note" id="filters-note">Every card is a filter. Counts read straight from <code>manifest.json</code>.</p>
-
-  <div class="skeleton" id="skeleton" aria-hidden="true">
-    <span></span><span></span><span></span><span></span><span></span><span></span>
-  </div>
-
-  <div class="panel panel--error" id="error-panel" hidden></div>
-
-  <ul class="grid" id="grid" aria-label="Media files"></ul>
-
-  <div class="panel panel--empty" id="empty-panel" hidden></div>
-
-  <div class="grid-status" id="grid-status" hidden>
-    <span id="grid-count"></span>
-    <button type="button" class="load-more" id="load-more">Load more</button>
-  </div>
-
-  <div class="panel panel--note">
-    <b>Click a tile</b> → the full file, plus a copy-URL button and its manifest entry (caption, region, capture time, path, size) — so grabbing an asset for a post is one click, not a directory crawl.
-  </div>
-
-  <div class="corrections" id="corrections" hidden>
-    <span><span class="corrections__n" id="corrections-n">0</span> region correction(s) held in this browser</span>
-    <span class="corrections__actions">
-      <button type="button" id="corrections-reset">Discard</button>
-      <button type="button" class="is-primary" id="corrections-save">Save overrides.json</button>
-    </span>
-  </div>
-
-  <p class="site-footer">Written from a van, a lab, or a garage — depending on the year.</p>
-</main>
-
-<dialog class="lightbox" id="lightbox" aria-label="Media detail">
-  <div class="lightbox__stage" id="lightbox-stage"></div>
-  <div class="lightbox__side">
-    <div class="lightbox__head">
-      <h2 class="lightbox__title" id="lightbox-title"></h2>
-      <button type="button" class="icon-btn" id="lightbox-close" aria-label="Close">×</button>
-    </div>
-
-    <dl class="entry" id="lightbox-entry"></dl>
-
-    <div class="lightbox__nav">
-      <button type="button" class="icon-btn" id="lightbox-prev" aria-label="Previous file">‹</button>
-      <button type="button" class="icon-btn" id="lightbox-next" aria-label="Next file">›</button>
-      <span id="lightbox-position"></span>
-    </div>
-
-    <div class="lightbox__actions">
-      <button type="button" class="action action--primary" id="lightbox-copy">⧉ Copy URL</button>
-      <a class="action action--ghost" id="lightbox-open" target="_blank" rel="noopener">Open raw file ↗</a>
+  <div class="lb__stage" id="lb-stage"></div>
+  <div class="lb__foot">
+    <p class="lb__cap" id="lb-cap" hidden></p>
+    <div class="lb__nav">
+      <button type="button" class="lb__btn lb__btn--nav" id="lb-prev" aria-label="Previous clip">‹</button>
+      <button type="button" class="lb__btn lb__btn--nav" id="lb-next" aria-label="Next clip">›</button>
+      <span class="lb__spacer"></span>
+      <a id="lb-raw" target="_blank" rel="noopener">OPEN RAW ↗</a>
     </div>
   </div>
 </dialog>
 
-<p class="sr-only" role="status" aria-live="polite" id="live-region"></p>
-
-<noscript>
-  <p style="padding: 20px var(--pad-x);">This browser has JavaScript disabled. The media index is still readable at
-  <a href="manifest.json">/manifest.json</a>.</p>
-</noscript>
+<p class="sr-only" role="status" aria-live="polite" id="live"></p>
 
 <script>
 (function () {
   'use strict';
 
-  var PAGE_SIZE = 60;
-  var CATEGORY_ORDER = ['stories', 'reels', 'garage', 'profile'];
-  var BADGE = { stories: 'STORY', reels: 'REEL', garage: 'GARAGE', profile: 'PROFILE' };
-  var OVERRIDES_KEY = 'ride-assets:region-overrides';
+  /* ─── narrative legs, from the design ───────────────────────────────── */
+  var LEGS = [
+    { id: '01', title: 'Out of Trivandrum',        sub: 'Trivandrum → Kanyakumari → Thanjavur, the southern launch', from: '2025-01-01', to: '2025-01-15' },
+    { id: '02', title: 'Up the west coast',        sub: 'Bengaluru → Goa → Mumbai → the western tip at Kutch',       from: '2025-01-15', to: '2025-02-01' },
+    { id: '03', title: 'Into the Himalaya',        sub: 'Rajasthan → Delhi → Shimla → Kashmir, and back through Punjab', from: '2025-02-01', to: '2025-03-01' },
+    { id: '04', title: 'Across the Northeast',     sub: 'Nepal → Sikkim → Bhutan → Arunachal → Nagaland',            from: '2025-03-01', to: '2025-04-05' },
+    { id: '05', title: 'Down the east coast, home', sub: 'Odisha → Andhra → Hyderabad → back to Trivandrum',         from: '2025-04-05', to: '2025-07-01' },
+  ];
 
-  // Corrections live in localStorage until they're saved out as overrides.json and
-  // baked in by tag-media.cjs — this is a static site, there's nothing to POST to.
-  var overrides = {};
-  try {
-    overrides = JSON.parse(localStorage.getItem(OVERRIDES_KEY) || '{}') || {};
-  } catch (e) {
-    overrides = {};
-  }
+  var ABBR = {
+    'Jammu and Kashmir': 'J&K', 'West Bengal': 'W Bengal',
+    'Dadra and Nagar Haveli and Daman and Diu': 'Daman',
+  };
+  function abbrev(n) { return ABBR[n] || n.replace(' Pradesh', ''); }
 
-  var manifest = null;
-  var allItems = [];
-  var filtered = [];
-  var renderedCount = 0;
-  var activeFilter = 'all';
-  var activeRegion = 'all';
-  var query = '';
-  var lightboxPos = -1;
-
-  var el = {
-    grid: document.getElementById('grid'),
-    regions: document.getElementById('regions'),
-    skeleton: document.getElementById('skeleton'),
-    errorPanel: document.getElementById('error-panel'),
-    emptyPanel: document.getElementById('empty-panel'),
-    gridStatus: document.getElementById('grid-status'),
-    gridCount: document.getElementById('grid-count'),
-    loadMore: document.getElementById('load-more'),
-    search: document.getElementById('filename-filter'),
-    searchClear: document.getElementById('search-clear'),
-    note: document.getElementById('filters-note'),
-    hostName: document.getElementById('host-name'),
-    hostDomain: document.getElementById('host-domain'),
-    live: document.getElementById('live-region'),
-    lightbox: document.getElementById('lightbox'),
-    lbStage: document.getElementById('lightbox-stage'),
-    lbTitle: document.getElementById('lightbox-title'),
-    lbEntry: document.getElementById('lightbox-entry'),
-    lbPrev: document.getElementById('lightbox-prev'),
-    lbNext: document.getElementById('lightbox-next'),
-    lbPosition: document.getElementById('lightbox-position'),
-    lbCopy: document.getElementById('lightbox-copy'),
-    lbOpen: document.getElementById('lightbox-open'),
-    lbClose: document.getElementById('lightbox-close'),
-    corrections: document.getElementById('corrections'),
-    correctionsN: document.getElementById('corrections-n'),
-    correctionsSave: document.getElementById('corrections-save'),
-    correctionsReset: document.getElementById('corrections-reset')
+  // Region centroids, from the design's india-map.js.
+  var CENTROIDS = {
+    'Kerala': [76.3, 10.2], 'Tamil Nadu': [78.6, 10.6], 'Karnataka': [75.9, 14.6], 'Goa': [74.0, 15.3],
+    'Maharashtra': [73.8, 19.2], 'Gujarat': [71.2, 22.6], 'Rajasthan': [73.8, 26.3], 'Delhi': [77.1, 28.6],
+    'Uttarakhand': [79.0, 30.1], 'Himachal Pradesh': [77.2, 31.8], 'Jammu and Kashmir': [75.5, 33.9],
+    'Punjab': [75.4, 30.9], 'Chandigarh': [76.78, 30.73], 'Haryana': [76.3, 29.2], 'Uttar Pradesh': [80.9, 26.8],
+    'Madhya Pradesh': [78.5, 23.5], 'Nepal': [84.2, 28.1], 'Bihar': [85.6, 25.7], 'West Bengal': [88.0, 24.6],
+    'Sikkim': [88.5, 27.5], 'Bhutan': [90.4, 27.4], 'Assam': [92.9, 26.2], 'Arunachal Pradesh': [93.6, 27.3],
+    'Meghalaya': [91.3, 25.5], 'Nagaland': [94.3, 26.1], 'Jharkhand': [85.3, 23.6], 'Odisha': [85.0, 20.3],
+    'Andhra Pradesh': [79.7, 15.9], 'Telangana': [79.2, 17.9], 'Puducherry': [79.8, 11.9],
+    'Dadra and Nagar Haveli and Daman and Diu': [73.0, 20.3],
   };
 
-  /* ---------- formatting ---------- */
+  var DESKTOP = window.matchMedia('(min-width: 900px)');
 
-  function formatSize(bytes) {
-    if (typeof bytes !== 'number' || !isFinite(bytes)) return '—';
-    if (bytes < 1024) return bytes + ' B';
-    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(0) + ' KB';
-    return (bytes / 1024 / 1024).toFixed(1) + ' MB';
+  var manifest = null, basemap = null;
+  var legs = [], regionsFlat = [], flatClips = [];
+  var activeIdx = 0, lbPos = -1;
+  var expanded = {};
+
+  var el = {
+    legs: document.getElementById('legs'),
+    loading: document.getElementById('loading'),
+    error: document.getElementById('error'),
+    close: document.getElementById('close'),
+    strip: document.getElementById('strip'),
+    statRegions: document.getElementById('stat-regions'),
+    statClips: document.getElementById('stat-clips'),
+    atlas: document.getElementById('atlas'),
+    badge: document.getElementById('map-badge'),
+    lb: document.getElementById('lb'),
+    lbTitle: document.getElementById('lb-title'),
+    lbCount: document.getElementById('lb-count'),
+    lbStage: document.getElementById('lb-stage'),
+    lbCap: document.getElementById('lb-cap'),
+    lbRaw: document.getElementById('lb-raw'),
+    lbPrev: document.getElementById('lb-prev'),
+    lbNext: document.getElementById('lb-next'),
+    lbClose: document.getElementById('lb-close'),
+    live: document.getElementById('live'),
+  };
+
+  /* ─── helpers ───────────────────────────────────────────────────────── */
+  function fmt(iso) {
+    var d = new Date(iso);
+    return isNaN(d) ? '' : d.toLocaleDateString('en-GB', { month: 'short', day: 'numeric' });
+  }
+  function isLocal() {
+    var h = location.hostname;
+    return location.protocol === 'file:' || h === 'localhost' || h === '127.0.0.1' || h === '';
+  }
+  function mediaUrl(p) {
+    if (isLocal() || !manifest || !manifest.baseUrl) return p;
+    return manifest.baseUrl.replace(/\/+$/, '') + '/' + p;
   }
 
-  function formatDuration(seconds) {
-    if (typeof seconds !== 'number' || !isFinite(seconds)) return '';
-    var m = Math.floor(seconds / 60);
-    var s = Math.floor(seconds % 60);
-    return m + ':' + (s < 10 ? '0' : '') + s;
-  }
+  /* ─── data layer ────────────────────────────────────────────────────── */
+  //
+  // The design groups clips into legs by timestamp. That works for stories, which
+  // are posted the same day — but all 41 reels carry an UPLOAD time, not a capture
+  // time, and they lag by hours to weeks. Grouping reels by their own date scatters
+  // Punjab and Chandigarh into "Across the Northeast".
+  //
+  // So legs and region blocks are built from stories, and each reel is attached to
+  // the block for its own region. Only four regions appear in two legs, and those
+  // fall back to the nearest block by date.
+  //
+  // A story is posted the same day, so its timestamp is close enough to trust for
+  // ordering. Reels are edited and posted later — every one carries an upload time.
+  function isDatable(c) { return c.category === 'story' || c.timeSource === 'exif'; }
 
-  function formatDate(value) {
-    var d = new Date(value);
-    if (isNaN(d.getTime())) return String(value || '—');
-    return d.toLocaleString(undefined, {
-      year: 'numeric', month: 'short', day: '2-digit',
-      hour: '2-digit', minute: '2-digit'
-    });
-  }
+  function build(m) {
+    function usable(c) { return c.type === 'video' && c.captured; }
+    var stories = (m.stories || []).filter(usable)
+      .map(function (c) { return Object.assign({ category: 'story' }, c); })
+      .sort(function (a, b) { return a.captured < b.captured ? -1 : 1; });
+    var reels = (m.reels || []).filter(usable)
+      .map(function (c) { return Object.assign({ category: 'reel' }, c); })
+      .sort(function (a, b) { return a.captured < b.captured ? -1 : 1; });
 
-  /* ---------- URLs ---------- */
-
-  // Relative paths keep the page usable off a local server or a preview deploy;
-  // the copy/open actions always hand out the canonical manifest.baseUrl form.
-  function isLocalHost() {
-    var h = window.location.hostname;
-    return window.location.protocol === 'file:' || h === 'localhost' || h === '127.0.0.1' || h === '';
-  }
-
-  function displayUrl(path) {
-    if (isLocalHost() || !manifest || !manifest.baseUrl) return path;
-    return manifest.baseUrl.replace(/\/+$/, '') + '/' + path;
-  }
-
-  function canonicalUrl(path) {
-    var base = manifest && manifest.baseUrl
-      ? manifest.baseUrl.replace(/\/+$/, '')
-      : window.location.origin;
-    return base + '/' + String(path).replace(/^\/+/, '');
-  }
-
-  /* ---------- clipboard ---------- */
-
-  // Used for file://, plain http, and whenever the async API is denied.
-  function legacyCopy(text) {
-    return new Promise(function (resolve, reject) {
-      var ta = document.createElement('textarea');
-      ta.value = text;
-      ta.setAttribute('readonly', '');
-      ta.style.position = 'fixed';
-      ta.style.top = '0';
-      ta.style.opacity = '0';
-      // Everything outside an open modal dialog is inert, so a textarea parented to
-      // <body> can't be selected and execCommand would silently copy nothing.
-      var host = document.querySelector('dialog[open]') || document.body;
-      host.appendChild(ta);
-      ta.select();
-      ta.setSelectionRange(0, text.length);
-      var ok = false;
-      try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
-      host.removeChild(ta);
-      ok ? resolve() : reject(new Error('copy unavailable'));
-    });
-  }
-
-  function copyText(text) {
-    // The async API rejects with NotAllowedError under permissions policy, in some
-    // embedded webviews, and on stricter gesture rules — so always fall through.
-    if (navigator.clipboard && window.isSecureContext) {
-      return navigator.clipboard.writeText(text).catch(function () { return legacyCopy(text); });
-    }
-    return legacyCopy(text);
-  }
-
-  function announce(message) {
-    el.live.textContent = message;
-  }
-
-  function wireCopy(button, getUrl, idleLabel) {
-    var timer = null;
-    button.addEventListener('click', function () {
-      var url = getUrl();
-      copyText(url).then(function () {
-        button.dataset.state = 'copied';
-        button.textContent = '✓ copied';
-        announce('Copied ' + url);
-      }).catch(function () {
-        button.textContent = '✕ copy failed';
-        announce('Copy failed. The URL is ' + url);
-      }).then(function () {
-        clearTimeout(timer);
-        timer = setTimeout(function () {
-          delete button.dataset.state;
-          button.textContent = idleLabel;
-        }, 1600);
+    var idx = 0;
+    var built = LEGS.map(function (def) {
+      var inLeg = stories.filter(function (s) { return s.captured >= def.from && s.captured < def.to; });
+      var groups = [];
+      inLeg.forEach(function (s) {
+        var name = s.state || 'On the road';
+        var g = groups.filter(function (x) { return x.name === name; })[0];
+        if (!g) { g = { name: name, items: [] }; groups.push(g); }
+        g.items.push(s);
       });
+      return { def: def, groups: groups };
     });
-  }
 
-  /* ---------- manifest ---------- */
-
-  function collect(m) {
-    var out = [];
-    CATEGORY_ORDER.forEach(function (key) {
-      (m[key] || []).forEach(function (item) {
-        out.push({
-          name: item.name,
-          path: item.path,
-          size: item.size,
-          modified: item.modified,
-          captured: item.captured || null,
-          type: item.type,
-          category: key,
-          state: item.state || null,
-          country: item.country || null,
-          stateSource: item.stateSource || null,
-          nearby: item.nearby || [],
-          caption: item.caption || '',
-          subtitles: item.subtitles || null,
-          haystack: [item.path, item.name, item.state, item.country, item.caption]
-            .filter(Boolean).join(' ').toLowerCase()
-        });
+    // Attach every reel to the block for its region.
+    reels.forEach(function (r) {
+      var name = r.state || 'On the road';
+      var candidates = [];
+      built.forEach(function (L) {
+        L.groups.forEach(function (g) { if (g.name === name) candidates.push({ L: L, g: g }); });
       });
-    });
 
-    // Ride order. mtime is the checkout date and identical across every file, so
-    // `captured` is the only real chronology; untagged files sink to the end.
-    out.sort(function (a, b) {
-      if (a.captured && b.captured) return a.captured < b.captured ? -1 : a.captured > b.captured ? 1 : 0;
-      if (a.captured) return -1;
-      if (b.captured) return 1;
-      return a.path < b.path ? -1 : 1;
-    });
-
-    return out;
-  }
-
-  /* ---------- region corrections ---------- */
-
-  function applyOverrides() {
-    allItems.forEach(function (item) {
-      var fix = overrides[item.path];
-      if (!fix) return;
-      item.state = fix;
-      item.stateSource = 'manual';
-      item.haystack = [item.path, item.name, item.state, item.country, item.caption]
-        .filter(Boolean).join(' ').toLowerCase();
-    });
-  }
-
-  // Derived from the live items rather than manifest.regions, so a correction moves
-  // the chip counts immediately instead of waiting for a manifest rebuild.
-  function computeRegions() {
-    var acc = {};
-    allItems.forEach(function (item) {
-      if (!item.state) return;
-      if (!acc[item.state]) acc[item.state] = { name: item.state, count: 0, unsure: 0, country: item.country };
-      acc[item.state].count++;
-      if (item.stateSource === 'time') acc[item.state].unsure++;
-    });
-    return Object.keys(acc)
-      .sort(function (a, b) { return acc[b].count - acc[a].count || a.localeCompare(b); })
-      .map(function (k) { return acc[k]; });
-  }
-
-  function allRegionNames() {
-    var names = {};
-    allItems.forEach(function (i) { if (i.state) names[i.state] = true; });
-    ((manifest && manifest.regions) || []).forEach(function (r) { names[r.name] = true; });
-    return Object.keys(names).sort();
-  }
-
-  function setOverride(item, state) {
-    if (!state || state === item.state) return;
-    overrides[item.path] = state;
-    try { localStorage.setItem(OVERRIDES_KEY, JSON.stringify(overrides)); } catch (e) { /* private mode */ }
-
-    item.state = state;
-    item.stateSource = 'manual';
-    item.haystack = [item.path, item.name, item.state, item.country, item.caption]
-      .filter(Boolean).join(' ').toLowerCase();
-
-    paintCorrections();
-    paintRegions();
-    paintNote();
-    // Keep the current view honest: if the file no longer belongs to the active
-    // region it should leave the grid straight away.
-    var pos = lightboxPos;
-    applyFilters();
-    if (pos > -1 && filtered.indexOf(item) === -1) closeLightbox();
-    announce('Region set to ' + state + ' for ' + item.name);
-  }
-
-  function paintCorrections() {
-    var n = Object.keys(overrides).length;
-    el.corrections.hidden = n === 0;
-    el.correctionsN.textContent = String(n);
-  }
-
-  function saveOverrides() {
-    var blob = new Blob([JSON.stringify(overrides, null, 2)], { type: 'application/json' });
-    var url = URL.createObjectURL(blob);
-    var a = document.createElement('a');
-    a.href = url;
-    a.download = 'overrides.json';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
-    announce('Saved overrides.json with ' + Object.keys(overrides).length + ' corrections');
-  }
-
-  function countFor(key) {
-    var stats = (manifest && manifest.stats) || {};
-    switch (key) {
-      case 'all':     return typeof stats.totalFiles === 'number' ? stats.totalFiles : allItems.length;
-      case 'rides':   return countFor('stories') + countFor('reels');
-      case 'stories': return typeof stats.totalStories === 'number' ? stats.totalStories : sizeOf('stories');
-      case 'reels':   return typeof stats.totalReels === 'number' ? stats.totalReels : sizeOf('reels');
-      case 'garage':  return typeof stats.totalGarage === 'number' ? stats.totalGarage : sizeOf('garage');
-      case 'profile': return typeof stats.totalProfile === 'number' ? stats.totalProfile : sizeOf('profile');
-      default:        return 0;
-    }
-  }
-
-  function sizeOf(category) {
-    return allItems.filter(function (i) { return i.category === category; }).length;
-  }
-
-  function paintCounts() {
-    Array.prototype.forEach.call(document.querySelectorAll('[data-count]'), function (node) {
-      node.textContent = String(countFor(node.dataset.count));
-    });
-  }
-
-  function paintHost() {
-    if (!manifest || !manifest.baseUrl) return;
-    var host;
-    try { host = new URL(manifest.baseUrl).host; } catch (e) { return; }
-    var dot = host.indexOf('.');
-    el.hostName.textContent = dot === -1 ? host : host.slice(0, dot);
-    el.hostDomain.textContent = dot === -1 ? '' : host.slice(dot);
-  }
-
-  function paintNote() {
-    var stats = (manifest && manifest.stats) || {};
-    var text = 'Every card is a filter, and they compose. Grid is in ride order.';
-
-    if (stats.totalRegions) {
-      var gps = 0, timing = 0, manual = 0;
-      allItems.forEach(function (i) {
-        if (i.stateSource === 'gps') gps++;
-        else if (i.stateSource === 'time') timing++;
-        else if (i.stateSource === 'manual') manual++;
-      });
-      text += ' ' + (gps + timing + manual) + ' of ' + stats.totalFiles + ' files placed across '
-            + computeRegions().length + ' regions — ' + gps + ' from GPS';
-      if (timing) text += ', ' + timing + ' marked ~ guessed from upload timing (check these)';
-      if (manual) text += ', ' + manual + ' corrected by hand';
-      text += '. Open any tile to fix its region.';
-    }
-
-    if (manifest && manifest.generated) {
-      text += ' Manifest generated ' + formatDate(manifest.generated) + '.';
-    }
-    el.note.textContent = text;
-  }
-
-  /* ---------- filtering ---------- */
-
-  function inCategory(item, key) {
-    if (key === 'all') return true;
-    if (key === 'rides') return item.category === 'stories' || item.category === 'reels';
-    return item.category === key;
-  }
-
-  function paintRegions() {
-    var regions = computeRegions();
-    if (!regions.length) return;
-
-    el.regions.hidden = false;
-    el.regions.replaceChildren();
-
-    var label = document.createElement('span');
-    label.className = 'regions__label';
-    label.textContent = 'Region';
-    el.regions.appendChild(label);
-
-    var tagged = allItems.filter(function (i) { return i.state; }).length;
-    var all = [{ name: 'all', count: tagged }].concat(regions);
-
-    all.forEach(function (region) {
-      var chip = document.createElement('button');
-      chip.type = 'button';
-      chip.className = 'chip';
-      chip.dataset.region = region.name;
-      chip.setAttribute('aria-pressed', String(region.name === activeRegion));
-
-      var name = document.createElement('span');
-      name.textContent = region.name === 'all' ? 'All regions' : region.name;
-      chip.appendChild(name);
-
-      // Foreign regions carry a country tag — unless the region already IS the
-      // country name, which would read "Nepal NEPAL".
-      if (region.country && region.country !== 'India' && region.country !== region.name) {
-        var country = document.createElement('span');
-        country.className = 'chip__country';
-        country.textContent = region.country;
-        chip.appendChild(country);
+      if (!candidates.length) {
+        // A region with reels but no stories (Goa, Daman, Puducherry) — give it its
+        // own block, placed by the reel's own date.
+        var host = built.filter(function (L) { return r.captured >= L.def.from && r.captured < L.def.to; })[0] || built[0];
+        var fresh = { name: name, items: [] };
+        host.groups.push(fresh);
+        fresh.items.push(r);
+        return;
       }
 
-      var n = document.createElement('span');
-      n.className = 'chip__n';
-      n.textContent = String(region.count);
-      chip.appendChild(n);
-
-      if (region.unsure) {
-        chip.title = region.unsure + ' of ' + region.count + ' guessed from upload timing — worth checking';
-      }
-
-      chip.addEventListener('click', function () {
-        activeRegion = region.name;
-        Array.prototype.forEach.call(el.regions.querySelectorAll('.chip'), function (other) {
-          other.setAttribute('aria-pressed', String(other === chip));
+      var best = candidates[0];
+      if (candidates.length > 1) {
+        var bestGap = Infinity;
+        candidates.forEach(function (c) {
+          var mid = c.g.items[Math.floor(c.g.items.length / 2)].captured;
+          var gap = Math.abs(new Date(mid) - new Date(r.captured));
+          if (gap < bestGap) { bestGap = gap; best = c; }
         });
-        applyFilters();
+      }
+      best.g.items.push(r);
+    });
+
+    legs = built.map(function (L) {
+      // Reels landed at the end of their block; restore chronological order.
+      L.groups.forEach(function (g) {
+        g.items.sort(function (a, b) { return a.captured < b.captured ? -1 : a.captured > b.captured ? 1 : 0; });
       });
+      var all = L.groups.reduce(function (n, g) { return n + g.items.length; }, 0);
 
-      el.regions.appendChild(chip);
+      // Date labels come from stories only. A reel attached to this leg carries an
+      // upload date that can sit weeks outside it — letting those set the range made
+      // "Into the Himalaya" read 1 Feb – 15 Mar when the leg ends on 1 Mar.
+      var dated = L.groups.reduce(function (acc, g) { return acc.concat(g.items.filter(isDatable)); }, [])
+        .sort(function (a, b) { return a.captured < b.captured ? -1 : 1; });
+
+      return {
+        id: L.def.id, title: L.def.title, sub: L.def.sub, count: all,
+        dates: dated.length
+          ? (fmt(dated[0].captured) + ' – ' + fmt(dated[dated.length - 1].captured)).toUpperCase() : '',
+        regions: L.groups.map(function (g) {
+          var span = g.items.filter(isDatable);
+          if (!span.length) span = g.items;   // reel-only region: its dates are all we have
+          var r = {
+            index: idx, name: g.name, abbr: abbrev(g.name),
+            num: String(idx + 1).padStart(2, '0'),
+            count: g.items.length,
+            range: fmt(span[0].captured) +
+              (span.length > 1 ? ' – ' + fmt(span[span.length - 1].captured) : ''),
+            clips: g.items,
+          };
+          idx++;
+          return r;
+        }),
+      };
+    }).filter(function (L) { return L.regions.length; });
+
+    regionsFlat = legs.reduce(function (a, L) { return a.concat(L.regions); }, []);
+    flatClips = [];
+    regionsFlat.forEach(function (r) {
+      r.clips.forEach(function (c) { flatClips.push({ clip: c, region: r }); });
     });
+    // Distinct places, not blocks: Tamil Nadu and Karnataka each get two blocks
+    // because they were ridden twice, and "35 regions" would overstate the ride.
+    var distinct = {};
+    regionsFlat.forEach(function (r) { distinct[r.name] = true; });
+    return { totalClips: flatClips.length, totalRegions: Object.keys(distinct).length };
   }
 
-  function applyFilters() {
-    filtered = allItems.filter(function (item) {
-      return inCategory(item, activeFilter)
-        && (activeRegion === 'all' || item.state === activeRegion)
-        && (!query || item.haystack.indexOf(query) !== -1);
+  /* ─── render ────────────────────────────────────────────────────────── */
+  function render() {
+    el.loading.remove();
+    var frag = document.createDocumentFragment();
+
+    legs.forEach(function (L) {
+      var sec = document.createElement('section');
+      sec.className = 'leg';
+
+      var head = document.createElement('div');
+      head.className = 'leg__head';
+      var meta = document.createElement('div');
+      meta.className = 'leg__meta';
+      var a = document.createElement('span'); a.textContent = 'LEG ' + L.id + (L.dates ? ' · ' + L.dates : '');
+      var b = document.createElement('span'); b.textContent = L.count + ' CLIPS';
+      meta.appendChild(a); meta.appendChild(b);
+      head.appendChild(meta);
+      var h2 = document.createElement('h2'); h2.textContent = L.title; head.appendChild(h2);
+      var sub = document.createElement('div'); sub.className = 'leg__sub'; sub.textContent = L.sub; head.appendChild(sub);
+      sec.appendChild(head);
+
+      L.regions.forEach(function (r) {
+        sec.appendChild(regionBlock(r));
+      });
+      frag.appendChild(sec);
     });
-    el.grid.replaceChildren();
-    renderedCount = 0;
-    renderNextPage();
-    paintEmpty();
+
+    el.legs.insertBefore(frag, el.close);
+    el.close.hidden = false;
   }
 
-  function paintEmpty() {
-    if (filtered.length > 0) {
-      el.emptyPanel.hidden = true;
-      return;
-    }
-    var label = document.querySelector('.statcard[data-filter="' + activeFilter + '"] .statcard__label');
-    var name = label ? label.textContent.toLowerCase() : activeFilter;
-    var where = activeRegion === 'all' ? '' : ' in ' + activeRegion;
-    el.emptyPanel.hidden = false;
+  function regionBlock(r) {
+    var wrap = document.createElement('div');
+    wrap.className = 'region';
+    wrap.id = 'region-' + r.index;
+    wrap.dataset.regionIdx = r.index;
+    wrap.dataset.expanded = String(isExpanded(r.index));
 
-    if (query) {
-      el.emptyPanel.textContent = 'No ' + name + where + ' matching “' + el.search.value.trim() + '”.';
-    } else if (where) {
-      el.emptyPanel.textContent = 'No ' + name + where + '. Try another region, or widen the category above.';
-    } else {
-      el.emptyPanel.textContent = 'No files under ' + name + ' yet. Drop them into media/ and run node generate-manifest.cjs.';
-    }
+    var bar = document.createElement('button');
+    bar.type = 'button';
+    bar.className = 'region__bar';
+    bar.setAttribute('aria-controls', 'clips-' + r.index);
+
+    var num = document.createElement('span'); num.className = 'region__num'; num.textContent = r.num;
+    var name = document.createElement('span'); name.className = 'region__name'; name.textContent = r.name;
+    var meta = document.createElement('span'); meta.className = 'region__meta';
+    meta.textContent = r.count + (r.count === 1 ? ' clip · ' : ' clips · ') + r.range;
+    var sign = document.createElement('span'); sign.className = 'region__sign';
+    sign.setAttribute('aria-hidden', 'true');
+
+    bar.appendChild(num); bar.appendChild(name); bar.appendChild(meta); bar.appendChild(sign);
+    bar.addEventListener('click', function () {
+      if (DESKTOP.matches) return;              // desktop never collapses
+      setExpanded(r.index, !isExpanded(r.index));
+    });
+    wrap.appendChild(bar);
+
+    var grid = document.createElement('div');
+    grid.className = 'clips';
+    grid.id = 'clips-' + r.index;
+    r.clips.forEach(function (c) { grid.appendChild(clipButton(c, r)); });
+    wrap.appendChild(grid);
+
+    syncBar(wrap);
+    return wrap;
   }
 
-  /* ---------- rendering ---------- */
+  function clipButton(c, r) {
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'clip';
+    btn.dataset.pos = String(flatClips.findIndex(function (f) { return f.clip === c; }));
+    btn.setAttribute('aria-label', 'Play clip from ' + r.name + ', ' + fmt(c.captured));
 
+    var date = document.createElement('span');
+    date.className = 'clip__date';
+    date.textContent = fmt(c.captured).toUpperCase();
+    btn.appendChild(date);
+
+    btn._clip = c;
+    mediaObserver ? mediaObserver.observe(btn) : hydrate(btn);
+    return btn;
+  }
+
+  // 222 clips would be 222 metadata fetches up front; only load what nears the view.
   var mediaObserver = ('IntersectionObserver' in window)
     ? new IntersectionObserver(function (entries) {
-        entries.forEach(function (entry) {
-          if (!entry.isIntersecting) return;
-          hydrate(entry.target);
-          mediaObserver.unobserve(entry.target);
+        entries.forEach(function (e) {
+          if (!e.isIntersecting) return;
+          hydrate(e.target);
+          mediaObserver.unobserve(e.target);
         });
-      }, { rootMargin: '500px 0px' })
+      }, { rootMargin: '400px' })
     : null;
 
-  function hydrate(tile) {
-    if (tile.dataset.hydrated === 'true') return;
-    tile.dataset.hydrated = 'true';
+  function hydrate(btn) {
+    if (btn.dataset.hydrated) return;
+    btn.dataset.hydrated = '1';
+    var c = btn._clip;
+    var v = document.createElement('video');
+    v.className = 'grayscale';
+    v.preload = 'metadata';
+    v.muted = true; v.playsInline = true; v.tabIndex = -1;
+    v.setAttribute('aria-hidden', 'true');
+    v.src = mediaUrl(c.path) + '#t=0.5';
+    btn.insertBefore(v, btn.firstChild);
+  }
 
-    var item = tile._item;
-    var src = displayUrl(item.path);
+  /* ─── expand / collapse (mobile only) ───────────────────────────────── */
+  function isExpanded(i) { return DESKTOP.matches ? true : !!expanded[i]; }
 
-    if (item.type === 'video') {
-      var video = document.createElement('video');
-      video.preload = 'metadata';
-      video.muted = true;
-      video.playsInline = true;
-      video.tabIndex = -1;
-      video.setAttribute('aria-hidden', 'true');
-      video.src = src + '#t=0.1';
-      video.addEventListener('loadedmetadata', function () {
-        var d = formatDuration(video.duration);
-        if (d) {
-          item.duration = d;
-          var meta = tile.querySelector('.tile__meta');
-          if (meta) meta.textContent = d + ' · ' + formatSize(item.size);
-        }
-      });
-      tile.insertBefore(video, tile.firstChild);
+  function setExpanded(i, on) {
+    expanded[i] = on;
+    var wrap = document.getElementById('region-' + i);
+    if (!wrap) return;
+    wrap.dataset.expanded = String(on);
+    syncBar(wrap);
+  }
+
+  function syncBar(wrap) {
+    var on = wrap.dataset.expanded === 'true' || DESKTOP.matches;
+    var bar = wrap.querySelector('.region__bar');
+    var sign = wrap.querySelector('.region__sign');
+    if (DESKTOP.matches) {
+      bar.removeAttribute('aria-expanded');
+      sign.textContent = '';
     } else {
-      var img = document.createElement('img');
-      img.loading = 'lazy';
-      img.decoding = 'async';
-      img.alt = '';
-      img.src = src;
-      tile.insertBefore(img, tile.firstChild);
+      bar.setAttribute('aria-expanded', String(on));
+      sign.textContent = on ? '–' : '+';
     }
   }
 
-  function createTile(item, position) {
-    var li = document.createElement('li');
-
-    var tile = document.createElement('button');
-    tile.type = 'button';
-    tile.className = 'tile';
-    tile.dataset.pos = String(position);
-    tile._item = item;
-    tile.setAttribute('aria-label', [
-      item.name,
-      BADGE[item.category].toLowerCase(),
-      item.state ? (item.stateInferred ? item.state + ' (inferred)' : item.state) : null,
-      formatSize(item.size)
-    ].filter(Boolean).join(' — '));
-
-    var badge = document.createElement('span');
-    badge.className = 'tile__badge';
-    badge.dataset.cat = item.category;
-    badge.textContent = BADGE[item.category] || item.category.toUpperCase();
-    tile.appendChild(badge);
-
-    if (item.state) {
-      var region = document.createElement('span');
-      region.className = 'tile__region';
-      region.dataset.source = item.stateSource || 'gps';
-      region.dataset.inferred = String(item.stateSource === 'time');
-      region.textContent = (item.stateSource === 'time' ? '~' : '') + item.state;
-      region.title = item.stateSource === 'manual'
-        ? item.state + ' — corrected by hand'
-        : item.stateSource === 'time'
-          ? item.state + ' — guessed from upload timing, likely wrong'
-          : item.state + ' — from the file’s own GPS data';
-      tile.appendChild(region);
-    }
-
-    if (item.type === 'video') {
-      var play = document.createElement('span');
-      play.className = 'tile__play';
-      play.setAttribute('aria-hidden', 'true');
-      var disc = document.createElement('span');
-      disc.textContent = '▶';
-      play.appendChild(disc);
-      tile.appendChild(play);
-    }
-
-    var caption = document.createElement('span');
-    caption.className = 'tile__caption';
-
-    var nameEl = document.createElement('span');
-    nameEl.className = 'tile__name';
-    nameEl.textContent = item.name;
-    nameEl.title = item.path;
-
-    var metaEl = document.createElement('span');
-    metaEl.className = 'tile__meta';
-    metaEl.textContent = (item.duration ? item.duration + ' · ' : '') + formatSize(item.size);
-
-    caption.appendChild(nameEl);
-    caption.appendChild(metaEl);
-    tile.appendChild(caption);
-
-    li.appendChild(tile);
-
-    if (mediaObserver) {
-      mediaObserver.observe(tile);
-    } else {
-      hydrate(tile);
-    }
-
-    return li;
-  }
-
-  function renderNextPage() {
-    var end = Math.min(renderedCount + PAGE_SIZE, filtered.length);
-    var frag = document.createDocumentFragment();
-    for (var i = renderedCount; i < end; i++) {
-      frag.appendChild(createTile(filtered[i], i));
-    }
-    el.grid.appendChild(frag);
-    renderedCount = end;
-    paintStatus();
-  }
-
-  // Auto-advance the grid as the status row scrolls into view; the button stays
-  // as the keyboard-reachable and no-IntersectionObserver path.
-  var statusObserver = ('IntersectionObserver' in window)
-    ? new IntersectionObserver(function (entries) {
-        entries.forEach(function (entry) {
-          if (entry.isIntersecting && !el.gridStatus.hidden && renderedCount < filtered.length) {
-            renderNextPage();
-          }
-        });
-      }, { rootMargin: '300px 0px' })
-    : null;
-
-  function paintStatus() {
-    if (filtered.length === 0) {
-      el.gridStatus.hidden = true;
-      if (statusObserver) statusObserver.unobserve(el.gridStatus);
-      return;
-    }
-    el.gridStatus.hidden = false;
-    el.gridCount.textContent = 'Showing ' + renderedCount + ' of ' + filtered.length;
-    el.loadMore.hidden = renderedCount >= filtered.length;
-
-    if (!statusObserver) return;
-    // Re-arm: IntersectionObserver only reports *changes*, so a status row that
-    // stays in view after a page renders would never fire again and stall the feed.
-    statusObserver.unobserve(el.gridStatus);
-    if (renderedCount < filtered.length) statusObserver.observe(el.gridStatus);
-  }
-
-  /* ---------- lightbox ---------- */
-
-  function addEntryRow(term, value, note) {
-    var dt = document.createElement('dt');
-    dt.textContent = term;
-    var dd = document.createElement('dd');
-    dd.textContent = value;
-    if (note) {
-      var small = document.createElement('span');
-      small.className = 'inferred-note';
-      small.textContent = note;
-      dd.appendChild(small);
-    }
-    el.lbEntry.appendChild(dt);
-    el.lbEntry.appendChild(dd);
-  }
-
-  // Region is the one field the export gets wrong often enough to need correcting by
-  // hand, so it's an editable control rather than a static row. Candidates come from
-  // tags.json `nearby` — ranked by distance from this file's own coordinates.
-  function addRegionEditor(item) {
-    var dt = document.createElement('dt');
-    dt.textContent = 'Region';
-
-    var dd = document.createElement('dd');
-    var wrap = document.createElement('div');
-    wrap.className = 'region-edit';
-
-    var select = document.createElement('select');
-    select.dataset.source = item.stateSource || 'gps';
-    select.setAttribute('aria-label', 'Region for ' + item.name);
-
-    var near = (item.nearby || []).filter(Boolean);
-    var rest = allRegionNames().filter(function (n) { return near.indexOf(n) === -1; });
-
-    function option(value, label) {
-      var o = document.createElement('option');
-      o.value = value;
-      o.textContent = label || value;
-      if (value === item.state) o.selected = true;
-      return o;
-    }
-
-    if (near.length) {
-      var g1 = document.createElement('optgroup');
-      g1.label = 'Nearest';
-      near.forEach(function (n) { g1.appendChild(option(n)); });
-      select.appendChild(g1);
-    }
-    if (rest.length) {
-      var g2 = document.createElement('optgroup');
-      g2.label = 'All regions';
-      rest.forEach(function (n) { g2.appendChild(option(n)); });
-      select.appendChild(g2);
-    }
-    if (!item.state) select.insertBefore(option('', '— pick a region —'), select.firstChild);
-
-    select.addEventListener('change', function () {
-      setOverride(item, select.value);
-      select.dataset.source = 'manual';
-      note.replaceChildren(document.createTextNode('Corrected by hand.'));
-    });
-
-    var note = document.createElement('span');
-    note.className = 'source-note';
-    if (item.stateSource === 'manual') {
-      note.textContent = 'Corrected by hand.';
-    } else if (item.stateSource === 'time') {
-      note.innerHTML = '<b>Guessed from upload timing</b> — no GPS on this file, and uploads lag capture by hours. Likely wrong; pick the right one.';
-    } else if (item.stateSource === 'gps') {
-      note.textContent = 'From this file’s GPS data. Phones cache stale fixes, so check it looks right.';
-    }
-
-    wrap.appendChild(select);
-    if (note.textContent || note.innerHTML) wrap.appendChild(note);
-    dd.appendChild(wrap);
-    el.lbEntry.appendChild(dt);
-    el.lbEntry.appendChild(dd);
-  }
-
-  function addEntryLink(term, href, value) {
-    var dt = document.createElement('dt');
-    dt.textContent = term;
-    var dd = document.createElement('dd');
-    var a = document.createElement('a');
-    a.href = href;
-    a.target = '_blank';
-    a.rel = 'noopener';
-    a.textContent = value;
-    a.style.color = 'var(--color-accent-deep)';
-    dd.appendChild(a);
-    el.lbEntry.appendChild(dt);
-    el.lbEntry.appendChild(dd);
-  }
-
-  function openLightbox(position) {
-    if (position < 0 || position >= filtered.length) return;
-    lightboxPos = position;
-
-    var item = filtered[position];
-    var src = displayUrl(item.path);
-
-    el.lbStage.replaceChildren();
-    if (item.type === 'video') {
-      var video = document.createElement('video');
-      video.src = src;
-      video.controls = true;
-      video.autoplay = true;
-      video.muted = true;
-      video.playsInline = true;
-      el.lbStage.appendChild(video);
-    } else {
-      var img = document.createElement('img');
-      img.src = src;
-      img.alt = item.name;
-      el.lbStage.appendChild(img);
-    }
-
-    el.lbTitle.textContent = item.name;
-
-    el.lbEntry.replaceChildren();
-    if (item.caption) addEntryRow('Caption', item.caption);
-    addRegionEditor(item);
-    if (item.captured) {
-      addEntryRow('Captured', formatDate(item.captured),
-        item.timeSource === 'upload'
-          ? 'This is the upload time — the original capture time didn’t survive the upload.'
-          : null);
-    }
-    addEntryRow('Path', item.path);
-    addEntryRow('Category', item.category);
-    addEntryRow('Type', item.type);
-    addEntryRow('Size', formatSize(item.size) + ' (' + item.size + ' bytes)');
-    if (item.subtitles) addEntryLink('Subtitles', displayUrl(item.subtitles), item.subtitles.split('/').pop());
-
-    el.lbOpen.href = src;
-    el.lbPosition.textContent = (position + 1) + ' of ' + filtered.length;
-    el.lbPrev.disabled = position === 0;
-    el.lbNext.disabled = position === filtered.length - 1;
-
-    if (!el.lightbox.open) {
-      if (typeof el.lightbox.showModal === 'function') {
-        el.lightbox.showModal();
-      } else {
-        el.lightbox.setAttribute('open', '');
-      }
-    }
-  }
-
-  function closeLightbox() {
-    if (typeof el.lightbox.close === 'function' && el.lightbox.open) {
-      el.lightbox.close();
-    } else {
-      el.lightbox.removeAttribute('open');
-    }
-  }
-
-  function step(delta) {
-    var next = lightboxPos + delta;
-    // Pull in more results if paging past what's currently rendered.
-    while (next >= renderedCount && renderedCount < filtered.length) renderNextPage();
-    openLightbox(next);
-  }
-
-  el.lightbox.addEventListener('close', function () {
-    el.lbStage.replaceChildren();
-    lightboxPos = -1;
-  });
-
-  el.lightbox.addEventListener('click', function (event) {
-    // Clicks landing on the dialog box itself (not its children) are backdrop clicks.
-    if (event.target === el.lightbox) closeLightbox();
-  });
-
-  el.lbClose.addEventListener('click', closeLightbox);
-  el.lbPrev.addEventListener('click', function () { step(-1); });
-  el.lbNext.addEventListener('click', function () { step(1); });
-
-  wireCopy(el.lbCopy, function () {
-    return canonicalUrl(filtered[lightboxPos] ? filtered[lightboxPos].path : '');
-  }, '⧉ Copy URL');
-
-  document.addEventListener('keydown', function (event) {
-    if (lightboxPos === -1) return;
-    if (event.key === 'ArrowRight') { event.preventDefault(); step(1); }
-    if (event.key === 'ArrowLeft')  { event.preventDefault(); step(-1); }
-  });
-
-  /* ---------- events ---------- */
-
-  el.grid.addEventListener('click', function (event) {
-    var tile = event.target.closest ? event.target.closest('.tile') : null;
-    if (tile) openLightbox(Number(tile.dataset.pos));
-  });
-
-  Array.prototype.forEach.call(document.querySelectorAll('.statcard'), function (card) {
-    card.addEventListener('click', function () {
-      activeFilter = card.dataset.filter;
-      Array.prototype.forEach.call(document.querySelectorAll('.statcard'), function (other) {
-        other.setAttribute('aria-pressed', String(other === card));
-      });
-      applyFilters();
+  DESKTOP.addEventListener('change', function () {
+    document.querySelectorAll('.region').forEach(function (w) {
+      w.dataset.expanded = String(isExpanded(+w.dataset.regionIdx));
+      syncBar(w);
     });
   });
 
-  var searchTimer = null;
-  el.search.addEventListener('input', function () {
-    el.searchClear.hidden = el.search.value === '';
-    clearTimeout(searchTimer);
-    searchTimer = setTimeout(function () {
-      query = el.search.value.trim().toLowerCase();
-      applyFilters();
-    }, 120);
-  });
-
-  el.searchClear.addEventListener('click', function () {
-    el.search.value = '';
-    el.searchClear.hidden = true;
-    query = '';
-    applyFilters();
-    el.search.focus();
-  });
-
-  el.loadMore.addEventListener('click', renderNextPage);
-
-  el.correctionsSave.addEventListener('click', saveOverrides);
-
-  el.correctionsReset.addEventListener('click', function () {
-    if (!window.confirm('Discard all ' + Object.keys(overrides).length + ' unsaved region corrections?')) return;
-    overrides = {};
-    try { localStorage.removeItem(OVERRIDES_KEY); } catch (e) { /* private mode */ }
-    // Cheapest correct way back to the baked-in values.
-    window.location.reload();
-  });
-
-  Array.prototype.forEach.call(document.querySelectorAll('.copy-btn'), function (button) {
-    wireCopy(button, function () { return canonicalUrl(button.dataset.copyPath); }, '⧉ copy URL');
-  });
-
-  /* ---------- boot ---------- */
-
-  function showError(error) {
-    el.skeleton.hidden = true;
-    el.errorPanel.hidden = false;
-    el.errorPanel.replaceChildren();
-
-    var line = document.createElement('p');
-    line.style.margin = '0 0 8px';
-    line.innerHTML = '<b>Could not load manifest.json.</b>';
-    el.errorPanel.appendChild(line);
-
-    var hint = document.createElement('p');
-    hint.style.margin = '0';
-    hint.textContent = window.location.protocol === 'file:'
-      ? 'Browsers block fetch() over file://. Serve the folder instead — e.g. npx serve . — then reload.'
-      : 'Generate it with: node generate-manifest.cjs';
-    el.errorPanel.appendChild(hint);
-
-    if (error) console.error('Error loading manifest:', error);
+  /* ─── state strip (mobile) ──────────────────────────────────────────── */
+  function renderStrip() {
+    el.strip.replaceChildren();
+    regionsFlat.forEach(function (r) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'strip__btn';
+      b.dataset.idx = r.index;
+      b.textContent = r.abbr;
+      b.setAttribute('aria-current', String(r.index === activeIdx));
+      b.addEventListener('click', function () { jump(r.index); });
+      el.strip.appendChild(b);
+    });
   }
 
-  fetch('manifest.json', { cache: 'no-cache' })
-    .then(function (response) {
-      if (!response.ok) throw new Error('HTTP ' + response.status);
-      return response.json();
-    })
-    .then(function (data) {
-      manifest = data;
-      allItems = collect(manifest);
-      applyOverrides();
-      el.skeleton.hidden = true;
-      paintHost();
-      paintCounts();
-      paintRegions();
-      paintCorrections();
-      paintNote();
-      applyFilters();
-    })
-    .catch(showError);
+  function syncStrip() {
+    el.strip.querySelectorAll('.strip__btn').forEach(function (b) {
+      var on = +b.dataset.idx === activeIdx;
+      b.setAttribute('aria-current', String(on));
+      if (!on) return;
+      // Scroll the strip by hand. scrollIntoView() walks every scrollable ancestor
+      // including the document, so it drags the page vertically and fights jump().
+      el.strip.scrollLeft = b.offsetLeft - (el.strip.clientWidth - b.offsetWidth) / 2;
+    });
+  }
+
+  /* ─── map ───────────────────────────────────────────────────────────── */
+  var NS = 'http://www.w3.org/2000/svg';
+  var mapStops = [];
+
+  function renderMap() {
+    if (!basemap) return;
+
+    var W = 420, H = 470, PAD = 10;
+    // Mercator, matching the design's d3.geoMercator().fitExtent to India.
+    function merc(lon, lat) {
+      return [lon * Math.PI / 180, Math.log(Math.tan(Math.PI / 4 + (lat * Math.PI / 180) / 2))];
+    }
+
+    var india = basemap.countries.filter(function (c) { return c.name === 'India'; })[0];
+    if (!india) return;
+    var xs = [], ys = [];
+    india.rings.forEach(function (ring) {
+      ring.forEach(function (p) { var q = merc(p[0], p[1]); xs.push(q[0]); ys.push(q[1]); });
+    });
+    var minX = Math.min.apply(null, xs), maxX = Math.max.apply(null, xs);
+    var minY = Math.min.apply(null, ys), maxY = Math.max.apply(null, ys);
+    var k = Math.min((W - PAD * 2) / (maxX - minX), (H - PAD * 2) / (maxY - minY));
+    var offX = (W - (maxX - minX) * k) / 2, offY = (H - (maxY - minY) * k) / 2;
+
+    function project(lon, lat) {
+      var q = merc(lon, lat);
+      return [offX + (q[0] - minX) * k, H - (offY + (q[1] - minY) * k)];
+    }
+
+    el.atlas.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+    el.atlas.replaceChildren();
+
+    basemap.countries.forEach(function (c) {
+      if (c.name === 'India') return;
+      c.rings.forEach(function (ring) {
+        var poly = document.createElementNS(NS, 'polygon');
+        poly.setAttribute('class', 'neighbour');
+        poly.setAttribute('points', ring.map(function (p) { return project(p[0], p[1]).join(','); }).join(' '));
+        el.atlas.appendChild(poly);
+      });
+    });
+    india.rings.forEach(function (ring) {
+      var poly = document.createElementNS(NS, 'polygon');
+      poly.setAttribute('class', 'india');
+      poly.setAttribute('points', ring.map(function (p) { return project(p[0], p[1]).join(','); }).join(' '));
+      el.atlas.appendChild(poly);
+    });
+
+    var pts = [];
+    regionsFlat.forEach(function (r) {
+      var c = CENTROIDS[r.name];
+      if (!c) return;
+      var xy = project(c[0], c[1]);
+      pts.push({ r: r, x: xy[0], y: xy[1] });
+    });
+
+    if (pts.length > 1) {
+      var line = document.createElementNS(NS, 'polyline');
+      line.setAttribute('class', 'route');
+      line.setAttribute('points', pts.map(function (p) { return p.x.toFixed(1) + ',' + p.y.toFixed(1); }).join(' '));
+      el.atlas.appendChild(line);
+    }
+
+    mapStops = [];
+    pts.forEach(function (p) {
+      var dot = document.createElementNS(NS, 'circle');
+      dot.setAttribute('class', 'stop');
+      dot.setAttribute('cx', p.x); dot.setAttribute('cy', p.y); dot.setAttribute('r', 4);
+      dot.dataset.idx = p.r.index;
+      el.atlas.appendChild(dot);
+      mapStops.push(dot);
+
+      // The visible dot is 4px; a finger is not.
+      var hit = document.createElementNS(NS, 'circle');
+      hit.setAttribute('class', 'hit');
+      hit.setAttribute('cx', p.x); hit.setAttribute('cy', p.y); hit.setAttribute('r', 12);
+      hit.dataset.idx = p.r.index;
+      var t = document.createElementNS(NS, 'title');
+      t.textContent = p.r.num + ' · ' + p.r.name;
+      hit.appendChild(t);
+      el.atlas.appendChild(hit);
+    });
+
+    el.atlas.addEventListener('click', function (e) {
+      var n = e.target;
+      while (n && n !== el.atlas && !n.dataset.idx) n = n.parentNode;
+      if (n && n.dataset && n.dataset.idx) jump(+n.dataset.idx);
+    });
+
+    syncMap();
+  }
+
+  function syncMap() {
+    mapStops.forEach(function (d) {
+      var on = +d.dataset.idx === activeIdx;
+      d.dataset.active = String(on);
+      d.setAttribute('r', on ? 7 : 4);
+    });
+    var r = regionsFlat.filter(function (x) { return x.index === activeIdx; })[0];
+    if (r) { el.badge.hidden = false; el.badge.textContent = r.num + ' · ' + r.name; }
+    else el.badge.hidden = true;
+  }
+
+  /* ─── navigation ────────────────────────────────────────────────────── */
+  function jump(idx) {
+    activeIdx = idx;
+    syncMap(); syncStrip();
+    if (!DESKTOP.matches) setExpanded(idx, true);
+
+    // Expanding a grid shifts layout, so land instantly and re-measure once the new
+    // rows exist. scroll-margin-top handles the sticky strip's offset.
+    var go = function () {
+      var node = document.getElementById('region-' + idx);
+      if (node) node.scrollIntoView({ block: 'start', behavior: 'auto' });
+    };
+    requestAnimationFrame(go);
+    setTimeout(go, 400);
+  }
+
+  var raf = null;
+  window.addEventListener('scroll', function () {
+    if (raf) return;
+    raf = requestAnimationFrame(function () {
+      raf = null;
+      var line = DESKTOP.matches ? 200 : 140;
+      var cur = activeIdx;
+      document.querySelectorAll('[data-region-idx]').forEach(function (n) {
+        if (n.getBoundingClientRect().top <= line) cur = +n.dataset.regionIdx;
+      });
+      if (cur !== activeIdx) { activeIdx = cur; syncMap(); syncStrip(); }
+    });
+  }, { passive: true });
+
+  /* ─── lightbox ──────────────────────────────────────────────────────── */
+  function openLb(pos) {
+    if (pos < 0 || pos >= flatClips.length) return;
+    lbPos = pos;
+    var entry = flatClips[pos];
+    var c = entry.clip, r = entry.region;
+
+    el.lbStage.replaceChildren();
+    var v = document.createElement('video');
+    v.src = mediaUrl(c.path);
+    v.controls = true; v.autoplay = true; v.muted = true; v.playsInline = true;
+    el.lbStage.appendChild(v);
+
+    el.lbTitle.textContent = (r.name + ' · ' + fmt(c.captured)).toUpperCase();
+
+    // Position within this region, as the design shows it — not within all 222.
+    var within = r.clips.indexOf(c);
+    el.lbCount.textContent = (within + 1) + ' / ' + r.clips.length;
+
+    el.lbCap.textContent = c.caption || '';
+    el.lbCap.hidden = !c.caption;
+    el.lbRaw.href = mediaUrl(c.path);
+    el.lbPrev.disabled = pos === 0;
+    el.lbNext.disabled = pos === flatClips.length - 1;
+
+    if (!el.lb.open) el.lb.showModal ? el.lb.showModal() : el.lb.setAttribute('open', '');
+  }
+
+  function closeLb() { el.lb.open && el.lb.close ? el.lb.close() : el.lb.removeAttribute('open'); }
+
+  el.lb.addEventListener('close', function () { el.lbStage.replaceChildren(); lbPos = -1; });
+  el.lbClose.addEventListener('click', closeLb);
+  el.lbPrev.addEventListener('click', function () { openLb(lbPos - 1); });
+  el.lbNext.addEventListener('click', function () { openLb(lbPos + 1); });
+  document.addEventListener('keydown', function (e) {
+    if (lbPos === -1) return;
+    if (e.key === 'ArrowRight') { e.preventDefault(); openLb(lbPos + 1); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); openLb(lbPos - 1); }
+  });
+  el.legs.addEventListener('click', function (e) {
+    var btn = e.target.closest && e.target.closest('.clip');
+    if (btn) openLb(+btn.dataset.pos);
+  });
+
+  /* ─── boot ──────────────────────────────────────────────────────────── */
+  Promise.all([
+    fetch('manifest.json', { cache: 'no-cache' }).then(function (r) {
+      if (!r.ok) throw new Error('HTTP ' + r.status); return r.json();
+    }),
+    fetch('basemap.json').then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; }),
+  ]).then(function (res) {
+    manifest = res[0];
+    basemap = res[1];
+
+    var totals = build(manifest);
+    el.statRegions.textContent = String(totals.totalRegions);
+    el.statClips.textContent = String(totals.totalClips);
+
+    render();
+    renderStrip();
+    renderMap();
+    syncStrip();
+  }).catch(function (err) {
+    el.loading.remove();
+    el.error.hidden = false;
+    console.error(err);
+  });
 })();
 </script>
 </body>

@@ -90,9 +90,9 @@ To get an export: Instagram → Settings → Accounts Center → Your informatio
 permissions → Export your information. Choose **JSON** format. The download link
 expires after 4 days.
 
-## The journey page
+## The site
 
-`journey.html` tells the ride as a story. It implements two designs from the
+`index.html` is the whole site — it tells the ride as a story. It implements two designs from the
 "Great India Ride redesign" project (Claude Design `1e0800a2`), on one DOM:
 
 - **≥900px — Desktop A, Atlas Split.** A 460px sticky pane holds the brand, title,
@@ -151,6 +151,20 @@ that script:
 **Privacy:** `route.json` carries only region-level spend aggregates and the trip
 total. It never includes per-night lines, the `Misc_label` column (medical, fines,
 theft) or the `Accomodation Link` column. Keep the CSV outside the repo.
+
+## Correcting region tags
+
+There is no longer a browser UI for this — the media-library page that carried the
+region dropdown was replaced by the journey layouts. Edit `overrides.json` by hand
+(a flat `{ "media/...": "State" }` map), then re-run:
+
+```
+node tag-media.cjs /path/to/instagram-export
+node generate-manifest.cjs
+```
+
+`tag-media.cjs` still applies overrides ahead of GPS and timing, exactly as before.
+The previous library UI is in git history at `index.html`, commit `1a1b71f`.
 
 ## Local Development
 

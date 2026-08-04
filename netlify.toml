@@ -1,6 +1,20 @@
 [build]
   publish = "."
 
+# /journey.html was live for a while before the two layouts moved onto the index.
+# Anyone holding that link lands on the same content rather than a 404.
+[[redirects]]
+  from = "/journey.html"
+  to = "/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/journey"
+  to = "/"
+  status = 301
+  force = true
+
 # ORDER MATTERS. When several [[headers]] blocks match the same request, Netlify
 # applies them in file order and the LAST one wins for any header they both set.
 # The catch-all therefore has to come FIRST — when it sat at the bottom it silently
