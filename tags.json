@@ -1,12 +1,12 @@
 {
-  "generated": "2026-08-04T19:53:33.044Z",
+  "generated": "2026-08-04T23:05:54.457Z",
   "source": "instagram-thegreatindiaride-2026-08-03-XQld81EN",
   "stats": {
     "total": 222,
     "gps": 156,
     "route": 21,
-    "time": 32,
-    "manual": 13,
+    "time": 31,
+    "manual": 14,
     "untagged": 0,
     "capturedFromExif": 59
   },
@@ -2721,10 +2721,9 @@
     "media/stories/202504/18077096947739153.mp4": {
       "captured": "2025-04-03T15:27:42.000Z",
       "timeSource": "upload",
-      "state": "Nepal",
-      "country": "Nepal",
-      "stateSource": "time",
-      "stateGapHours": 9.1,
+      "state": "Assam",
+      "country": "India",
+      "stateSource": "manual",
       "nearby": [
         "Nepal",
         "West Bengal",

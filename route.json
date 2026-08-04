@@ -1,5 +1,5 @@
 {
-  "generated": "2026-08-04T19:53:32.996Z",
+  "generated": "2026-08-04T23:45:58.643Z",
   "source": "Pan India Trip  - Trip expenses.csv",
   "nights": 93,
   "regionOrder": [
@@ -46,6 +46,8 @@
       "nights": 3,
       "firstNight": 1,
       "lastNight": 3,
+      "firstDate": "2025-01-12",
+      "lastDate": "2025-01-14",
       "spend": 12770,
       "lat": 8.0921711,
       "lon": 77.5493834
@@ -60,6 +62,8 @@
       "nights": 1,
       "firstNight": 4,
       "lastNight": 4,
+      "firstDate": "2025-01-15",
+      "lastDate": "2025-01-15",
       "spend": 4090,
       "lat": 11.9850087,
       "lon": 79.84765
@@ -76,6 +80,8 @@
       "nights": 3,
       "firstNight": 5,
       "lastNight": 7,
+      "firstDate": "2025-01-16",
+      "lastDate": "2025-01-18",
       "spend": 10421,
       "lat": 12.9767936,
       "lon": 77.590082
@@ -90,6 +96,8 @@
       "nights": 1,
       "firstNight": 8,
       "lastNight": 8,
+      "firstDate": "2025-01-19",
+      "lastDate": "2025-01-19",
       "spend": 3324,
       "lat": 15.5758922,
       "lon": 73.7469627
@@ -106,6 +114,8 @@
       "nights": 3,
       "firstNight": 9,
       "lastNight": 11,
+      "firstDate": "2025-01-20",
+      "lastDate": "2025-01-22",
       "spend": 16880,
       "lat": 17.0737631,
       "lon": 73.6243928
@@ -120,6 +130,8 @@
       "nights": 1,
       "firstNight": 12,
       "lastNight": 12,
+      "firstDate": "2025-01-23",
+      "lastDate": "2025-01-23",
       "spend": 3180,
       "lat": 20.4144379,
       "lon": 72.8328504
@@ -140,6 +152,8 @@
       "nights": 7,
       "firstNight": 13,
       "lastNight": 19,
+      "firstDate": "2025-01-24",
+      "lastDate": "2025-01-30",
       "spend": 24826,
       "lat": 21.2008064,
       "lon": 72.8385786
@@ -155,6 +169,8 @@
       "nights": 3,
       "firstNight": 20,
       "lastNight": 22,
+      "firstDate": "2025-01-31",
+      "lastDate": "2025-02-02",
       "spend": 10414,
       "lat": 24.5807978,
       "lon": 73.68241
@@ -169,6 +185,8 @@
       "nights": 1,
       "firstNight": 23,
       "lastNight": 23,
+      "firstDate": "2025-02-03",
+      "lastDate": "2025-02-03",
       "spend": 4531,
       "lat": 28.6049512,
       "lon": 77.3455184
@@ -185,6 +203,8 @@
       "nights": 4,
       "firstNight": 24,
       "lastNight": 27,
+      "firstDate": "2025-02-04",
+      "lastDate": "2025-02-07",
       "spend": 11184,
       "lat": 30.1246741,
       "lon": 78.3305378
@@ -202,6 +222,8 @@
       "nights": 7,
       "firstNight": 28,
       "lastNight": 34,
+      "firstDate": "2025-02-08",
+      "lastDate": "2025-02-14",
       "spend": 15764,
       "lat": 31.0913074,
       "lon": 77.1399856
@@ -216,6 +238,8 @@
       "nights": 1,
       "firstNight": 35,
       "lastNight": 35,
+      "firstDate": "2025-02-15",
+      "lastDate": "2025-02-15",
       "spend": 3591,
       "lat": 32.4561368,
       "lon": 75.7249659
@@ -230,6 +254,8 @@
       "nights": 1,
       "firstNight": 36,
       "lastNight": 36,
+      "firstDate": "2025-02-16",
+      "lastDate": "2025-02-16",
       "spend": 2053,
       "lat": 31.6281,
       "lon": 74.8873
@@ -244,6 +270,8 @@
       "nights": 1,
       "firstNight": 37,
       "lastNight": 37,
+      "firstDate": "2025-02-17",
+      "lastDate": "2025-02-17",
       "spend": 4720,
       "lat": 30.6626,
       "lon": 76.8372
@@ -258,6 +286,8 @@
       "nights": 1,
       "firstNight": 38,
       "lastNight": 38,
+      "firstDate": "2025-02-18",
+      "lastDate": "2025-02-18",
       "spend": 2395,
       "lat": 29.9642384,
       "lon": 76.8276914
@@ -272,6 +302,8 @@
       "nights": 2,
       "firstNight": 39,
       "lastNight": 40,
+      "firstDate": "2025-02-19",
+      "lastDate": "2025-02-20",
       "spend": 5201,
       "lat": 28.5659,
       "lon": 77.271
@@ -286,6 +318,8 @@
       "nights": 1,
       "firstNight": 41,
       "lastNight": 41,
+      "firstDate": "2025-02-21",
+      "lastDate": "2025-02-21",
       "spend": 3473,
       "lat": 26.2130558,
       "lon": 78.1771653
@@ -301,6 +335,8 @@
       "nights": 9,
       "firstNight": 42,
       "lastNight": 50,
+      "firstDate": "2025-02-22",
+      "lastDate": "2025-03-02",
       "spend": 35533,
       "lat": 26.8117988,
       "lon": 80.9007491
@@ -318,6 +354,8 @@
       "nights": 7,
       "firstNight": 51,
       "lastNight": 57,
+      "firstDate": "2025-03-03",
+      "lastDate": "2025-03-09",
       "spend": 33812,
       "lat": 27.47,
       "lon": 83.2847
@@ -330,6 +368,8 @@
       "nights": 0,
       "firstNight": 57,
       "lastNight": 57,
+      "firstDate": "2025-03-09",
+      "lastDate": "2025-03-09",
       "spend": 0,
       "lat": null,
       "lon": null,
@@ -345,6 +385,8 @@
       "nights": 1,
       "firstNight": 58,
       "lastNight": 58,
+      "firstDate": "2025-03-10",
+      "lastDate": "2025-03-10",
       "spend": 3582,
       "lat": 26.6499026,
       "lon": 88.3334914
@@ -359,6 +401,8 @@
       "nights": 1,
       "firstNight": 59,
       "lastNight": 59,
+      "firstDate": "2025-03-11",
+      "lastDate": "2025-03-11",
       "spend": 3277,
       "lat": 27.3128913,
       "lon": 88.3620903
@@ -373,6 +417,8 @@
       "nights": 1,
       "firstNight": 60,
       "lastNight": 60,
+      "firstDate": "2025-03-12",
+      "lastDate": "2025-03-12",
       "spend": 3162,
       "lat": 26.8606728,
       "lon": 89.3782327
@@ -385,6 +431,8 @@
       "nights": 0,
       "firstNight": 60,
       "lastNight": 60,
+      "firstDate": "2025-03-12",
+      "lastDate": "2025-03-12",
       "spend": 0,
       "lat": null,
       "lon": null,
@@ -400,6 +448,8 @@
       "nights": 2,
       "firstNight": 61,
       "lastNight": 62,
+      "firstDate": "2025-03-13",
+      "lastDate": "2025-03-14",
       "spend": 4516,
       "lat": 26.1844959,
       "lon": 91.7846926
@@ -416,6 +466,8 @@
       "nights": 3,
       "firstNight": 63,
       "lastNight": 65,
+      "firstDate": "2025-03-15",
+      "lastDate": "2025-03-19",
       "spend": 12940,
       "lat": 27.262494,
       "lon": 92.425316
@@ -430,6 +482,8 @@
       "nights": 2,
       "firstNight": 66,
       "lastNight": 67,
+      "firstDate": "2025-03-22",
+      "lastDate": "2025-03-23",
       "spend": 6307,
       "lat": 26.1400084,
       "lon": 91.7371378
@@ -445,6 +499,8 @@
       "nights": 2,
       "firstNight": 68,
       "lastNight": 69,
+      "firstDate": "2025-03-24",
+      "lastDate": "2025-03-25",
       "spend": 8188,
       "lat": 25.5045248,
       "lon": 91.8136987
@@ -459,6 +515,8 @@
       "nights": 2,
       "firstNight": 70,
       "lastNight": 71,
+      "firstDate": "2025-03-27",
+      "lastDate": "2025-03-27",
       "spend": 3497,
       "lat": 26.1400084,
       "lon": 91.7371378
@@ -475,6 +533,8 @@
       "nights": 3,
       "firstNight": 72,
       "lastNight": 74,
+      "firstDate": "2025-03-28",
+      "lastDate": "2025-03-30",
       "spend": 10678,
       "lat": 25.9133955,
       "lon": 93.7280498
@@ -489,6 +549,8 @@
       "nights": 1,
       "firstNight": 75,
       "lastNight": 75,
+      "firstDate": "2025-03-31",
+      "lastDate": "2025-03-31",
       "spend": 4476,
       "lat": 27.027363,
       "lon": 95.0152243
@@ -503,6 +565,8 @@
       "nights": 1,
       "firstNight": 76,
       "lastNight": 76,
+      "firstDate": "2025-04-01",
+      "lastDate": "2025-04-01",
       "spend": 3248,
       "lat": 27.8197221,
       "lon": 96.028021
@@ -517,6 +581,8 @@
       "nights": 1,
       "firstNight": 77,
       "lastNight": 77,
+      "firstDate": "2025-04-02",
+      "lastDate": "2025-04-02",
       "spend": 7706,
       "lat": 27.4644456,
       "lon": 94.9375596
@@ -531,6 +597,8 @@
       "nights": 2,
       "firstNight": 78,
       "lastNight": 79,
+      "firstDate": "2025-04-03",
+      "lastDate": "2025-04-04",
       "spend": 12181,
       "lat": 22.5658912,
       "lon": 88.350936
@@ -545,6 +613,8 @@
       "nights": 1,
       "firstNight": 80,
       "lastNight": 80,
+      "firstDate": "2025-04-05",
+      "lastDate": "2025-04-05",
       "spend": 3645,
       "lat": 22.8138745,
       "lon": 86.1850975
@@ -561,6 +631,8 @@
       "nights": 3,
       "firstNight": 81,
       "lastNight": 83,
+      "firstDate": "2025-04-06",
+      "lastDate": "2025-04-09",
       "spend": 13936,
       "lat": 20.4648844,
       "lon": 85.8692539
@@ -576,6 +648,8 @@
       "nights": 2,
       "firstNight": 84,
       "lastNight": 85,
+      "firstDate": "2025-04-10",
+      "lastDate": "2025-04-11",
       "spend": 7733,
       "lat": 17.7199784,
       "lon": 83.3158836
@@ -590,6 +664,8 @@
       "nights": 3,
       "firstNight": 86,
       "lastNight": 88,
+      "firstDate": "2025-04-12",
+      "lastDate": "2025-04-14",
       "spend": 11421,
       "lat": 17.360589,
       "lon": 78.4740613
@@ -604,6 +680,8 @@
       "nights": 1,
       "firstNight": 89,
       "lastNight": 89,
+      "firstDate": "2025-04-15",
+      "lastDate": "2025-04-15",
       "spend": 2063,
       "lat": 15.8309251,
       "lon": 78.0425373
@@ -618,6 +696,8 @@
       "nights": 1,
       "firstNight": 90,
       "lastNight": 90,
+      "firstDate": "2025-04-16",
+      "lastDate": "2025-04-16",
       "spend": 4387,
       "lat": 12.9767936,
       "lon": 77.590082
@@ -632,6 +712,8 @@
       "nights": 1,
       "firstNight": 91,
       "lastNight": 91,
+      "firstDate": "2025-04-17",
+      "lastDate": "2025-04-17",
       "spend": 3816,
       "lat": 11.020514,
       "lon": 76.9628847
@@ -647,6 +729,8 @@
       "nights": 2,
       "firstNight": 92,
       "lastNight": 93,
+      "firstDate": "2025-04-18",
+      "lastDate": "2025-04-19",
       "spend": 2481,
       "lat": 9.5003416,
       "lon": 76.4123364
@@ -983,7 +1067,8 @@
       "spend": 3559,
       "stayCost": 1789,
       "firstNight": 1,
-      "lastNight": 1
+      "lastNight": 1,
+      "date": "2025-01-12"
     },
     {
       "n": 2,
@@ -1000,7 +1085,8 @@
       "spend": 6220,
       "stayCost": 500,
       "firstNight": 2,
-      "lastNight": 2
+      "lastNight": 2,
+      "date": "2025-01-13"
     },
     {
       "n": 3,
@@ -1017,7 +1103,8 @@
       "spend": 2991,
       "stayCost": 1139,
       "firstNight": 3,
-      "lastNight": 3
+      "lastNight": 3,
+      "date": "2025-01-14"
     },
     {
       "n": 4,
@@ -1034,7 +1121,8 @@
       "spend": 4090,
       "stayCost": 1879,
       "firstNight": 4,
-      "lastNight": 4
+      "lastNight": 4,
+      "date": "2025-01-15"
     },
     {
       "n": 5,
@@ -1051,7 +1139,8 @@
       "spend": 2965,
       "stayCost": 0,
       "firstNight": 5,
-      "lastNight": 5
+      "lastNight": 5,
+      "date": "2025-01-16"
     },
     {
       "n": 6,
@@ -1068,7 +1157,8 @@
       "spend": 3785,
       "stayCost": 2463,
       "firstNight": 6,
-      "lastNight": 6
+      "lastNight": 6,
+      "date": "2025-01-17"
     },
     {
       "n": 7,
@@ -1085,7 +1175,8 @@
       "spend": 3671,
       "stayCost": 1419,
       "firstNight": 7,
-      "lastNight": 7
+      "lastNight": 7,
+      "date": "2025-01-18"
     },
     {
       "n": 8,
@@ -1102,7 +1193,8 @@
       "spend": 3324,
       "stayCost": 983,
       "firstNight": 8,
-      "lastNight": 8
+      "lastNight": 8,
+      "date": "2025-01-19"
     },
     {
       "n": 9,
@@ -1119,7 +1211,8 @@
       "spend": 4147,
       "stayCost": 1956,
       "firstNight": 9,
-      "lastNight": 9
+      "lastNight": 9,
+      "date": "2025-01-20"
     },
     {
       "n": 10,
@@ -1136,7 +1229,8 @@
       "spend": 6131,
       "stayCost": 2224,
       "firstNight": 10,
-      "lastNight": 10
+      "lastNight": 10,
+      "date": "2025-01-21"
     },
     {
       "n": 11,
@@ -1153,7 +1247,8 @@
       "spend": 6602,
       "stayCost": 2252,
       "firstNight": 11,
-      "lastNight": 11
+      "lastNight": 11,
+      "date": "2025-01-22"
     },
     {
       "n": 12,
@@ -1170,7 +1265,8 @@
       "spend": 3180,
       "stayCost": 395,
       "firstNight": 12,
-      "lastNight": 12
+      "lastNight": 12,
+      "date": "2025-01-23"
     },
     {
       "n": 13,
@@ -1187,7 +1283,8 @@
       "spend": 3605,
       "stayCost": 1420,
       "firstNight": 13,
-      "lastNight": 13
+      "lastNight": 13,
+      "date": "2025-01-24"
     },
     {
       "n": 14,
@@ -1204,7 +1301,8 @@
       "spend": 3488,
       "stayCost": 1318,
       "firstNight": 14,
-      "lastNight": 14
+      "lastNight": 14,
+      "date": "2025-01-25"
     },
     {
       "n": 15,
@@ -1221,7 +1319,8 @@
       "spend": 1387,
       "stayCost": 790,
       "firstNight": 15,
-      "lastNight": 15
+      "lastNight": 15,
+      "date": "2025-01-26"
     },
     {
       "n": 16,
@@ -1238,7 +1337,8 @@
       "spend": 4313,
       "stayCost": 1512,
       "firstNight": 16,
-      "lastNight": 16
+      "lastNight": 16,
+      "date": "2025-01-27"
     },
     {
       "n": 17,
@@ -1255,7 +1355,8 @@
       "spend": 2520,
       "stayCost": 2240,
       "firstNight": 17,
-      "lastNight": 17
+      "lastNight": 17,
+      "date": "2025-01-28"
     },
     {
       "n": 18,
@@ -1272,7 +1373,8 @@
       "spend": 3637,
       "stayCost": 2167,
       "firstNight": 18,
-      "lastNight": 18
+      "lastNight": 18,
+      "date": "2025-01-29"
     },
     {
       "n": 19,
@@ -1289,7 +1391,8 @@
       "spend": 5876,
       "stayCost": 3039,
       "firstNight": 19,
-      "lastNight": 19
+      "lastNight": 19,
+      "date": "2025-01-30"
     },
     {
       "n": 20,
@@ -1306,7 +1409,8 @@
       "spend": 6001,
       "stayCost": 3519,
       "firstNight": 20,
-      "lastNight": 21
+      "lastNight": 21,
+      "date": "2025-01-31"
     },
     {
       "n": 21,
@@ -1323,7 +1427,8 @@
       "spend": 4413,
       "stayCost": 842,
       "firstNight": 22,
-      "lastNight": 22
+      "lastNight": 22,
+      "date": "2025-02-02"
     },
     {
       "n": 22,
@@ -1340,7 +1445,8 @@
       "spend": 4531,
       "stayCost": 1433,
       "firstNight": 23,
-      "lastNight": 23
+      "lastNight": 23,
+      "date": "2025-02-03"
     },
     {
       "n": 23,
@@ -1357,7 +1463,8 @@
       "spend": 6666,
       "stayCost": 3607,
       "firstNight": 24,
-      "lastNight": 25
+      "lastNight": 25,
+      "date": "2025-02-04"
     },
     {
       "n": 24,
@@ -1374,7 +1481,8 @@
       "spend": 1799,
       "stayCost": 1007,
       "firstNight": 26,
-      "lastNight": 26
+      "lastNight": 26,
+      "date": "2025-02-06"
     },
     {
       "n": 25,
@@ -1391,7 +1499,8 @@
       "spend": 2719,
       "stayCost": 1397,
       "firstNight": 27,
-      "lastNight": 27
+      "lastNight": 27,
+      "date": "2025-02-07"
     },
     {
       "n": 26,
@@ -1408,7 +1517,8 @@
       "spend": 5865,
       "stayCost": 2110,
       "firstNight": 28,
-      "lastNight": 29
+      "lastNight": 29,
+      "date": "2025-02-08"
     },
     {
       "n": 27,
@@ -1425,7 +1535,8 @@
       "spend": 4896,
       "stayCost": 1062,
       "firstNight": 30,
-      "lastNight": 31
+      "lastNight": 31,
+      "date": "2025-02-10"
     },
     {
       "n": 28,
@@ -1442,7 +1553,8 @@
       "spend": 1381,
       "stayCost": 1181,
       "firstNight": 32,
-      "lastNight": 32
+      "lastNight": 32,
+      "date": "2025-02-12"
     },
     {
       "n": 29,
@@ -1459,7 +1571,8 @@
       "spend": 3621,
       "stayCost": 1116,
       "firstNight": 33,
-      "lastNight": 34
+      "lastNight": 34,
+      "date": "2025-02-13"
     },
     {
       "n": 30,
@@ -1476,7 +1589,8 @@
       "spend": 3591,
       "stayCost": 1200,
       "firstNight": 35,
-      "lastNight": 35
+      "lastNight": 35,
+      "date": "2025-02-15"
     },
     {
       "n": 31,
@@ -1493,7 +1607,8 @@
       "spend": 2053,
       "stayCost": 361,
       "firstNight": 36,
-      "lastNight": 36
+      "lastNight": 36,
+      "date": "2025-02-16"
     },
     {
       "n": 32,
@@ -1510,7 +1625,8 @@
       "spend": 4720,
       "stayCost": 2165,
       "firstNight": 37,
-      "lastNight": 37
+      "lastNight": 37,
+      "date": "2025-02-17"
     },
     {
       "n": 33,
@@ -1527,7 +1643,8 @@
       "spend": 2395,
       "stayCost": 1295,
       "firstNight": 38,
-      "lastNight": 38
+      "lastNight": 38,
+      "date": "2025-02-18"
     },
     {
       "n": 34,
@@ -1544,7 +1661,8 @@
       "spend": 5201,
       "stayCost": 1900,
       "firstNight": 39,
-      "lastNight": 40
+      "lastNight": 40,
+      "date": "2025-02-19"
     },
     {
       "n": 35,
@@ -1561,7 +1679,8 @@
       "spend": 3473,
       "stayCost": 948,
       "firstNight": 41,
-      "lastNight": 41
+      "lastNight": 41,
+      "date": "2025-02-21"
     },
     {
       "n": 36,
@@ -1578,7 +1697,8 @@
       "spend": 9731,
       "stayCost": 2581,
       "firstNight": 42,
-      "lastNight": 43
+      "lastNight": 43,
+      "date": "2025-02-22"
     },
     {
       "n": 37,
@@ -1595,7 +1715,8 @@
       "spend": 10663,
       "stayCost": 4708,
       "firstNight": 44,
-      "lastNight": 46
+      "lastNight": 46,
+      "date": "2025-02-27"
     },
     {
       "n": 38,
@@ -1612,7 +1733,8 @@
       "spend": 11860,
       "stayCost": 6966,
       "firstNight": 47,
-      "lastNight": 49
+      "lastNight": 49,
+      "date": "2025-03-02"
     },
     {
       "n": 39,
@@ -1629,7 +1751,8 @@
       "spend": 3280,
       "stayCost": 1826,
       "firstNight": 50,
-      "lastNight": 50
+      "lastNight": 50,
+      "date": "2025-03-02"
     },
     {
       "n": 40,
@@ -1646,7 +1769,8 @@
       "spend": 7338,
       "stayCost": 938,
       "firstNight": 51,
-      "lastNight": 52
+      "lastNight": 52,
+      "date": "2025-03-03"
     },
     {
       "n": 41,
@@ -1663,7 +1787,8 @@
       "spend": 15613,
       "stayCost": 3375,
       "firstNight": 53,
-      "lastNight": 54
+      "lastNight": 54,
+      "date": "2025-03-05"
     },
     {
       "n": 42,
@@ -1680,7 +1805,8 @@
       "spend": 6878,
       "stayCost": 4128,
       "firstNight": 55,
-      "lastNight": 56
+      "lastNight": 56,
+      "date": "2025-03-07"
     },
     {
       "n": 43,
@@ -1697,7 +1823,8 @@
       "spend": 3983,
       "stayCost": 2748,
       "firstNight": 57,
-      "lastNight": 57
+      "lastNight": 57,
+      "date": "2025-03-09"
     },
     {
       "n": 44,
@@ -1714,7 +1841,8 @@
       "spend": 3582,
       "stayCost": 1300,
       "firstNight": 58,
-      "lastNight": 58
+      "lastNight": 58,
+      "date": "2025-03-10"
     },
     {
       "n": 45,
@@ -1731,7 +1859,8 @@
       "spend": 3277,
       "stayCost": 1168,
       "firstNight": 59,
-      "lastNight": 59
+      "lastNight": 59,
+      "date": "2025-03-11"
     },
     {
       "n": 46,
@@ -1748,7 +1877,8 @@
       "spend": 3162,
       "stayCost": 1120,
       "firstNight": 60,
-      "lastNight": 60
+      "lastNight": 60,
+      "date": "2025-03-12"
     },
     {
       "n": 47,
@@ -1765,7 +1895,8 @@
       "spend": 4516,
       "stayCost": 1812,
       "firstNight": 61,
-      "lastNight": 62
+      "lastNight": 62,
+      "date": "2025-03-13"
     },
     {
       "n": 48,
@@ -1782,7 +1913,8 @@
       "spend": 4450,
       "stayCost": 2129,
       "firstNight": 63,
-      "lastNight": 63
+      "lastNight": 63,
+      "date": "2025-03-15"
     },
     {
       "n": 49,
@@ -1799,7 +1931,8 @@
       "spend": 4587,
       "stayCost": 2520,
       "firstNight": 64,
-      "lastNight": 64
+      "lastNight": 64,
+      "date": "2025-03-17"
     },
     {
       "n": 50,
@@ -1816,7 +1949,8 @@
       "spend": 3903,
       "stayCost": 2000,
       "firstNight": 65,
-      "lastNight": 65
+      "lastNight": 65,
+      "date": "2025-03-19"
     },
     {
       "n": 51,
@@ -1833,7 +1967,8 @@
       "spend": 6307,
       "stayCost": 2156,
       "firstNight": 66,
-      "lastNight": 67
+      "lastNight": 67,
+      "date": "2025-03-22"
     },
     {
       "n": 52,
@@ -1850,7 +1985,8 @@
       "spend": 5298,
       "stayCost": 2500,
       "firstNight": 68,
-      "lastNight": 68
+      "lastNight": 68,
+      "date": "2025-03-24"
     },
     {
       "n": 53,
@@ -1867,7 +2003,8 @@
       "spend": 2890,
       "stayCost": 1000,
       "firstNight": 69,
-      "lastNight": 69
+      "lastNight": 69,
+      "date": "2025-03-25"
     },
     {
       "n": 54,
@@ -1884,7 +2021,8 @@
       "spend": 3497,
       "stayCost": 2309,
       "firstNight": 70,
-      "lastNight": 71
+      "lastNight": 71,
+      "date": "2025-03-27"
     },
     {
       "n": 55,
@@ -1901,7 +2039,8 @@
       "spend": 2630,
       "stayCost": 1800,
       "firstNight": 72,
-      "lastNight": 72
+      "lastNight": 72,
+      "date": "2025-03-28"
     },
     {
       "n": 56,
@@ -1918,7 +2057,8 @@
       "spend": 4812,
       "stayCost": 1904,
       "firstNight": 73,
-      "lastNight": 73
+      "lastNight": 73,
+      "date": "2025-03-29"
     },
     {
       "n": 57,
@@ -1935,7 +2075,8 @@
       "spend": 3235,
       "stayCost": 1600,
       "firstNight": 74,
-      "lastNight": 74
+      "lastNight": 74,
+      "date": "2025-03-30"
     },
     {
       "n": 58,
@@ -1952,7 +2093,8 @@
       "spend": 4476,
       "stayCost": 2400,
       "firstNight": 75,
-      "lastNight": 75
+      "lastNight": 75,
+      "date": "2025-03-31"
     },
     {
       "n": 59,
@@ -1969,7 +2111,8 @@
       "spend": 3248,
       "stayCost": 2378,
       "firstNight": 76,
-      "lastNight": 76
+      "lastNight": 76,
+      "date": "2025-04-01"
     },
     {
       "n": 60,
@@ -1986,7 +2129,8 @@
       "spend": 7706,
       "stayCost": 2400,
       "firstNight": 77,
-      "lastNight": 77
+      "lastNight": 77,
+      "date": "2025-04-02"
     },
     {
       "n": 61,
@@ -2003,7 +2147,8 @@
       "spend": 12181,
       "stayCost": 4284,
       "firstNight": 78,
-      "lastNight": 79
+      "lastNight": 79,
+      "date": "2025-04-03"
     },
     {
       "n": 62,
@@ -2020,7 +2165,8 @@
       "spend": 3645,
       "stayCost": 1795,
       "firstNight": 80,
-      "lastNight": 80
+      "lastNight": 80,
+      "date": "2025-04-05"
     },
     {
       "n": 63,
@@ -2037,7 +2183,8 @@
       "spend": 2891,
       "stayCost": 839,
       "firstNight": 81,
-      "lastNight": 81
+      "lastNight": 81,
+      "date": "2025-04-06"
     },
     {
       "n": 64,
@@ -2054,7 +2201,8 @@
       "spend": 4848,
       "stayCost": 2297,
       "firstNight": 82,
-      "lastNight": 82
+      "lastNight": 82,
+      "date": "2025-04-07"
     },
     {
       "n": 65,
@@ -2071,7 +2219,8 @@
       "spend": 6197,
       "stayCost": 1298,
       "firstNight": 83,
-      "lastNight": 83
+      "lastNight": 83,
+      "date": "2025-04-09"
     },
     {
       "n": 66,
@@ -2088,7 +2237,8 @@
       "spend": 4343,
       "stayCost": 895,
       "firstNight": 84,
-      "lastNight": 84
+      "lastNight": 84,
+      "date": "2025-04-10"
     },
     {
       "n": 67,
@@ -2105,7 +2255,8 @@
       "spend": 3391,
       "stayCost": 1254,
       "firstNight": 85,
-      "lastNight": 85
+      "lastNight": 85,
+      "date": "2025-04-11"
     },
     {
       "n": 68,
@@ -2122,7 +2273,8 @@
       "spend": 11421,
       "stayCost": 4067,
       "firstNight": 86,
-      "lastNight": 88
+      "lastNight": 88,
+      "date": "2025-04-12"
     },
     {
       "n": 69,
@@ -2139,7 +2291,8 @@
       "spend": 2063,
       "stayCost": 1800,
       "firstNight": 89,
-      "lastNight": 89
+      "lastNight": 89,
+      "date": "2025-04-15"
     },
     {
       "n": 70,
@@ -2156,7 +2309,8 @@
       "spend": 4387,
       "stayCost": 1084,
       "firstNight": 90,
-      "lastNight": 90
+      "lastNight": 90,
+      "date": "2025-04-16"
     },
     {
       "n": 71,
@@ -2173,7 +2327,8 @@
       "spend": 3816,
       "stayCost": 1441,
       "firstNight": 91,
-      "lastNight": 91
+      "lastNight": 91,
+      "date": "2025-04-17"
     },
     {
       "n": 72,
@@ -2190,7 +2345,8 @@
       "spend": 1216,
       "stayCost": 0,
       "firstNight": 92,
-      "lastNight": 92
+      "lastNight": 92,
+      "date": "2025-04-18"
     },
     {
       "n": 73,
@@ -2207,7 +2363,8 @@
       "spend": 1265,
       "stayCost": 0,
       "firstNight": 93,
-      "lastNight": 93
+      "lastNight": 93,
+      "date": "2025-04-19"
     }
   ],
   "home": "Trivandrum",

@@ -613,7 +613,9 @@ button { font: inherit; color: inherit; }
     var runs = ((m.route && m.route.legs) || []).map(function (l, i) {
       return {
         order: i + 1, region: l.region, country: l.country,
-        firstNight: l.firstNight, lastNight: l.lastNight, items: [],
+        firstNight: l.firstNight, lastNight: l.lastNight,
+        firstDate: l.firstDate || null, lastDate: l.lastDate || null,
+        items: [],
       };
     });
 
@@ -635,9 +637,20 @@ button { font: inherit; color: inherit; }
     // The sheet has no dates, only night numbers — interpolate across the trip. It
     // only has to be good enough to tell one visit from another, and the two Delhi
     // stops are three weeks apart.
+    // Real dates where the route has them, carried from the rider's booking
+    // confirmations. Spreading nights evenly across the trip instead was out by a
+    // median of two days and up to four through Nepal and the Northeast, which is
+    // exactly where a clip has to choose between one visit and another.
     runs.forEach(function (r) {
-      r.at = t0 + (t1 - t0) * (((r.firstNight + r.lastNight) / 2) / lastNight);
-      r.start = t0 + (t1 - t0) * (r.firstNight / lastNight);
+      if (r.firstDate && r.lastDate) {
+        var a = Date.parse(r.firstDate + 'T00:00:00Z');
+        var b = Date.parse(r.lastDate + 'T23:59:59Z');
+        r.start = a;
+        r.at = (a + b) / 2;
+      } else {
+        r.at = t0 + (t1 - t0) * (((r.firstNight + r.lastNight) / 2) / lastNight);
+        r.start = t0 + (t1 - t0) * (r.firstNight / lastNight);
+      }
     });
 
     var byRegion = {};

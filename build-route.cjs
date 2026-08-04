@@ -24,6 +24,10 @@ const path = require('path');
 const CSV = process.argv[2];
 const STOP_CACHE = '.stopcache.json';
 const STAY_CACHE = '.staycache.json';
+// night number -> real check-in date, taken from the rider's Booking.com and Agoda
+// confirmations. The sheet has no dates at all, and interpolating them evenly across
+// the trip was out by a median of 2 days and up to 4 through Nepal and Assam.
+const STAY_DATES = 'stay-dates.json';
 const OUT = 'route.json';
 
 // Rows that are in the sheet but not on the motorcycle route. Keeping them would
@@ -88,6 +92,30 @@ const money = s => {
 
 const stopGeo = JSON.parse(fs.readFileSync(STOP_CACHE, 'utf8'));
 const stayGeo = fs.existsSync(STAY_CACHE) ? JSON.parse(fs.readFileSync(STAY_CACHE, 'utf8')) : {};
+const stayDates = fs.existsSync(STAY_DATES) ? JSON.parse(fs.readFileSync(STAY_DATES, 'utf8')) : {};
+
+// Piecewise-linear between anchors; beyond the ends, carry the nearest segment's
+// slope. With 19 anchors spread over the trip every night lands within a day.
+const anchors = Object.keys(stayDates)
+  .map(n => ({ night: +n, t: Date.parse(stayDates[n] + 'T00:00:00Z') }))
+  .sort((a, b) => a.night - b.night);
+
+const DAY = 86400000;
+function nightDate(night) {
+  if (!anchors.length) return null;
+  if (anchors.length === 1) return new Date(anchors[0].t + (night - anchors[0].night) * DAY);
+
+  let lo = anchors[0], hi = anchors[anchors.length - 1];
+  for (let i = 0; i < anchors.length - 1; i++) {
+    if (night >= anchors[i].night && night <= anchors[i + 1].night) { lo = anchors[i]; hi = anchors[i + 1]; break; }
+  }
+  if (night < anchors[0].night) { lo = anchors[0]; hi = anchors[1]; }
+  if (night > anchors[anchors.length - 1].night) { lo = anchors[anchors.length - 2]; hi = anchors[anchors.length - 1]; }
+
+  const slope = (hi.t - lo.t) / Math.max(1, hi.night - lo.night);
+  return new Date(lo.t + (night - lo.night) * slope);
+}
+const iso = d => (d ? d.toISOString().slice(0, 10) : null);
 const rows = parseCsv(fs.readFileSync(CSV, 'utf8'));
 
 // The sheet's links carry tracking/query junk that varies between rows for the same
@@ -235,6 +263,7 @@ fs.writeFileSync(OUT, JSON.stringify({
   legs: legs.map(l => ({
     order: l.order, region: l.region, country: l.country, stops: l.stops,
     nights: l.nights, firstNight: l.firstNight, lastNight: l.lastNight,
+    firstDate: iso(nightDate(l.firstNight)), lastDate: iso(nightDate(l.lastNight)),
     spend: Math.round(l.spend), lat: l.lat, lon: l.lon,
     ...(l.transit && { transit: true }),
   })),
@@ -252,6 +281,7 @@ fs.writeFileSync(OUT, JSON.stringify({
       : [];
     return home.concat(stops).map((s, i) => ({
       n: i, ...s,
+      ...(s.firstNight ? { date: iso(nightDate(s.firstNight)) } : {}),
       lat: Math.round(s.lat * 1e5) / 1e5,
       lon: Math.round(s.lon * 1e5) / 1e5,
       spend: Math.round(s.spend), stayCost: Math.round(s.stayCost),
