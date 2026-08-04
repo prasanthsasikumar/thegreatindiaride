@@ -116,6 +116,8 @@ if (route) {
     spend: route.totals.spend,
     regionOrder: route.regionOrder,
     legs: route.legs,
+    // Every place slept, in order — the map draws its line and markers from this.
+    stops: route.stops,
   };
 }
 

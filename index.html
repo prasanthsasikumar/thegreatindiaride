@@ -110,8 +110,10 @@ button { font: inherit; color: inherit; }
 .atlas .neighbour { fill: none; stroke: var(--color-neutral-400); stroke-width: 1; }
 .atlas .india { fill: var(--color-surface); stroke: var(--color-text); stroke-width: 1.25; }
 .atlas .route { fill: none; stroke: var(--color-accent); stroke-width: 1.75; stroke-linejoin: round; stroke-linecap: round; }
-.atlas .stop { fill: var(--color-bg); stroke: var(--color-text); stroke-width: 1.5; }
-.atlas .stop[data-active="true"] { fill: var(--color-accent); stroke: var(--color-accent); stroke-width: 2; }
+/* 74 stops, not 29 regions — dots are small so a dense stretch still reads as a line. */
+.atlas .stop { fill: var(--color-bg); stroke: var(--color-text); stroke-width: 1.1; }
+.atlas .stop[data-active="true"] { fill: var(--color-accent); stroke: var(--color-accent); stroke-width: 1.4; }
+.atlas .stop[data-sel="true"] { fill: var(--color-accent); stroke: var(--color-text); stroke-width: 1.6; }
 .atlas .hit { fill: transparent; cursor: pointer; }
 
 .map__badge {
@@ -121,6 +123,43 @@ button { font: inherit; color: inherit; }
   font-size: 11px; letter-spacing: 0.08em; padding: 4px 8px; text-transform: uppercase;
 }
 .map__badge[hidden] { display: none; }
+
+/* The stop card sits over the foot of the map rather than floating beside its dot:
+   the SVG scales with the pane, so anchoring HTML to a dot would mean re-measuring
+   on every resize for no real gain. */
+.map__card {
+  position: absolute; left: 0; right: 0; bottom: 0; z-index: 3;
+  background: var(--color-bg); border: 1px solid var(--color-text);
+  padding: 8px 26px 8px 10px;
+}
+.map__card[hidden] { display: none; }
+/* Flipped when the chosen stop is low on the map, so the card never covers the dot
+   it is describing — the whole Kerala/Tamil Nadu run sits in the bottom third. */
+.map__card[data-pos="top"] { bottom: auto; top: 26px; }
+.map__card-x {
+  position: absolute; right: 2px; top: 2px;
+  background: none; border: 0; cursor: pointer; line-height: 1;
+  font-size: 16px; padding: 2px 5px; color: var(--color-neutral-700);
+}
+.map__card-place {
+  font-family: var(--font-heading); font-weight: var(--fw-bold);
+  font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--color-neutral-700);
+}
+.map__card-list { list-style: none; margin: 3px 0 0; padding: 0; max-height: 152px; overflow-y: auto; }
+.map__card-list li { display: flex; align-items: baseline; gap: var(--space-2); padding: 3px 0; }
+.map__card-list li + li { border-top: 1px solid var(--color-divider); }
+.map__card-stay { font-family: var(--font-heading); font-weight: var(--fw-bold); font-size: 14px; line-height: 1.2; }
+.map__card-meta { font-size: 11px; color: var(--color-neutral-700); font-variant-numeric: tabular-nums; margin-top: 1px; }
+.map__card-acts { display: flex; gap: var(--space-2); margin-top: 6px; }
+.map__card-link, .map__card-jump {
+  font-family: var(--font-heading); font-weight: var(--fw-bold);
+  font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 3px 7px; cursor: pointer; text-decoration: none;
+  border: 1px solid var(--color-divider); background: var(--color-bg); color: var(--color-text);
+}
+.map__card-link[hidden] { display: none; }
+.map__card-link:hover, .map__card-jump:hover { border-color: var(--color-text); }
 
 .map__toggle {
   position: absolute; right: 0; top: 0; z-index: 2;
@@ -282,7 +321,7 @@ button { font: inherit; color: inherit; }
 
 /* auto-fill rather than a fixed count: tiles stay a consistent size and the
    column count follows the width, so more of the ride is on screen at once. */
-.clips { grid-template-columns: repeat(auto-fill, minmax(78px, 1fr)); padding: 0 0 20px; }
+.clips { grid-template-columns: repeat(auto-fill, minmax(86px, 1fr)); padding: 0 0 20px; }
 .region[data-expanded="false"] .clips { display: none; }
 
 .close { margin-top: 56px; padding: 28px 20px 32px; }
@@ -325,7 +364,7 @@ button { font: inherit; color: inherit; }
   .region__bar:hover { background: transparent; }
   .region__name { font-size: 24px; }
   .region__sign { display: none; }              /* nothing collapses on desktop */
-  .clips { grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); padding: 0; }
+  .clips { grid-template-columns: repeat(auto-fill, minmax(114px, 1fr)); padding: 0; }
   .region[data-expanded="false"] .clips { display: grid; }
 
   .close { margin: 56px 0 0; padding: 32px 28px 36px; }
@@ -369,17 +408,25 @@ button { font: inherit; color: inherit; }
     <section class="mapsection">
       <div class="mapsection__head">
         <h2>The whole route</h2>
-        <span class="mapsection__hint">tap a stop to jump</span>
+        <span class="mapsection__hint">tap a stop for the night</span>
       </div>
       <div class="mapwrap">
         <svg class="atlas" id="atlas" data-mode="outline" role="img" aria-label="Map of the route across India, Nepal and Bhutan"></svg>
         <div class="map__badge" id="map-badge" hidden></div>
         <button type="button" class="map__toggle" id="map-toggle" aria-pressed="false">Real map</button>
+        <div class="map__card" id="map-card" hidden>
+          <button type="button" class="map__card-x" id="map-card-x" aria-label="Close">&times;</button>
+          <div class="map__card-place" id="map-card-place"></div>
+          <ul class="map__card-list" id="map-card-list"></ul>
+          <div class="map__card-acts">
+            <button type="button" class="map__card-jump" id="map-card-jump">See the clips →</button>
+          </div>
+        </div>
       </div>
       <p class="map__attr" id="map-attr" hidden>© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors</p>
     </section>
 
-    <div class="pane__foot">Click a stop to jump. The map follows your scroll.</div>
+    <div class="pane__foot">Click a stop for the night, the bill and the map link. The route follows your scroll.</div>
   </aside>
 
   <main class="legs" id="legs">
@@ -440,18 +487,6 @@ button { font: inherit; color: inherit; }
   function abbrev(n) { return ABBR[n] || n.replace(' Pradesh', ''); }
 
   // Region centroids, from the design's india-map.js.
-  var CENTROIDS = {
-    'Kerala': [76.3, 10.2], 'Tamil Nadu': [78.6, 10.6], 'Karnataka': [75.9, 14.6], 'Goa': [74.0, 15.3],
-    'Maharashtra': [73.8, 19.2], 'Gujarat': [71.2, 22.6], 'Rajasthan': [73.8, 26.3], 'Delhi': [77.1, 28.6],
-    'Uttarakhand': [79.0, 30.1], 'Himachal Pradesh': [77.2, 31.8], 'Jammu and Kashmir': [75.5, 33.9],
-    'Punjab': [75.4, 30.9], 'Chandigarh': [76.78, 30.73], 'Haryana': [76.3, 29.2], 'Uttar Pradesh': [80.9, 26.8],
-    'Madhya Pradesh': [78.5, 23.5], 'Nepal': [84.2, 28.1], 'Bihar': [85.6, 25.7], 'West Bengal': [88.0, 24.6],
-    'Sikkim': [88.5, 27.5], 'Bhutan': [90.4, 27.4], 'Assam': [92.9, 26.2], 'Arunachal Pradesh': [93.6, 27.3],
-    'Meghalaya': [91.3, 25.5], 'Nagaland': [94.3, 26.1], 'Jharkhand': [85.3, 23.6], 'Odisha': [85.0, 20.3],
-    'Andhra Pradesh': [79.7, 15.9], 'Telangana': [79.2, 17.9], 'Puducherry': [79.8, 11.9],
-    'Dadra and Nagar Haveli and Daman and Diu': [73.0, 20.3],
-  };
-
   // Must match the CSS breakpoint below. The pane is a fixed 460px, so under
   // ~1080px the legs column drops to three columns — narrower than the mobile
   // layout manages in its 600px measure. Below this the Journey layout is better.
@@ -484,6 +519,11 @@ button { font: inherit; color: inherit; }
     badge: document.getElementById('map-badge'),
     mapToggle: document.getElementById('map-toggle'),
     mapAttr: document.getElementById('map-attr'),
+    card: document.getElementById('map-card'),
+    cardX: document.getElementById('map-card-x'),
+    cardPlace: document.getElementById('map-card-place'),
+    cardList: document.getElementById('map-card-list'),
+    cardJump: document.getElementById('map-card-jump'),
     lb: document.getElementById('lb'),
     lbTitle: document.getElementById('lb-title'),
     lbCount: document.getElementById('lb-count'),
@@ -524,6 +564,13 @@ button { font: inherit; color: inherit; }
   // A story is posted the same day, so its timestamp is close enough to trust for
   // ordering. Reels are edited and posted later — every one carries an upload time.
   function isDatable(c) { return c.category === 'story' || c.timeSource === 'exif'; }
+
+  // The date a block is sorted and labelled by: its first trustworthy clip, or its
+  // first clip of any kind when the region has nothing but reels.
+  function blockStart(g) {
+    var datable = g.items.filter(isDatable);
+    return (datable.length ? datable[0] : g.items[0]).captured;
+  }
 
   function build(m) {
     function usable(c) { return c.type === 'video' && c.captured; }
@@ -582,6 +629,13 @@ button { font: inherit; color: inherit; }
       L.groups.forEach(function (g) {
         g.items.sort(function (a, b) { return a.captured < b.captured ? -1 : a.captured > b.captured ? 1 : 0; });
       });
+
+      // Then order the blocks themselves. Blocks are created as stories are walked, so
+      // a region with no stories at all (Goa, Daman, Puducherry — reels only) got
+      // appended after everything else: Goa on 19 Jan and Daman on 25 Jan sat below
+      // Gujarat on 28 Jan. Sort on the same date the block displays, so the ride reads
+      // in order and the printed ranges never go backwards.
+      L.groups.sort(function (a, b) { return blockStart(a) < blockStart(b) ? -1 : blockStart(a) > blockStart(b) ? 1 : 0; });
       var all = L.groups.reduce(function (n, g) { return n + g.items.length; }, 0);
 
       // Date labels come from stories only. A reel attached to this leg carries an
@@ -827,6 +881,117 @@ button { font: inherit; color: inherit; }
   var mapStops = [];
   var mapFrame = null;   // projection constants, shared with the tile layer
   var mapTiles = null;   // the <g> of OSM tiles, when the real map is on
+  var mapPlaced = [];    // every stop, projected, in travel order — this draws the line
+  var mapClusters = [];  // stops merged by pixel proximity — these are the markers
+  var selStop = -1;      // which cluster's card is open
+  var cardIdx = -1;      // region block that card jumps to
+
+  var rupee = function (n) { return '₹' + Math.round(n).toLocaleString('en-IN'); };
+
+  // India is 420px wide here, so a pixel is roughly 8km: the four Varanasi hotels, and
+  // both Guwahati ones, land on the same dot no matter how the click is resolved.
+  // Merge anything that close into one marker and let the card list what's under it —
+  // better than stacking dots where all but the topmost are unreachable.
+  var CLUSTER_PX = 3.5;
+
+  function clusterStops(placed) {
+    var out = [];
+    placed.forEach(function (p) {
+      if (p.stop.origin) return;   // home starts the line but wasn't a paid night
+      for (var i = 0; i < out.length; i++) {
+        var c = out[i];
+        if (Math.abs(c.x - p.x) <= CLUSTER_PX && Math.abs(c.y - p.y) <= CLUSTER_PX) {
+          c.stops.push(p.stop);
+          if (c.idx < 0) c.idx = p.idx;
+          return;
+        }
+      }
+      out.push({ x: p.x, y: p.y, idx: p.idx, stops: [p.stop] });
+    });
+    return out;
+  }
+
+  function clusterLabel(c) {
+    var names = [];
+    c.stops.forEach(function (s) { if (names.indexOf(s.name) < 0) names.push(s.name); });
+    var nights = c.stops.reduce(function (a, s) { return a + s.nights; }, 0);
+    return names.join(' / ') + ' · ' + nights + (nights === 1 ? ' night' : ' nights');
+  }
+
+  // Stops carry a region name; the legs column carries region *blocks*, and four
+  // regions have two of them because they were ridden twice. Walk both lists forward
+  // together so the second run of Tamil Nadu points at the homecoming block rather
+  // than the opening one.
+  function matchStopsToRegions(stops) {
+    var ptr = 0;
+    return stops.map(function (s) {
+      var at = -1, i;
+      for (i = ptr; i < regionsFlat.length; i++) {
+        if (regionsFlat[i].name === s.region) { at = i; break; }
+      }
+      if (at < 0) {
+        for (i = 0; i < regionsFlat.length; i++) {
+          if (regionsFlat[i].name === s.region) { at = i; break; }
+        }
+      } else ptr = at;
+      return { stop: s, idx: at >= 0 ? regionsFlat[at].index : -1 };
+    });
+  }
+
+  function showStop(i) {
+    var c = mapClusters[i];
+    if (!c) return;
+    selStop = i;
+    cardIdx = c.idx;
+
+    // Distinct place names in the cluster: usually one, but Mussoorie and Dehradun are
+    // 20km apart, which is under two pixels at this scale.
+    var names = [];
+    c.stops.forEach(function (s) { if (names.indexOf(s.name) < 0) names.push(s.name); });
+    var region = c.stops[0].region;
+    el.cardPlace.textContent = names.join(' / ') + (region && names.indexOf(region) < 0 ? ' · ' + region : '');
+
+    el.cardList.replaceChildren();
+    c.stops.forEach(function (s) {
+      var li = document.createElement('li');
+
+      var txt = document.createElement('div');
+      txt.style.flex = '1';
+      var h = document.createElement('div');
+      h.className = 'map__card-stay';
+      h.textContent = s.stay || s.name;
+      var m = document.createElement('div');
+      m.className = 'map__card-meta';
+      var bits = [s.nights + (s.nights === 1 ? ' night' : ' nights')];
+      if (s.stayCost) bits.push('bed ' + rupee(s.stayCost));
+      if (s.spend) bits.push('all in ' + rupee(s.spend));
+      // A named home is placed at the town centre on purpose; an unnamed stop is
+      // placed there because we have nothing better. Say which.
+      if (s.private) bits.push('approximate');
+      else if (!s.precise) bits.push('town centre');
+      m.textContent = bits.join(' · ');
+      txt.appendChild(h); txt.appendChild(m);
+      li.appendChild(txt);
+
+      if (s.link) {
+        var a = document.createElement('a');
+        a.className = 'map__card-link';
+        a.href = s.link; a.target = '_blank'; a.rel = 'noopener';
+        a.textContent = 'Maps ↗';
+        li.appendChild(a);
+      }
+      el.cardList.appendChild(li);
+    });
+
+    el.cardJump.hidden = c.idx < 0;
+    // The card is about a third of the map's height; anything below ~two thirds down
+    // would end up underneath it.
+    el.card.dataset.pos = c.y > 300 ? 'top' : 'bottom';
+    el.card.hidden = false;
+    syncMap();
+  }
+
+  function hideStop() { selStop = -1; el.card.hidden = true; syncMap(); }
 
   function renderMap() {
     if (!basemap) return;
@@ -872,45 +1037,63 @@ button { font: inherit; color: inherit; }
       el.atlas.appendChild(poly);
     });
 
-    var pts = [];
-    regionsFlat.forEach(function (r) {
-      var c = CENTROIDS[r.name];
-      if (!c) return;
-      var xy = project(c[0], c[1]);
-      pts.push({ r: r, x: xy[0], y: xy[1] });
+    // The line follows the places actually slept in, in order — not a tour of state
+    // centroids, which used to cut Rajasthan-to-Delhi through the middle of Haryana
+    // and put "Nepal" in the far west of the country.
+    var stops = (manifest.route && manifest.route.stops) || [];
+    mapPlaced = matchStopsToRegions(stops).map(function (o) {
+      var xy = project(o.stop.lon, o.stop.lat);
+      return { stop: o.stop, idx: o.idx, x: xy[0], y: xy[1] };
     });
 
-    if (pts.length > 1) {
+    if (mapPlaced.length > 1) {
       var line = document.createElementNS(NS, 'polyline');
       line.setAttribute('class', 'route');
-      line.setAttribute('points', pts.map(function (p) { return p.x.toFixed(1) + ',' + p.y.toFixed(1); }).join(' '));
+      line.setAttribute('points', mapPlaced.map(function (p) { return p.x.toFixed(1) + ',' + p.y.toFixed(1); }).join(' '));
       el.atlas.appendChild(line);
     }
 
+    mapClusters = clusterStops(mapPlaced);
+
     mapStops = [];
-    pts.forEach(function (p) {
+    mapClusters.forEach(function (c, i) {
       var dot = document.createElementNS(NS, 'circle');
       dot.setAttribute('class', 'stop');
-      dot.setAttribute('cx', p.x); dot.setAttribute('cy', p.y); dot.setAttribute('r', 4);
-      dot.dataset.idx = p.r.index;
+      dot.setAttribute('cx', c.x); dot.setAttribute('cy', c.y); dot.setAttribute('r', 2.6);
+      dot.dataset.idx = c.idx; dot.dataset.stop = i;
       el.atlas.appendChild(dot);
       mapStops.push(dot);
 
-      // The visible dot is 4px; a finger is not.
+      // The visible dot is under 3px; a finger is not. This circle exists for the
+      // hover tooltip — the click itself is resolved by distance, below.
       var hit = document.createElementNS(NS, 'circle');
       hit.setAttribute('class', 'hit');
-      hit.setAttribute('cx', p.x); hit.setAttribute('cy', p.y); hit.setAttribute('r', 12);
-      hit.dataset.idx = p.r.index;
+      hit.setAttribute('cx', c.x); hit.setAttribute('cy', c.y); hit.setAttribute('r', 8);
+      hit.dataset.idx = c.idx; hit.dataset.stop = i;
       var t = document.createElementNS(NS, 'title');
-      t.textContent = p.r.num + ' · ' + p.r.name;
+      t.textContent = clusterLabel(c);
       hit.appendChild(t);
       el.atlas.appendChild(hit);
     });
 
+    // Resolve a click to the *nearest* stop rather than to whatever circle caught the
+    // event. Through Himachal and the Northeast the stops sit closer together than a
+    // finger-sized target, so the hit circles overlap and the last one drawn swallows
+    // its neighbours — several stops were simply unclickable. Nearest-point gives
+    // every stop its own catchment, and a click on open sea closes the card.
     el.atlas.addEventListener('click', function (e) {
-      var n = e.target;
-      while (n && n !== el.atlas && !n.dataset.idx) n = n.parentNode;
-      if (n && n.dataset && n.dataset.idx) jump(+n.dataset.idx);
+      var box = el.atlas.getBoundingClientRect();
+      if (!box.width || !box.height) return;
+      var vb = el.atlas.viewBox.baseVal;
+      var x = (e.clientX - box.left) / box.width * vb.width;
+      var y = (e.clientY - box.top) / box.height * vb.height;
+
+      var best = -1, bestD = Infinity;
+      mapClusters.forEach(function (c, i) {
+        var d = (c.x - x) * (c.x - x) + (c.y - y) * (c.y - y);
+        if (d < bestD) { bestD = d; best = i; }
+      });
+      if (best >= 0 && bestD <= 14 * 14) showStop(best); else hideStop();
     });
 
     // Everything the tile layer needs to sit on the same projection.
@@ -983,8 +1166,10 @@ button { font: inherit; color: inherit; }
   function syncMap() {
     mapStops.forEach(function (d) {
       var on = +d.dataset.idx === activeIdx;
+      var sel = +d.dataset.stop === selStop;
       d.dataset.active = String(on);
-      d.setAttribute('r', on ? 7 : 4);
+      d.dataset.sel = String(sel);
+      d.setAttribute('r', sel ? 5 : (on ? 4 : 2.6));
     });
     var r = regionsFlat.filter(function (x) { return x.index === activeIdx; })[0];
     if (r) { el.badge.hidden = false; el.badge.textContent = r.num + ' · ' + r.name; }
@@ -1108,6 +1293,9 @@ button { font: inherit; color: inherit; }
     el.mapToggle.addEventListener('click', function () {
       setMapMode(mapMode === 'map' ? 'outline' : 'map');
     });
+
+    el.cardX.addEventListener('click', hideStop);
+    el.cardJump.addEventListener('click', function () { if (cardIdx >= 0) jump(cardIdx); });
   }).catch(function (err) {
     el.loading.remove();
     el.error.hidden = false;

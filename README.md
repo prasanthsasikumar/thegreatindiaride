@@ -164,9 +164,24 @@ Round coordinates *after* simplifying and keep 3 decimals. At 2 decimals every p
 snapped to a ~1.1km grid, which staircased the coastline and made any tolerance finer
 than that pointless.
 
-Region centroids come from the design's `india-map.js`.
+**The line follows the places actually slept in, not region centroids.** It used to be a
+polyline through one hardcoded centroid per state, which put "Nepal" in the far west of
+the country and cut Rajasthan→Delhi straight through the middle of Haryana. It now walks
+`route.stops` in travel order.
 
-Route data (region order, legs, nights, stop names) comes from the trip spreadsheet:
+Markers cluster at 3.5px. India is 420px wide here, so a pixel is roughly 8km — the four
+Varanasi hotels, both Guwahati ones, and Mussoorie/Dehradun all land on the same dot.
+Stacking them would leave every stop but the topmost unreachable, so co-located stops
+merge into one marker and the card lists what's underneath.
+
+Clicks resolve to the **nearest** marker rather than to whichever `<circle>` caught the
+event, for the same reason: through Himachal and the Northeast the stops sit closer
+together than a finger-sized target, so the hit circles overlap. A click on open sea
+closes the card. The card flips above the map when its stop is in the lower third, so it
+never covers the dot it describes.
+
+Route data (region order, legs, nights, stop names, hotels and spend) comes from the trip
+spreadsheet:
 
 ```
 node build-route.cjs "/path/to/Pan India Trip  - Trip expenses.csv"
@@ -182,9 +197,37 @@ that script:
 - `ORIGIN` prepends home (Trivandrum) to the drawn path, since the ride started and
   finished at the same front door but the sheet only records paid nights.
 
-**Privacy:** `route.json` carries only region-level spend aggregates and the trip
-total. It never includes per-night lines, the `Misc_label` column (medical, fines,
-theft) or the `Accomodation Link` column. Keep the CSV outside the repo.
+Stop coordinates live in `.staycache.json`, keyed by the bare accommodation URL (the
+sheet's links carry `?g_st=`/`?entry=` junk that differs between rows for the same
+hotel). Every link resolves to the hotel's own coordinates.
+
+Nights with no link in the sheet fall back to a `name:<Stop>` key in the same file:
+
+| entry | treatment |
+|---|---|
+| `name:Coimbatore` | Decostel Backpackers Hostel — a real stay that never got a link; sited exactly |
+| `name:Banglore`, `name:Allapuzha`, `name:Trivandrum` | `"private": true` — a friend's place and two family homes |
+
+A `private` stay keeps its **name** but takes the town centre from `.stopcache.json`
+rather than a real address, and is never given a Maps link. Those are other people's
+houses; nothing on the site needs them pinned. The card says "approximate" for these and
+"town centre" for a stop we genuinely know nothing about, so the two aren't confused.
+
+Hyderabad and Kurnool are still unaccounted for and `build-route.cjs` warns about them
+by name on every run.
+
+Regions still come from the **stop name**, never from the hotel. A few stays sit just
+over a border — Zirakpur for Chandigarh, Noida for Delhi, Phuentsholing for Jaigaon — and
+re-deriving the region from their coordinates would silently delete chapters from the
+narrative.
+
+**Privacy — read before regenerating.** `route.json` is published, and it now carries a
+`stops` list: every place slept, the hotel's name, its Google Maps link, and what was
+paid there. That is a public, night-by-night record of where the rider was for three
+months. It is published deliberately, because the map is meant to be browsable.
+
+The `Misc_label` column is still excluded and should stay that way — it holds medical,
+fines, scam and theft, and nothing in the UI needs it. Keep the CSV outside the repo.
 
 ## Correcting region tags
 

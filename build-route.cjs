@@ -7,11 +7,15 @@
  * record of the route — GPS fixes drift and upload timestamps lag by hours, but the
  * order you slept in places is exact.
  *
- * PRIVACY: route.json is published (netlify.toml publishes "."). It carries only
- * region-level spend aggregates and the trip total — never per-night lines, never the
- * Misc_label column (which holds things like medical, fines and theft), and never the
- * Accomodation Link column (specific hotels). Point it at the CSV, which stays outside
- * the repo.
+ * PRIVACY: route.json is published (netlify.toml publishes "."). It carries
+ * region-level spend aggregates, the trip total, and — by explicit choice — a `stops`
+ * list naming each place stayed, its Google Maps link, nights, and what was paid.
+ * That is a public record of where the rider slept on 93 nights; it is published
+ * because the map is meant to be browsable, not because it is incidental.
+ *
+ * The Misc_label column stays out. It holds things like medical, fines, scam and
+ * theft, and nothing in the UI needs it. Keep it that way. The CSV itself stays
+ * outside the repo.
  */
 
 const fs = require('fs');
@@ -19,6 +23,7 @@ const path = require('path');
 
 const CSV = process.argv[2];
 const STOP_CACHE = '.stopcache.json';
+const STAY_CACHE = '.staycache.json';
 const OUT = 'route.json';
 
 // Rows that are in the sheet but not on the motorcycle route. Keeping them would
@@ -73,7 +78,12 @@ const money = s => {
 /* ---------- read the sheet ---------- */
 
 const stopGeo = JSON.parse(fs.readFileSync(STOP_CACHE, 'utf8'));
+const stayGeo = fs.existsSync(STAY_CACHE) ? JSON.parse(fs.readFileSync(STAY_CACHE, 'utf8')) : {};
 const rows = parseCsv(fs.readFileSync(CSV, 'utf8'));
+
+// The sheet's links carry tracking/query junk that varies between rows for the same
+// hotel (?g_st=..., ?entry=...). Key the cache on the bare URL so repeat stays match.
+const bareLink = s => (s || '').trim().split('?')[0];
 
 const nights = [];
 const skipped = [];
@@ -84,15 +94,44 @@ for (const r of rows.slice(1)) {
   dataRow++;
   if (SKIP_NIGHTS.has(dataRow)) { skipped.push(`${dataRow}. ${name}`); continue; }
   const geo = stopGeo[name] || {};
+  const clean = name.replace(/\*\d+$/, ''); // "Banglore*2" is a note about nights, not a place
+  const link = bareLink(r[6]);
+  // "Home" marks a night that cost nothing and has no hotel to point at. Nights with no
+  // link at all fall back to a name-keyed entry — a hostel that never made it into the
+  // sheet, or somebody's house.
+  const stay = (link && link !== 'Home') ? stayGeo[link] : stayGeo['name:' + clean];
+  // Friends' and family's homes get a name but keep the town centre: they are other
+  // people's addresses, and nothing on the site needs them pinned.
+  const sited = stay && !stay.private;
   nights.push({
-    name: name.replace(/\*\d+$/, ''), // "Banglore*2" is a note about nights, not a place
+    name: clean,
     region: geo.state || null,
     country: geo.country || null,
-    lat: geo.lat, lon: geo.lon,
-    // Summed here and immediately aggregated away — never emitted per night.
+    // The stay's own coordinates where we have them; the town centre otherwise. The
+    // region always comes from the stop name, never from the stay — a few hotels sit
+    // just over a border (Zirakpur for Chandigarh, Noida for Delhi) and re-deriving
+    // the region from them would silently drop chapters out of the narrative.
+    lat: sited ? stay.lat : geo.lat,
+    lon: sited ? stay.lon : geo.lon,
+    precise: !!sited,
+    private: !!(stay && stay.private),
+    stay: stay ? stay.stay : null,
+    // The sheet's own link where there is one. A stay we sited by hand (Decostel) has
+    // real coordinates but no link, so point at those instead — no reason for it to be
+    // the one marker you can't open. Private homes never get a link.
+    link: sited
+      ? ((link && link !== 'Home') ? link
+        : 'https://www.google.com/maps/search/?api=1&query=' + stay.lat + ',' + stay.lon)
+      : null,
+    stayCost: money(r[1]),
     spend: money(r[1]) + money(r[2]) + money(r[3]) + money(r[4]),
   });
 }
+
+// Private homes are meant to sit at the town centre; only warn about nights we simply
+// have nothing for.
+const missingStay = nights.filter(n => !n.precise && !n.private).map(n => n.name);
+if (missingStay.length) console.warn('No stay recorded (using town centre):', [...new Set(missingStay)].join(', '));
 
 const unresolved = nights.filter(n => !n.region).map(n => n.name);
 if (unresolved.length) console.warn('Unresolved stops:', [...new Set(unresolved)].join(', '));
@@ -139,6 +178,33 @@ nights.forEach(n => { if (n.region && !regionOrder.includes(n.region)) regionOrd
 
 const total = nights.reduce((s, n) => s + n.spend, 0);
 
+/* ---------- collapse consecutive nights at the same stay into map stops ---------- */
+//
+// 93 nights but 64 hotels: Varanasi alone is four separate stays across seven nights.
+// One marker per unbroken run at the same address, so the map shows places slept
+// rather than a pile of coincident dots. A return to the same hotel after going
+// somewhere else (Guwahati, three times) correctly gets a marker each time.
+
+const stops = [];
+nights.forEach((n, i) => {
+  const last = stops[stops.length - 1];
+  const sameStay = last && (n.link ? last.link === n.link : (!last.link && last.name === n.name));
+  if (sameStay) {
+    last.nights++;
+    last.spend += n.spend;
+    last.stayCost += n.stayCost;
+    last.lastNight = i + 1;
+  } else {
+    stops.push({
+      name: n.name, stay: n.stay, link: n.link,
+      region: n.region, country: n.country,
+      lat: n.lat, lon: n.lon, precise: n.precise, private: n.private,
+      nights: 1, spend: n.spend, stayCost: n.stayCost,
+      firstNight: i + 1, lastNight: i + 1,
+    });
+  }
+});
+
 fs.writeFileSync(OUT, JSON.stringify({
   generated: new Date().toISOString(),
   source: path.basename(CSV),
@@ -153,15 +219,20 @@ fs.writeFileSync(OUT, JSON.stringify({
     region: r, country: byRegion[r].country, nights: byRegion[r].nights,
     stops: byRegion[r].stops, spend: Math.round(byRegion[r].spend),
   })),
-  // Town-centre coordinates in travel order, for drawing the route line. These are
-  // public place centroids from geocoding the stop names — not GPS traces, and not
-  // the hotels themselves.
-  path: (() => {
+  // One entry per place slept, in travel order — this is what the map draws and what
+  // its markers read from. Rounded to 5dp (~1m); more digits than that is noise.
+  stops: (() => {
     const g = stopGeo[ORIGIN] || {};
     const home = g.lat != null
-      ? [{ n: 0, name: ORIGIN, region: g.state || null, lat: g.lat, lon: g.lon, origin: true }]
+      ? [{ name: ORIGIN, stay: null, link: null, region: g.state || null, country: g.country || null,
+           lat: g.lat, lon: g.lon, precise: false, nights: 0, spend: 0, stayCost: 0, origin: true }]
       : [];
-    return home.concat(nights.map((n, i) => ({ n: i + 1, name: n.name, region: n.region, lat: n.lat, lon: n.lon })));
+    return home.concat(stops).map((s, i) => ({
+      n: i, ...s,
+      lat: Math.round(s.lat * 1e5) / 1e5,
+      lon: Math.round(s.lon * 1e5) / 1e5,
+      spend: Math.round(s.spend), stayCost: Math.round(s.stayCost),
+    }));
   })(),
   home: ORIGIN,
   totals: { nights: nights.length, spend: Math.round(total), regions: regionOrder.length },
@@ -169,6 +240,7 @@ fs.writeFileSync(OUT, JSON.stringify({
 
 console.log(`Wrote ${OUT}`);
 if (skipped.length) console.log(`  skipped (not on the route): ${skipped.join(', ')}`);
-console.log(`  ${nights.length} nights · ${legs.length} legs · ${regionOrder.length} regions`);
+console.log(`  ${nights.length} nights · ${legs.length} legs · ${regionOrder.length} regions · ${stops.length} stops`);
 console.log(`  route: ${regionOrder.slice(0, 6).join(' → ')} … ${regionOrder.slice(-3).join(' → ')}`);
-console.log(`  aggregate spend only — no per-night lines, no misc labels, no hotel links`);
+console.log(`  ${stops.filter(s => s.precise).length}/${stops.length} stops at their real address; the rest fall back to the town centre`);
+console.log(`  publishes stop names, hotel links and per-stop spend — misc labels stay out`);
