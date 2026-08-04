@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>The Great India Ride — 93 nights, one motorcycle</title>
-<meta name="description" content="Kanyakumari to Ladakh to the Arunachal border and home again. 93 nights, 31 regions, 222 clips, told in the order it happened.">
+<title>The Great India Ride: 100 days, 18,000 km</title>
+<meta name="description" content="100 days, 18,000 km, one motorcycle. Trivandrum to Kanyakumari, up to Ladakh, across to the Arunachal border and home again, told in the order it happened.">
 <meta name="color-scheme" content="light">
 <link rel="icon" type="image/png" href="favicon.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -99,7 +99,7 @@ button { font: inherit; color: inherit; }
 .eyebrow { color: var(--color-accent-700); }
 
 .stats {
-  display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-3);
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-3);
   border-top: var(--rule); padding-top: 10px;
 }
 .stat__n { font-family: var(--font-heading); font-weight: var(--fw-bold); font-size: 24px; line-height: 1; font-variant-numeric: tabular-nums; }
@@ -153,14 +153,14 @@ button { font: inherit; color: inherit; }
 .map__card-stay { font-family: var(--font-heading); font-weight: var(--fw-bold); font-size: 14px; line-height: 1.2; }
 .map__card-meta { font-size: 11px; color: var(--color-neutral-700); font-variant-numeric: tabular-nums; margin-top: 1px; }
 .map__card-acts { display: flex; gap: var(--space-2); margin-top: 6px; }
-.map__card-link, .map__card-jump {
+.map__card-link {
   font-family: var(--font-heading); font-weight: var(--fw-bold);
   font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
   padding: 3px 7px; cursor: pointer; text-decoration: none;
   border: 1px solid var(--color-divider); background: var(--color-bg); color: var(--color-text);
 }
 .map__card-link[hidden] { display: none; }
-.map__card-link:hover, .map__card-jump:hover { border-color: var(--color-text); }
+.map__card-link:hover { border-color: var(--color-text); }
 
 .map__toggle {
   position: absolute; right: 0; top: 0; z-index: 2;
@@ -345,6 +345,8 @@ button { font: inherit; color: inherit; }
   .pane__brand { padding-top: 0; }
   .pane__head { padding: 20px 0 0; }
   .pane__head h1 { font-size: 38px; line-height: 1; letter-spacing: -0.02em; margin: 10px 0 12px; }
+  /* Four across fits the 460px pane: 18,000 at 24px bold is about 80px wide. */
+  .stats { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .hero__blurb { display: none; }              /* the pane is tight; the legs carry the story */
   .mapsection { flex: 1; min-height: 0; margin-top: 0; border-top: 0; padding-top: 16px; }
   .mapsection__head { display: none; }
@@ -408,8 +410,11 @@ button { font: inherit; color: inherit; }
       <p class="kicker eyebrow">JAN – APR 2025 · ONE MOTORCYCLE</p>
       <h1>The Great India Ride</h1>
       <p class="hero__blurb">Home in Trivandrum to Kanyakumari, up to Ladakh, across to the Arunachal border, and back down the east coast, told in the order it happened.</p>
+      <!-- Days and kilometres are the ride's own banner figures, given by the rider;
+           regions and clips are counted from the manifest. -->
       <div class="stats">
-        <div><div class="stat__n">93</div><div class="stat__l">Nights</div></div>
+        <div><div class="stat__n">100</div><div class="stat__l">Days</div></div>
+        <div><div class="stat__n">18,000</div><div class="stat__l">km</div></div>
         <div><div class="stat__n" id="stat-regions">…</div><div class="stat__l">Regions</div></div>
         <div><div class="stat__n" id="stat-clips">…</div><div class="stat__l">Clips</div></div>
       </div>
@@ -429,7 +434,6 @@ button { font: inherit; color: inherit; }
           <div class="map__card-place" id="map-card-place"></div>
           <ul class="map__card-list" id="map-card-list"></ul>
           <div class="map__card-acts">
-            <button type="button" class="map__card-jump" id="map-card-jump">See the clips →</button>
           </div>
         </div>
       </div>
@@ -446,7 +450,7 @@ button { font: inherit; color: inherit; }
     </p>
 
     <section class="close" id="close" hidden>
-      <h2>93 nights.<br>One motorcycle.</h2>
+      <h2>100 days.<br>One motorcycle.</h2>
       <p>Every clip above is served straight from this host, CORS enabled, with a machine-readable manifest.</p>
       <a href="https://www.instagram.com/thegreatindiaride/" target="_blank" rel="noopener">THE RIDE ON INSTAGRAM ↗</a>
     </section>
@@ -541,7 +545,6 @@ button { font: inherit; color: inherit; }
     cardX: document.getElementById('map-card-x'),
     cardPlace: document.getElementById('map-card-place'),
     cardList: document.getElementById('map-card-list'),
-    cardJump: document.getElementById('map-card-jump'),
     lb: document.getElementById('lb'),
     lbTitle: document.getElementById('lb-title'),
     lbCount: document.getElementById('lb-count'),
@@ -958,7 +961,6 @@ button { font: inherit; color: inherit; }
   var mapPlaced = [];    // every stop, projected, in travel order — this draws the line
   var mapClusters = [];  // stops merged by pixel proximity — these are the markers
   var selStop = -1;      // which cluster's card is open
-  var cardIdx = -1;      // region block that card jumps to
 
   var rupee = function (n) { return '₹' + Math.round(n).toLocaleString('en-IN'); };
 
@@ -1032,7 +1034,6 @@ button { font: inherit; color: inherit; }
     var c = mapClusters[i];
     if (!c) return;
     selStop = i;
-    cardIdx = c.idx;
 
     // Distinct place names in the cluster: usually one, but Mussoorie and Dehradun are
     // 20km apart, which is under two pixels at this scale.
@@ -1073,12 +1074,10 @@ button { font: inherit; color: inherit; }
       el.cardList.appendChild(li);
     });
 
-    // Clicking a stop scrolls straight there — the card is the detail, not a
-    // second step. The Jump button stays for keyboard users and for re-jumping
-    // after the page has scrolled away.
+    // Clicking a stop scrolls straight there; the card is the detail, not a second
+    // step. There was a "See the clips" button under it, which only repeated the
+    // scroll that had already happened.
     if (c.idx >= 0) jump(c.idx);
-
-    el.cardJump.hidden = c.idx < 0;
     // The card is about a third of the map's height; anything below ~two thirds down
     // would end up underneath it.
     el.card.dataset.pos = c.y > 300 ? 'top' : 'bottom';
@@ -1390,7 +1389,6 @@ button { font: inherit; color: inherit; }
     });
 
     el.cardX.addEventListener('click', hideStop);
-    el.cardJump.addEventListener('click', function () { if (cardIdx >= 0) jump(cardIdx); });
   }).catch(function (err) {
     el.loading.remove();
     el.error.hidden = false;
