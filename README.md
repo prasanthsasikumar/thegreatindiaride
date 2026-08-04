@@ -92,12 +92,47 @@ expires after 4 days.
 
 ## The journey page
 
-`journey.html` tells the ride as a story: one chapter per region **in travel order**,
-with the stops, nights, dates, clips and a route map drawn from the stop coordinates.
-`index.html` stays the utility view for grabbing assets. Both read the same
-`manifest.json`.
+`journey.html` tells the ride as a story. It implements two designs from the
+"Great India Ride redesign" project (Claude Design `1e0800a2`), on one DOM:
 
-Route data comes from the trip spreadsheet:
+- **≥900px — Desktop A, Atlas Split.** A 460px sticky pane holds the brand, title,
+  stats and the route map; the right column runs the legs, every region expanded.
+- **<900px — Journey.** Single column, a sticky strip of region chips, and regions
+  as accordions that expand into a 3-up grid.
+
+Both use the `modernist` design system: Archivo throughout, #f3f2f2 paper, #201e1d
+ink, #ec3013 accent, square corners, grayscale video thumbnails.
+
+Clips are grouped into five narrative legs (Out of Trivandrum, Up the west coast,
+Into the Himalaya, Across the Northeast, Down the east coast home), then by region
+inside each leg.
+
+### Why reels are attached by region, not by date
+
+The design's data layer groups everything by timestamp. That works for stories, which
+are posted the same day — but **all 41 reels carry an upload time**, and they lag
+capture by hours to weeks. Grouping them by their own date scattered Punjab and
+Chandigarh into "Across the Northeast".
+
+So legs and region blocks are built from stories, and each reel is attached to the
+block for its own region. Only four regions appear in two legs; those pick the nearest
+block by date. Three regions have reels but no stories (Goa, Daman, Puducherry) and get
+their own block. All 222 clips appear, none of them in the wrong leg.
+
+For the same reason, leg and region **date labels** are computed from stories only —
+letting reel dates set the range made "Into the Himalaya" read 1 Feb – 15 Mar when the
+leg ends on 1 Mar.
+
+### The map
+
+The design fetched d3, topojson-client and a world-atlas TopoJSON from CDNs at runtime.
+This reuses `basemap.json` instead — the same Natural Earth outlines, baked in at 20KB
+by `build-basemap.cjs`, with a hand-rolled Mercator fit to India. Same drawing, no
+external requests, works offline.
+
+Region centroids come from the design's `india-map.js`.
+
+Route data (region order, legs, nights, stop names) comes from the trip spreadsheet:
 
 ```
 node build-route.cjs "/path/to/Pan India Trip  - Trip expenses.csv"
@@ -105,30 +140,17 @@ node generate-manifest.cjs
 ```
 
 `build-route.cjs` treats each row as one night in travel order — the only exact record
-of the route, since GPS drifts and upload times lag. It writes `route.json` with the
-region order, legs, stop names and town-centre coordinates.
-
-Two adjustments live at the top of that script:
+of the route, since GPS drifts and upload times lag. Two adjustments live at the top of
+that script:
 
 - `SKIP_NIGHTS` drops rows that aren't on the motorcycle route. Row 71 (TVM) is the
-  flight home mid-trip — out of Guwahati, on to Singapore, back to Guwahati. Leaving it
-  in dropped a phantom Kerala chapter into the middle of the northeast.
-- `ORIGIN` prepends home (Trivandrum) to the drawn path. The ride started and finished
-  at the same front door, but the sheet only records nights that were paid for, so the
-  first row is Kanyakumari. The origin is added to the map line only — not to legs,
-  nights or region order, since Kerala already closes the story as the homecoming.
-
-The map is drawn from `basemap.json` — Natural Earth coastlines, simplified and baked
-in by `build-basemap.cjs` (20KB). No tile provider, so no external request on page view
-for a map that never pans or zooms.
+  flight home mid-trip — out of Guwahati, on to Singapore, back to Guwahati.
+- `ORIGIN` prepends home (Trivandrum) to the drawn path, since the ride started and
+  finished at the same front door but the sheet only records paid nights.
 
 **Privacy:** `route.json` carries only region-level spend aggregates and the trip
 total. It never includes per-night lines, the `Misc_label` column (medical, fines,
 theft) or the `Accomodation Link` column. Keep the CSV outside the repo.
-
-Regions ridden through more than once (Assam five times, Kerala twice via the flight
-home) collapse into a single chapter, which is labelled with a visit count so the date
-range doesn't look like a mistake.
 
 ## Local Development
 
