@@ -1,0 +1,478 @@
+{
+  "Kanyakumari": {
+    "state": "Tamil Nadu",
+    "country": "India",
+    "lat": 8.079252,
+    "lon": 77.5499338,
+    "query": "Kanyakumari"
+  },
+  "Rameshwaram": {
+    "state": "Tamil Nadu",
+    "country": "India",
+    "lat": 9.2844657,
+    "lon": 79.3125553,
+    "query": "Rameswaram"
+  },
+  "Thanjavur": {
+    "state": "Tamil Nadu",
+    "country": "India",
+    "lat": 10.659037,
+    "lon": 79.2014278,
+    "query": "Thanjavur"
+  },
+  "Puducherry": {
+    "state": "Puducherry",
+    "country": "India",
+    "lat": 10.9156489,
+    "lon": 79.8069488,
+    "query": "Puducherry"
+  },
+  "Banglore*2": {
+    "state": "Karnataka",
+    "country": "India",
+    "lat": 12.9767936,
+    "lon": 77.590082,
+    "query": "Bangalore"
+  },
+  "Chitradurga": {
+    "state": "Karnataka",
+    "country": "India",
+    "lat": 14.3049174,
+    "lon": 76.5296667,
+    "query": "Chitradurga"
+  },
+  "Gokarna": {
+    "state": "Karnataka",
+    "country": "India",
+    "lat": 14.5439629,
+    "lon": 74.3184418,
+    "query": "Gokarna"
+  },
+  "Goa": {
+    "state": "Goa",
+    "country": "India",
+    "lat": 15.3004543,
+    "lon": 74.0855134,
+    "query": "Goa"
+  },
+  "Devrukh": {
+    "state": "Maharashtra",
+    "country": "India",
+    "lat": 17.0638489,
+    "lon": 73.6208971,
+    "query": "Devrukh, Maharashtra"
+  },
+  "Mumbai": {
+    "state": "Maharashtra",
+    "country": "India",
+    "lat": 19.054999,
+    "lon": 72.8692035,
+    "query": "Mumbai"
+  },
+  "Daman": {
+    "state": "Dadra and Nagar Haveli and Daman and Diu",
+    "country": "India",
+    "lat": 20.4169701,
+    "lon": 72.833173,
+    "query": "Daman, India"
+  },
+  "Surat": {
+    "state": "Gujarat",
+    "country": "India",
+    "lat": 21.2094892,
+    "lon": 72.8317058,
+    "query": "Surat"
+  },
+  "Bhavnagar": {
+    "state": "Gujarat",
+    "country": "India",
+    "lat": 21.7718836,
+    "lon": 72.1416449,
+    "query": "Bhavnagar"
+  },
+  "Rajkot": {
+    "state": "Gujarat",
+    "country": "India",
+    "lat": 22.3053263,
+    "lon": 70.8028377,
+    "query": "Rajkot"
+  },
+  "Bhuj": {
+    "state": "Gujarat",
+    "country": "India",
+    "lat": 23.2472446,
+    "lon": 69.668339,
+    "query": "Bhuj"
+  },
+  "N.sarovar": {
+    "state": "Gujarat",
+    "country": "India",
+    "lat": 23.6735553,
+    "lon": 68.5394695,
+    "query": "Narayan Sarovar, Gujarat"
+  },
+  "Dhordo": {
+    "state": "Gujarat",
+    "country": "India",
+    "lat": 23.7584931,
+    "lon": 69.5105632,
+    "query": "Dhordo, Gujarat"
+  },
+  "Palanpur": {
+    "state": "Gujarat",
+    "country": "India",
+    "lat": 24.1709794,
+    "lon": 72.4366375,
+    "query": "Palanpur"
+  },
+  "Udaipur": {
+    "state": "Rajasthan",
+    "country": "India",
+    "lat": 24.578721,
+    "lon": 73.6862571,
+    "query": "Udaipur"
+  },
+  "Jaipur": {
+    "state": "Rajasthan",
+    "country": "India",
+    "lat": 26.9154576,
+    "lon": 75.8189817,
+    "query": "Jaipur"
+  },
+  "Delhi": {
+    "state": "Delhi",
+    "country": "India",
+    "lat": 28.6328027,
+    "lon": 77.2197713,
+    "query": "Delhi"
+  },
+  "Rishikesh": {
+    "state": "Uttarakhand",
+    "country": "India",
+    "lat": 30.1086537,
+    "lon": 78.2916193,
+    "query": "Rishikesh"
+  },
+  "Mussoorie": {
+    "state": "Uttarakhand",
+    "country": "India",
+    "lat": 30.4569012,
+    "lon": 78.0782906,
+    "query": "Mussoorie"
+  },
+  "Dehradun": {
+    "state": "Uttarakhand",
+    "country": "India",
+    "lat": 30.3255646,
+    "lon": 78.0436813,
+    "query": "Dehradun"
+  },
+  "Shimla": {
+    "state": "Himachal Pradesh",
+    "country": "India",
+    "lat": 31.1040393,
+    "lon": 77.1707923,
+    "query": "Shimla"
+  },
+  "dharamshala": {
+    "state": "Himachal Pradesh",
+    "country": "India",
+    "lat": 32.2143039,
+    "lon": 76.3196717,
+    "query": "Dharamshala"
+  },
+  "Triund": {
+    "state": "Himachal Pradesh",
+    "country": "India",
+    "lat": 32.7287809,
+    "lon": 75.9909864,
+    "query": "Triund, Himachal Pradesh"
+  },
+  "Jammu": {
+    "state": "Jammu and Kashmir",
+    "country": "India",
+    "lat": 32.7185614,
+    "lon": 74.8580917,
+    "query": "Jammu"
+  },
+  "Amritsar": {
+    "state": "Punjab",
+    "country": "India",
+    "lat": 31.6356659,
+    "lon": 74.8787496,
+    "query": "Amritsar"
+  },
+  "Chandigarh": {
+    "state": "Chandigarh",
+    "country": "India",
+    "lat": 30.7334421,
+    "lon": 76.7797143,
+    "query": "Chandigarh"
+  },
+  "Kurukshetra": {
+    "state": "Haryana",
+    "country": "India",
+    "lat": 29.9693747,
+    "lon": 76.8482787,
+    "query": "Kurukshetra"
+  },
+  "Gwalior": {
+    "state": "Madhya Pradesh",
+    "country": "India",
+    "lat": 26.2037247,
+    "lon": 78.1573628,
+    "query": "Gwalior"
+  },
+  "Lucknow": {
+    "state": "Uttar Pradesh",
+    "country": "India",
+    "lat": 26.8381,
+    "lon": 80.9346001,
+    "query": "Lucknow"
+  },
+  "Varanasi": {
+    "state": "Uttar Pradesh",
+    "country": "India",
+    "lat": 25.3356491,
+    "lon": 83.0076292,
+    "query": "Varanasi"
+  },
+  "Lumbini": {
+    "state": "Nepal",
+    "country": "Nepal",
+    "lat": 27.980713,
+    "lon": 82.9531851,
+    "query": "Lumbini, Nepal"
+  },
+  "Pokhara": {
+    "state": "Nepal",
+    "country": "Nepal",
+    "lat": 28.209538,
+    "lon": 83.991402,
+    "query": "Pokhara, Nepal"
+  },
+  "Kathmandu": {
+    "state": "Nepal",
+    "country": "Nepal",
+    "lat": 27.708317,
+    "lon": 85.3205817,
+    "query": "Kathmandu, Nepal"
+  },
+  "Janakpur": {
+    "state": "Nepal",
+    "country": "Nepal",
+    "lat": 26.7284541,
+    "lon": 85.9249005,
+    "query": "Janakpur, Nepal"
+  },
+  "Siliguri": {
+    "state": "West Bengal",
+    "country": "India",
+    "lat": 26.7164127,
+    "lon": 88.4309916,
+    "query": "Siliguri"
+  },
+  "Buddha Park": {
+    "state": "Sikkim",
+    "country": "India",
+    "lat": 27.3116732,
+    "lon": 88.3635699,
+    "query": "Buddha Park, Ravangla, Sikkim"
+  },
+  "Jaigaon": {
+    "state": "West Bengal",
+    "country": "India",
+    "lat": 26.854859,
+    "lon": 89.3767318,
+    "query": "Jaigaon, West Bengal"
+  },
+  "Guwahati": {
+    "state": "Assam",
+    "country": "India",
+    "lat": 26.1805978,
+    "lon": 91.753943,
+    "query": "Guwahati"
+  },
+  "Bomdila": {
+    "state": "Arunachal Pradesh",
+    "country": "India",
+    "lat": 27.264445,
+    "lon": 92.4206519,
+    "query": "Bomdila"
+  },
+  "Brokpublang": {
+    "state": "Arunachal Pradesh",
+    "country": "India",
+    "lat": 27.36008,
+    "lon": 92.24121,
+    "query": "Dirang, Arunachal Pradesh"
+  },
+  "Shillong": {
+    "state": "Meghalaya",
+    "country": "India",
+    "lat": 25.5759931,
+    "lon": 91.8827872,
+    "query": "Shillong"
+  },
+  "Dawki": {
+    "state": "Meghalaya",
+    "country": "India",
+    "lat": 25.1856343,
+    "lon": 92.0215717,
+    "query": "Dawki, Meghalaya"
+  },
+  "TVM": {
+    "state": "Kerala",
+    "country": "India",
+    "lat": 8.4882267,
+    "lon": 76.947551,
+    "query": "Thiruvananthapuram"
+  },
+  "Dimapur": {
+    "state": "Nagaland",
+    "country": "India",
+    "lat": 25.9041378,
+    "lon": 93.7177609,
+    "query": "Dimapur"
+  },
+  "Kohima": {
+    "state": "Nagaland",
+    "country": "India",
+    "lat": 25.6618755,
+    "lon": 94.1019156,
+    "query": "Kohima"
+  },
+  "Mokochung": {
+    "state": "Nagaland",
+    "country": "India",
+    "lat": 26.4795861,
+    "lon": 94.5105275,
+    "query": "Mokokchung"
+  },
+  "Sonari": {
+    "state": "Assam",
+    "country": "India",
+    "lat": 27.0557101,
+    "lon": 95.120299,
+    "query": "Sonari, Assam"
+  },
+  "Chongkham": {
+    "state": "Arunachal Pradesh",
+    "country": "India",
+    "lat": 27.8099085,
+    "lon": 96.0842123,
+    "query": "Chowkham, Arunachal Pradesh"
+  },
+  "Dibrugargh": {
+    "state": "Assam",
+    "country": "India",
+    "lat": 27.4844597,
+    "lon": 94.9019447,
+    "query": "Dibrugarh"
+  },
+  "Kolkata": {
+    "state": "West Bengal",
+    "country": "India",
+    "lat": 22.5726459,
+    "lon": 88.3638953,
+    "query": "Kolkata"
+  },
+  "Jamshedpur": {
+    "state": "Jharkhand",
+    "country": "India",
+    "lat": 22.8015194,
+    "lon": 86.2029579,
+    "query": "Jamshedpur"
+  },
+  "Cuttack": {
+    "state": "Odisha",
+    "country": "India",
+    "lat": 20.4686,
+    "lon": 85.8792,
+    "query": "Cuttack"
+  },
+  "Puri": {
+    "state": "Odisha",
+    "country": "India",
+    "lat": 19.8076083,
+    "lon": 85.8252538,
+    "query": "Puri"
+  },
+  "Brahmapur": {
+    "state": "Odisha",
+    "country": "India",
+    "lat": 19.3098134,
+    "lon": 84.7971562,
+    "query": "Brahmapur"
+  },
+  "Vishakapatanam": {
+    "state": "Andhra Pradesh",
+    "country": "India",
+    "lat": 17.6935526,
+    "lon": 83.2921297,
+    "query": "Visakhapatnam"
+  },
+  "Vijayawada": {
+    "state": "Andhra Pradesh",
+    "country": "India",
+    "lat": 16.5115306,
+    "lon": 80.6160469,
+    "query": "Vijayawada"
+  },
+  "Hyderabad": {
+    "state": "Telangana",
+    "country": "India",
+    "lat": 17.360589,
+    "lon": 78.4740613,
+    "query": "Hyderabad"
+  },
+  "Kurnool": {
+    "state": "Andhra Pradesh",
+    "country": "India",
+    "lat": 15.8309251,
+    "lon": 78.0425373,
+    "query": "Kurnool"
+  },
+  "Banglore": {
+    "state": "Karnataka",
+    "country": "India",
+    "lat": 12.9767936,
+    "lon": 77.590082,
+    "query": "Bangalore"
+  },
+  "Coimbatore": {
+    "state": "Tamil Nadu",
+    "country": "India",
+    "lat": 11.0018115,
+    "lon": 76.9628425,
+    "query": "Coimbatore"
+  },
+  "Allapuzha": {
+    "state": "Kerala",
+    "country": "India",
+    "lat": 9.5003416,
+    "lon": 76.4123364,
+    "query": "Alappuzha"
+  },
+  "Trivandrum": {
+    "state": "Kerala",
+    "country": "India",
+    "lat": 8.4882267,
+    "lon": 76.947551,
+    "query": "Trivandrum"
+  },
+  "South Mumbai": {
+    "state": "Maharashtra",
+    "country": "India",
+    "lat": 18.9752099,
+    "lon": 72.8239654,
+    "query": "South Mumbai, Maharashtra, India"
+  },
+  "Tawang": {
+    "state": "Arunachal Pradesh",
+    "country": "India",
+    "lat": 27.5879186,
+    "lon": 91.863733,
+    "query": "Tawang, Arunachal Pradesh, India"
+  }
+}

@@ -10,3 +10,10 @@ __pycache__/
 
 # Local Netlify folder
 .netlify
+
+# Local design-tool bookkeeping (publish = "." would otherwise serve it)
+.hallmark/
+
+# Reverse-geocode cache. Holds ~1km coordinates, i.e. a movement trail — and
+# publish = "." would serve it. tags.json carries the coarse state names instead.
+.geocache.json

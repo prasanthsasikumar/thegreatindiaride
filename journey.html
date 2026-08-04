@@ -1,0 +1,1197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Great India Ride — the whole route, in order</title>
+<meta name="description" content="93 nights, 31 regions, 222 clips. The Great India Ride told in travel order — out of Trivandrum, down to Kanyakumari, up to Ladakh and Arunachal, and home again.">
+<meta name="color-scheme" content="light">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%230a1628'/><path d='M13 10.5l9 5.5-9 5.5z' fill='%232dd4bf'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Public+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Hallmark · macrostructure: Long Document · tone: editorial · anchor hue: teal (cool)
+ * theme: studied-DNA — inherits the 15a media-library system so the two pages read as
+ *        one site; the shape is different because the job is (story, not tool).
+ * paper: #fafbfc · ink: #10233b · accent: #2dd4bf · display: Space Grotesk · body: Public Sans
+ * pre-emit critique: P5 H5 E4 S5 R4 V5
+ */
+
+:root {
+  --color-paper:          #fafbfc;
+  --color-surface:        #ffffff;
+  --color-surface-sunken: #eef2f6;
+  --color-ink:            #10233b;
+  --color-ink-soft:       #33415c;
+  --color-muted:          #64748b;
+  --color-line:           #e2e8f0;
+  --color-line-dashed:    #cbd5e1;
+
+  --color-navy-1:         #0a1628;
+  --color-navy-2:         #0e2846;
+  --color-navy-3:         #0f3a5c;
+  --color-navy-4:         #10516b;
+  --color-on-navy:        #ffffff;
+  --color-on-navy-dim:    rgba(255, 255, 255, 0.9);
+  --color-on-navy-faint:  rgba(255, 255, 255, 0.68);
+  --color-navy-card:      rgba(255, 255, 255, 0.07);
+  --color-navy-card-line: rgba(255, 255, 255, 0.18);
+  --color-navy-glow:      rgba(45, 212, 191, 0.12);
+
+  --color-accent:         #2dd4bf;
+  --color-accent-deep:    #0d9488;
+  --color-accent-alt:     #f0abfc;
+  --color-chip:           rgba(10, 18, 32, 0.8);
+  --color-scrim:          rgba(6, 16, 30, 0.92);
+  --color-backdrop:       rgba(6, 16, 30, 0.88);
+
+  --font-display: 'Space Grotesk', 'Segoe UI', system-ui, sans-serif;
+  --font-body:    'Public Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --font-mono:    'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --text-2xs: 10px; --text-xs: 11px; --text-sm: 12px; --text-md: 13px;
+  --text-base: 15px; --text-lg: 17px; --text-xl: 22px;
+  --text-chapter: clamp(30px, 5.5vw, 52px);
+  --text-hero:    clamp(34px, 7vw, 68px);
+
+  --space-2xs: 4px; --space-xs: 8px; --space-sm: 12px; --space-md: 16px;
+  --space-lg: 24px; --space-xl: 40px; --space-2xl: 64px; --space-3xl: 96px;
+  --pad-x: clamp(20px, 5.6vw, 72px);
+
+  --radius-sm: 4px; --radius-md: 10px; --radius-lg: 14px; --radius-pill: 999px;
+  --shadow-card: 0 2px 10px rgba(16, 35, 59, 0.10);
+  --shadow-lift: 0 12px 30px rgba(16, 35, 59, 0.20);
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-fast: 120ms; --dur-base: 220ms; --dur-slow: 420ms;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; overflow-x: clip; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 { margin: 0; font-family: var(--font-display); font-style: normal; overflow-wrap: anywhere; min-width: 0; }
+button { font: inherit; color: inherit; }
+a { color: inherit; }
+
+:where(a, button, select, [tabindex]):focus-visible {
+  outline: 2px solid var(--color-accent-deep);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+.on-navy :where(a, button):focus-visible { outline-color: var(--color-accent); }
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; border: 0;
+}
+
+/* ---------- hero ---------- */
+.hero {
+  position: relative;
+  color: var(--color-on-navy);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 94%);
+  isolation: isolate;
+  padding-bottom: var(--space-2xl);
+}
+
+.hero::before, .hero::after { content: ''; position: absolute; inset: 0; z-index: -1; }
+.hero::before {
+  background: linear-gradient(115deg, var(--color-navy-1) 0%, var(--color-navy-2) 45%,
+              var(--color-navy-3) 75%, var(--color-navy-4) 100%);
+}
+.hero::after { background: radial-gradient(700px 340px at 82% 68%, var(--color-navy-glow), transparent 70%); }
+
+.hero__bar {
+  display: flex; justify-content: space-between; align-items: center;
+  gap: var(--space-sm); flex-wrap: wrap; padding: var(--space-lg) var(--pad-x);
+}
+
+.wordmark { font-weight: 700; font-size: var(--text-lg); }
+.wordmark span { opacity: 0.6; font-weight: 400; }
+
+.to-library {
+  font-family: var(--font-mono); font-size: var(--text-xs);
+  color: var(--color-accent); border: 1px solid rgba(45, 212, 191, 0.4);
+  border-radius: var(--radius-pill); padding: var(--space-2xs) var(--space-sm);
+  text-decoration: none; white-space: nowrap;
+  transition: background var(--dur-base) var(--ease-out);
+}
+.to-library:hover { background: rgba(45, 212, 191, 0.12); }
+
+.hero__body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 420px);
+  gap: var(--space-xl);
+  align-items: center;
+  padding: var(--space-md) var(--pad-x) 0;
+}
+
+.eyebrow {
+  margin: 0; font-size: var(--text-sm); letter-spacing: 0.18em;
+  font-weight: 700; color: var(--color-accent);
+}
+
+.hero h1 {
+  font-size: var(--text-hero); font-weight: 700; line-height: 1.02;
+  margin-top: var(--space-sm); letter-spacing: -0.02em;
+}
+
+.hero__blurb {
+  font-size: var(--text-lg); line-height: 1.6; margin: var(--space-md) 0 0;
+  color: var(--color-on-navy-dim); max-width: 46ch;
+}
+
+.facts {
+  display: flex; flex-wrap: wrap; gap: var(--space-lg);
+  margin-top: var(--space-lg);
+}
+
+.fact__n {
+  font-family: var(--font-display); font-size: var(--text-xl);
+  font-weight: 700; color: var(--color-accent); line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+
+.fact__label {
+  font-size: var(--text-xs); letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--color-on-navy-faint);
+}
+
+/* ---------- route map ---------- */
+/* Must clip: the basemap rings extend past the viewBox on every side, and an SVG
+   with overflow:visible would paint China across the article text. */
+.routemap {
+  width: 100%; height: auto; display: block;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+}
+
+/* Real coastlines, baked from Natural Earth — no tile provider, no network. */
+.routemap .land { fill: #dfe6ee; stroke: #c6d2de; stroke-width: 0.4; }
+.routemap .land--primary { fill: #ccd8e4; stroke: #b3c3d3; }
+.routemap .sea { fill: #eef3f8; }
+
+.routemap .leg {
+  fill: none; stroke-width: 1.5; stroke-linejoin: round; stroke-linecap: round;
+  stroke: #a9b8c9;
+  transition: stroke var(--dur-base) var(--ease-out), stroke-width var(--dur-base) var(--ease-out);
+}
+.routemap .leg[data-phase="past"]   { stroke: var(--color-accent-deep); stroke-width: 1.7; }
+.routemap .leg[data-phase="active"] { stroke: var(--color-ink); stroke-width: 3; }
+
+.routemap .stop { fill: #9fb0c2; transition: fill var(--dur-base) var(--ease-out); }
+.routemap .stop[data-phase="past"]   { fill: var(--color-accent-deep); }
+.routemap .stop[data-phase="active"] { fill: var(--color-ink); }
+
+.routemap .here { fill: var(--color-ink); stroke: #fff; stroke-width: 1.6; }
+.routemap .here-halo { fill: var(--color-accent); opacity: 0.35; }
+.routemap .homecap { fill: none; stroke: var(--color-ink); stroke-width: 1.4; }
+.routemap .maplabel { fill: var(--color-muted); font-family: var(--font-mono); font-size: 7px; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .routemap .here-halo { animation: halo 2.4s var(--ease-out) infinite; transform-origin: center; }
+  @keyframes halo { 0%, 100% { opacity: 0.35; } 50% { opacity: 0.08; } }
+}
+
+/* ---------- layout: sticky map beside the chapters ---------- */
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 300px) minmax(0, 1fr);
+  gap: var(--space-xl);
+  align-items: start;
+  padding: 0 var(--pad-x);
+}
+
+.mapbar {
+  position: sticky;
+  top: 52px;
+  align-self: start;
+  padding-top: var(--space-2xl);
+}
+
+.mapbar__frame {
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-lg);
+  padding: var(--space-sm);
+  box-shadow: var(--shadow-card);
+}
+
+.mapbar__now {
+  margin-top: var(--space-sm);
+  padding-top: var(--space-sm);
+  border-top: 1px solid var(--color-line);
+}
+
+.mapbar__region {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.mapbar__stops {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-muted);
+  margin-top: 2px;
+  line-height: 1.5;
+}
+
+.mapbar__progress {
+  display: flex; align-items: baseline; gap: var(--space-xs);
+  margin-top: var(--space-xs);
+  font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-muted);
+}
+
+.mapbar__bar {
+  flex: 1; height: 3px; border-radius: 2px; background: var(--color-line);
+  overflow: hidden;
+}
+.mapbar__bar span {
+  display: block; height: 100%; background: var(--color-accent-deep);
+  transition: width var(--dur-slow) var(--ease-out);
+}
+
+/* ---------- chapter rail ---------- */
+.rail {
+  position: sticky; top: 0; z-index: 40;
+  background: rgba(250, 251, 252, 0.94);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--color-line);
+  padding: var(--space-xs) var(--pad-x);
+  display: flex; gap: var(--space-2xs); align-items: center;
+  overflow-x: auto; scrollbar-width: thin;
+}
+
+.rail__link {
+  flex: 0 0 auto;
+  font-family: var(--font-mono); font-size: var(--text-xs);
+  color: var(--color-muted); text-decoration: none;
+  padding: 5px var(--space-xs); border-radius: var(--radius-pill);
+  white-space: nowrap;
+  transition: background var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+}
+.rail__link:hover { background: var(--color-surface-sunken); color: var(--color-ink); }
+.rail__link[aria-current="true"] { background: var(--color-ink); color: var(--color-on-navy); }
+
+/* ---------- chapters ---------- */
+.chapters { padding: var(--space-2xl) 0 var(--space-3xl); min-width: 0; }
+
+.chapter { padding-block: var(--space-2xl); scroll-margin-top: 64px; }
+.chapter + .chapter { border-top: 1px solid var(--color-line); }
+
+.chapter__head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 300px);
+  gap: var(--space-xl);
+  align-items: end;
+  margin-bottom: var(--space-lg);
+}
+
+.chapter__index {
+  font-family: var(--font-mono); font-size: var(--text-sm);
+  color: var(--color-accent-deep); letter-spacing: 0.1em;
+}
+
+.chapter h2 {
+  font-size: var(--text-chapter); font-weight: 700;
+  line-height: 1.05; letter-spacing: -0.02em; margin-top: var(--space-2xs);
+}
+
+.chapter__country {
+  font-size: var(--text-sm); letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--color-accent-deep); font-weight: 600;
+}
+
+.chapter__stops {
+  font-family: var(--font-mono); font-size: var(--text-md);
+  color: var(--color-muted); margin-top: var(--space-sm);
+  line-height: 1.7;
+}
+
+.chapter__meta {
+  display: flex; flex-wrap: wrap; gap: var(--space-md) var(--space-lg);
+  padding: var(--space-sm) 0;
+  border-top: 1px solid var(--color-line);
+}
+
+.meta__n {
+  font-family: var(--font-display); font-size: var(--text-lg);
+  font-weight: 700; line-height: 1.2; font-variant-numeric: tabular-nums;
+}
+.meta__label {
+  font-size: var(--text-xs); letter-spacing: 0.09em; text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+/* ---------- media strip ---------- */
+.strip {
+  display: grid;
+  grid-auto-flow: column;
+  /* Fixed width, never 1fr: a chapter with one clip would otherwise stretch that
+     clip to the full container and, at 9:16, make it ~1900px tall. */
+  grid-auto-columns: clamp(150px, 15vw, 210px);
+  justify-content: start;
+  gap: var(--space-sm);
+  overflow-x: auto;
+  padding-bottom: var(--space-sm);
+  scroll-snap-type: x proximity;
+  scrollbar-width: thin;
+}
+
+.clip {
+  position: relative; display: block; width: 100%; aspect-ratio: 9 / 16;
+  padding: 0; border: 0; border-radius: var(--radius-md); overflow: hidden;
+  background: var(--color-surface-sunken); box-shadow: var(--shadow-card);
+  cursor: pointer; scroll-snap-align: start;
+  transition: transform var(--dur-base) var(--ease-out), box-shadow var(--dur-base) var(--ease-out);
+}
+
+.clip:hover, .clip:focus-visible { transform: translateY(-4px); box-shadow: var(--shadow-lift); }
+.clip:active { transform: translateY(0); }
+
+.clip img, .clip video {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover; background: var(--color-navy-1);
+}
+
+.clip__badge {
+  position: absolute; top: var(--space-xs); left: var(--space-xs); z-index: 2;
+  background: var(--color-chip); color: var(--color-accent);
+  font-family: var(--font-mono); font-size: 9px; padding: 3px 7px; border-radius: var(--radius-sm);
+}
+.clip__badge[data-cat="reels"] { color: var(--color-accent-alt); }
+
+.clip__day {
+  position: absolute; top: var(--space-xs); right: var(--space-xs); z-index: 2;
+  background: var(--color-chip); color: var(--color-on-navy);
+  font-family: var(--font-mono); font-size: 9px; padding: 3px 7px; border-radius: var(--radius-sm);
+}
+
+.clip__play {
+  position: absolute; inset: 0; z-index: 2; display: flex;
+  align-items: center; justify-content: center; pointer-events: none;
+}
+.clip__play span {
+  width: 42px; height: 42px; border-radius: 50%; background: rgba(10, 18, 32, 0.66);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--color-on-navy); font-size: 15px; padding-left: 3px;
+}
+
+.clip__cap {
+  position: absolute; left: 0; right: 0; bottom: 0; z-index: 2;
+  background: linear-gradient(transparent, var(--color-scrim));
+  padding: 30px var(--space-xs) var(--space-xs);
+  color: var(--color-on-navy); font-size: var(--text-sm);
+  line-height: 1.4; text-align: left;
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+}
+
+.chapter__quote {
+  margin: var(--space-lg) 0 0;
+  padding-left: var(--space-md);
+  border-left: 2px solid var(--color-accent);
+  font-size: var(--text-lg);
+  line-height: 1.65;
+  color: var(--color-ink-soft);
+  max-width: 62ch;
+}
+
+.chapter__quote cite {
+  display: block; margin-top: var(--space-xs);
+  font-family: var(--font-mono); font-size: var(--text-xs);
+  color: var(--color-muted); font-style: normal;
+}
+
+/* ---------- outro ---------- */
+.outro {
+  background: var(--color-ink); color: var(--color-on-navy);
+  padding: var(--space-2xl) var(--pad-x);
+  text-align: center;
+}
+.outro h2 { font-size: var(--text-chapter); }
+.outro p { color: var(--color-on-navy-dim); max-width: 56ch; margin: var(--space-md) auto 0; }
+.outro .facts { justify-content: center; }
+
+.outro a.cta {
+  display: inline-block; margin-top: var(--space-lg);
+  background: var(--color-accent); color: var(--color-navy-1);
+  font-weight: 700; text-decoration: none;
+  padding: var(--space-sm) var(--space-lg); border-radius: var(--radius-pill);
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+.outro a.cta:hover { transform: translateY(-2px); }
+
+.credit {
+  padding: var(--space-lg) var(--pad-x) var(--space-2xl);
+  text-align: center; font-size: var(--text-md); color: var(--color-muted);
+}
+
+/* ---------- lightbox ---------- */
+.lightbox {
+  border: 0; padding: 0; max-width: min(1080px, 94vw); max-height: 94vh; width: 100%;
+  background: var(--color-surface); color: var(--color-ink);
+  border-radius: var(--radius-lg); overflow: hidden;
+}
+.lightbox::backdrop { background: var(--color-backdrop); }
+.lightbox[open] { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); }
+
+.lightbox__stage {
+  background: var(--color-navy-1); display: flex; align-items: center;
+  justify-content: center; min-height: 220px; max-height: 94vh; overflow: hidden;
+}
+.lightbox__stage video, .lightbox__stage img {
+  max-width: 100%; max-height: 94vh; width: auto; height: auto; display: block;
+}
+
+.lightbox__side {
+  display: flex; flex-direction: column; gap: var(--space-md);
+  padding: var(--space-lg); overflow-y: auto; max-height: 94vh;
+}
+
+.lightbox__head { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-sm); }
+.lightbox__where { font-family: var(--font-display); font-size: var(--text-xl); font-weight: 700; line-height: 1.2; }
+.lightbox__when { font-family: var(--font-mono); font-size: var(--text-sm); color: var(--color-muted); margin-top: 2px; }
+.lightbox__caption { font-size: var(--text-base); line-height: 1.65; white-space: pre-wrap; overflow-wrap: anywhere; }
+
+.icon-btn {
+  background: none; border: 1px solid var(--color-line); border-radius: var(--radius-sm);
+  width: 30px; height: 30px; flex: 0 0 auto; display: flex; align-items: center;
+  justify-content: center; font-size: var(--text-lg); line-height: 1;
+  color: var(--color-muted); cursor: pointer;
+  transition: border-color var(--dur-base) var(--ease-out), color var(--dur-base) var(--ease-out);
+}
+.icon-btn:hover { border-color: var(--color-ink); color: var(--color-ink); }
+.icon-btn[disabled] { opacity: 0.35; cursor: not-allowed; }
+
+.lightbox__nav {
+  margin-top: auto; padding-top: var(--space-md); border-top: 1px solid var(--color-line);
+  display: flex; gap: var(--space-xs); align-items: center;
+  font-family: var(--font-mono); font-size: var(--text-sm); color: var(--color-muted);
+}
+.lightbox__nav a { margin-left: auto; color: var(--color-accent-deep); font-weight: 600; text-decoration: none; }
+.lightbox__nav a:hover { text-decoration: underline; }
+
+/* ---------- responsive ---------- */
+@media (max-width: 900px) {
+  .hero__body { grid-template-columns: minmax(0, 1fr); }
+  .chapter__head { grid-template-columns: minmax(0, 1fr); align-items: start; }
+  /* A sticky map would eat half a phone screen — show it once, then let it scroll away. */
+  .layout { grid-template-columns: minmax(0, 1fr); gap: var(--space-lg); }
+  .mapbar { position: static; padding-top: var(--space-lg); max-width: 420px; margin-inline: auto; width: 100%; }
+  /* Desktop's generous chapter rhythm reads as dead space on a phone, where the
+     viewport is short enough that 64px of padding pushes the header off screen. */
+  .chapters { padding: var(--space-lg) 0 var(--space-2xl); }
+  .chapter { padding-block: var(--space-lg); }
+  .chapter__head { margin-bottom: var(--space-md); }
+  .hero { padding-bottom: var(--space-lg); }
+  .hero__body { gap: var(--space-md); }
+  .lightbox[open] { grid-template-columns: minmax(0, 1fr); }
+  .lightbox__stage { max-height: 50vh; }
+  .lightbox__stage video, .lightbox__stage img { max-height: 50vh; }
+  .lightbox__side { max-height: none; }
+}
+
+@media (max-width: 560px) {
+  .strip { grid-auto-columns: min(62vw, 200px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important; animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+</style>
+</head>
+<body>
+
+<header class="hero on-navy">
+  <div class="hero__bar">
+    <div class="wordmark">thegreatindiaride<span>.prasanthsasikumar.com</span></div>
+    <a class="to-library" href="index.html">MEDIA LIBRARY →</a>
+  </div>
+
+  <div class="hero__body">
+    <div>
+      <p class="eyebrow">JAN – APR 2025 · ONE MOTORCYCLE</p>
+      <h1>The Great<br>India Ride</h1>
+      <p class="hero__blurb">Home in Trivandrum to Kanyakumari, up to Ladakh, across to the Arunachal border, and back down the east coast — told in the order it happened.</p>
+      <div class="facts" id="hero-facts"></div>
+    </div>
+    <div>
+      <p class="hero__blurb" style="font-size: var(--text-md); opacity: 0.75;">
+        The map keeps pace with whichever chapter you're reading.
+      </p>
+    </div>
+  </div>
+</header>
+
+<nav class="rail" id="rail" aria-label="Jump to a region"></nav>
+
+<div class="layout">
+  <aside class="mapbar" aria-label="Where this chapter sits on the route">
+    <div class="mapbar__frame">
+      <svg class="routemap" id="routemap" viewBox="0 0 300 330" role="img"
+           aria-label="Map of the route across India, Nepal and Bhutan"></svg>
+      <div class="mapbar__now">
+        <div class="mapbar__region" id="map-region">The whole route</div>
+        <div class="mapbar__stops" id="map-stops">Trivandrum → Kanyakumari → back again</div>
+        <div class="mapbar__progress">
+          <span id="map-night"></span>
+          <span class="mapbar__bar"><span id="map-bar" style="width: 0%"></span></span>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="chapters" id="chapters">
+    <p id="loading" style="color: var(--color-muted);">Loading the route…</p>
+  </main>
+</div>
+
+<section class="outro" id="outro" hidden>
+  <h2>Back where it started</h2>
+  <p id="outro-text"></p>
+  <div class="facts" id="outro-facts"></div>
+  <a class="cta" href="index.html">Browse every clip in the media library →</a>
+</section>
+
+<p class="credit">Written from a van, a lab, or a garage — depending on the year.</p>
+
+<dialog class="lightbox" id="lightbox" aria-label="Clip detail">
+  <div class="lightbox__stage" id="lb-stage"></div>
+  <div class="lightbox__side">
+    <div class="lightbox__head">
+      <div>
+        <div class="lightbox__where" id="lb-where"></div>
+        <div class="lightbox__when" id="lb-when"></div>
+      </div>
+      <button type="button" class="icon-btn" id="lb-close" aria-label="Close">×</button>
+    </div>
+    <div class="lightbox__caption" id="lb-caption"></div>
+    <div class="lightbox__nav">
+      <button type="button" class="icon-btn" id="lb-prev" aria-label="Previous clip">‹</button>
+      <button type="button" class="icon-btn" id="lb-next" aria-label="Next clip">›</button>
+      <span id="lb-pos"></span>
+      <a id="lb-raw" target="_blank" rel="noopener">Open raw ↗</a>
+    </div>
+  </div>
+</dialog>
+
+<p class="sr-only" role="status" aria-live="polite" id="live"></p>
+
+<script>
+(function () {
+  'use strict';
+
+  var BADGE = { stories: 'STORY', reels: 'REEL', garage: 'GARAGE', profile: 'PROFILE' };
+  var manifest = null;
+  var basemap = null;
+  var chapters = [];   // [{ region, country, nights, stops, spend, items: [] }]
+  var flat = [];       // every clip, in ride order — the lightbox walks this
+  var pos = -1;
+
+  var el = {
+    chapters: document.getElementById('chapters'),
+    loading: document.getElementById('loading'),
+    rail: document.getElementById('rail'),
+    heroFacts: document.getElementById('hero-facts'),
+    outro: document.getElementById('outro'),
+    outroText: document.getElementById('outro-text'),
+    outroFacts: document.getElementById('outro-facts'),
+    map: document.getElementById('routemap'),
+    mapRegion: document.getElementById('map-region'),
+    mapStops: document.getElementById('map-stops'),
+    mapNight: document.getElementById('map-night'),
+    mapBar: document.getElementById('map-bar'),
+    lb: document.getElementById('lightbox'),
+    lbStage: document.getElementById('lb-stage'),
+    lbWhere: document.getElementById('lb-where'),
+    lbWhen: document.getElementById('lb-when'),
+    lbCaption: document.getElementById('lb-caption'),
+    lbPos: document.getElementById('lb-pos'),
+    lbRaw: document.getElementById('lb-raw'),
+    lbPrev: document.getElementById('lb-prev'),
+    lbNext: document.getElementById('lb-next'),
+    lbClose: document.getElementById('lb-close'),
+    live: document.getElementById('live'),
+  };
+
+  /* ---------- helpers ---------- */
+
+  function isLocal() {
+    var h = window.location.hostname;
+    return window.location.protocol === 'file:' || h === 'localhost' || h === '127.0.0.1' || h === '';
+  }
+  function mediaUrl(path) {
+    if (isLocal() || !manifest || !manifest.baseUrl) return path;
+    return manifest.baseUrl.replace(/\/+$/, '') + '/' + path;
+  }
+  function fmtDate(iso) {
+    var d = new Date(iso);
+    return isNaN(d) ? '' : d.toLocaleDateString(undefined, { day: 'numeric', month: 'short' });
+  }
+  function fmtDateFull(iso) {
+    var d = new Date(iso);
+    return isNaN(d) ? '' : d.toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' });
+  }
+  function fmtInr(n) {
+    if (!n && n !== 0) return '';
+    if (n >= 100000) return '₹' + (n / 100000).toFixed(1).replace(/\.0$/, '') + 'L';
+    if (n >= 1000) return '₹' + Math.round(n / 1000) + 'k';
+    return '₹' + n;
+  }
+  function slug(s) { return s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''); }
+
+  function fact(container, n, label) {
+    var wrap = document.createElement('div');
+    var v = document.createElement('div');
+    v.className = 'fact__n'; v.textContent = n;
+    var l = document.createElement('div');
+    l.className = 'fact__label'; l.textContent = label;
+    wrap.appendChild(v); wrap.appendChild(l);
+    container.appendChild(wrap);
+  }
+
+  /* ---------- build the chapters ---------- */
+
+  function collect(m) {
+    var all = [];
+    ['stories', 'reels', 'garage', 'profile'].forEach(function (key) {
+      (m[key] || []).forEach(function (i) { if (i.state) all.push(Object.assign({ category: key }, i)); });
+    });
+    all.sort(function (a, b) {
+      if (a.captured && b.captured) return a.captured < b.captured ? -1 : a.captured > b.captured ? 1 : 0;
+      return a.captured ? -1 : b.captured ? 1 : 0;
+    });
+
+    // One chapter per region, in the order the route actually visited them. A region
+    // ridden through twice (Assam, Kerala) collapses into one chapter — the story reads
+    // better as "here is Assam" than as five fragments.
+    var order = (m.route && m.route.regionOrder) || (m.regions || []).map(function (r) { return r.name; });
+    var meta = {};
+    (m.regions || []).forEach(function (r) { meta[r.name] = r; });
+
+    var byRegion = {};
+    all.forEach(function (i) { (byRegion[i.state] = byRegion[i.state] || []).push(i); });
+
+    var seen = {};
+    var out = [];
+    order.forEach(function (region) {
+      if (!byRegion[region] || seen[region]) return;
+      seen[region] = true;
+      out.push(makeChapter(region, byRegion[region], meta[region]));
+    });
+    // Regions the sheet never names still have clips — Bhutan was a day trip out of
+    // Jaigaon, Bihar was ridden straight through. Anchor each to the clip shot
+    // immediately before it and sit right after that region's chapter. Comparing
+    // chapter midpoints instead would misplace them, because a chapter that collapses
+    // several visits spans months and its median means very little.
+    Object.keys(byRegion).forEach(function (region) {
+      if (seen[region]) return;
+      var ch = makeChapter(region, byRegion[region], meta[region]);
+      var first = null;
+      for (var f = 0; f < ch.items.length; f++) { if (ch.items[f].captured) { first = ch.items[f]; break; } }
+
+      // Nearest in time in EITHER direction, not just backwards. Looking only
+      // backwards lands on whatever came before, and some of those tags are stale GPS
+      // fixes — a clip 19h earlier tagged Chandigarh beat the West Bengal clip shot
+      // 12 minutes later, and put Bhutan a thousand kilometres off.
+      var anchor = null, anchorAfter = false, bestGap = Infinity;
+      if (first) {
+        var at0 = all.indexOf(first);
+        for (var k = 0; k < all.length; k++) {
+          if (!seen[all[k].state] || !all[k].captured) continue;
+          var gap = Math.abs(new Date(all[k].captured) - new Date(first.captured));
+          if (gap < bestGap) { bestGap = gap; anchor = all[k].state; anchorAfter = k > at0; }
+        }
+      }
+
+      var at = out.length;
+      if (anchor) {
+        for (var j = 0; j < out.length; j++) {
+          if (out[j].region === anchor) { at = anchorAfter ? j : j + 1; break; }
+        }
+      }
+      out.splice(at, 0, ch);
+    });
+    return out;
+  }
+
+  function makeChapter(region, items, meta) {
+    var dated = items.filter(function (i) { return i.captured; });
+    // A region can be ridden through more than once (Assam five times, Kerala twice
+    // via the flight home). The chapter collapses those, so say so — otherwise the
+    // date range silently spans gaps the reader can't account for.
+    var legs = ((manifest.route && manifest.route.legs) || [])
+      .filter(function (l) { return l.region === region; });
+    return {
+      visits: legs.length,
+      region: region,
+      country: (meta && meta.country) || items[0].country || null,
+      nights: meta && meta.nights,
+      stops: (meta && meta.stops) || [],
+      spend: meta && meta.spend,
+      items: items,
+      from: dated.length ? dated[0].captured : null,
+      to: dated.length ? dated[dated.length - 1].captured : null,
+      // The longest caption in a region is reliably the one worth reading.
+      quote: items.reduce(function (best, i) {
+        return (i.caption && i.caption.length > ((best && best.caption) || '').length) ? i : best;
+      }, null),
+    };
+  }
+
+  /* ---------- render ---------- */
+
+  function renderChapters() {
+    el.loading.remove();
+    var frag = document.createDocumentFragment();
+
+    chapters.forEach(function (ch, idx) {
+      var sec = document.createElement('section');
+      sec.className = 'chapter';
+      sec.id = 'ch-' + slug(ch.region);
+
+      var head = document.createElement('div');
+      head.className = 'chapter__head';
+
+      var left = document.createElement('div');
+      var index = document.createElement('div');
+      index.className = 'chapter__index';
+      index.textContent = String(idx + 1).padStart(2, '0') + ' / ' + String(chapters.length).padStart(2, '0');
+      left.appendChild(index);
+
+      var h2 = document.createElement('h2');
+      h2.textContent = ch.region;
+      left.appendChild(h2);
+
+      if (ch.country && ch.country !== 'India' && ch.country !== ch.region) {
+        var c = document.createElement('div');
+        c.className = 'chapter__country';
+        c.textContent = ch.country;
+        left.appendChild(c);
+      }
+
+      if (ch.stops.length) {
+        var stops = document.createElement('div');
+        stops.className = 'chapter__stops';
+        stops.textContent = ch.stops.join('  ·  ');
+        left.appendChild(stops);
+      }
+      head.appendChild(left);
+
+      var meta = document.createElement('div');
+      meta.className = 'chapter__meta';
+      if (ch.from) {
+        addMeta(meta, ch.from === ch.to ? fmtDate(ch.from) : fmtDate(ch.from) + ' – ' + fmtDate(ch.to), 'On the ground');
+      }
+      if (ch.nights) addMeta(meta, ch.nights, ch.nights === 1 ? 'Night' : 'Nights');
+      if (ch.visits > 1) addMeta(meta, ch.visits, 'Separate visits');
+      addMeta(meta, ch.items.length, ch.items.length === 1 ? 'Clip' : 'Clips');
+      if (ch.spend) addMeta(meta, fmtInr(ch.spend), 'Spent');
+      head.appendChild(meta);
+
+      sec.appendChild(head);
+
+      var strip = document.createElement('div');
+      strip.className = 'strip';
+      ch.items.forEach(function (item) { strip.appendChild(makeClip(item)); });
+      sec.appendChild(strip);
+
+      if (ch.quote && ch.quote.caption && ch.quote.caption.length > 60) {
+        var q = document.createElement('blockquote');
+        q.className = 'chapter__quote';
+        q.textContent = '“' + ch.quote.caption.split('\n')[0].replace(/#\w+\s*/g, '').trim() + '”';
+        if (ch.quote.captured) {
+          var cite = document.createElement('cite');
+          cite.textContent = fmtDateFull(ch.quote.captured);
+          q.appendChild(cite);
+        }
+        sec.appendChild(q);
+      }
+
+      frag.appendChild(sec);
+    });
+
+    el.chapters.appendChild(frag);
+  }
+
+  function addMeta(parent, value, label) {
+    var wrap = document.createElement('div');
+    var n = document.createElement('div');
+    n.className = 'meta__n'; n.textContent = value;
+    var l = document.createElement('div');
+    l.className = 'meta__label'; l.textContent = label;
+    wrap.appendChild(n); wrap.appendChild(l);
+    parent.appendChild(wrap);
+  }
+
+  function makeClip(item) {
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'clip';
+    btn._item = item;
+    btn.dataset.pos = String(flat.indexOf(item));
+    btn.setAttribute('aria-label',
+      (item.caption ? item.caption.slice(0, 80) : item.name) + ' — ' + item.state);
+
+    var badge = document.createElement('span');
+    badge.className = 'clip__badge';
+    badge.dataset.cat = item.category;
+    badge.textContent = BADGE[item.category] || item.category.toUpperCase();
+    btn.appendChild(badge);
+
+    if (item.captured) {
+      var day = document.createElement('span');
+      day.className = 'clip__day';
+      day.textContent = fmtDate(item.captured);
+      btn.appendChild(day);
+    }
+
+    if (item.type === 'video') {
+      var play = document.createElement('span');
+      play.className = 'clip__play';
+      play.setAttribute('aria-hidden', 'true');
+      var disc = document.createElement('span');
+      disc.textContent = '▶';
+      play.appendChild(disc);
+      btn.appendChild(play);
+    }
+
+    if (item.caption) {
+      var cap = document.createElement('span');
+      cap.className = 'clip__cap';
+      cap.textContent = item.caption.split('\n')[0].replace(/#\w+\s*/g, '').trim();
+      if (cap.textContent) btn.appendChild(cap);
+    }
+
+    mediaObserver ? mediaObserver.observe(btn) : hydrate(btn);
+    return btn;
+  }
+
+  var mediaObserver = ('IntersectionObserver' in window)
+    ? new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (!e.isIntersecting) return;
+          hydrate(e.target);
+          mediaObserver.unobserve(e.target);
+        });
+      }, { rootMargin: '400px' })
+    : null;
+
+  // 222 clips would be 222 metadata fetches on load; only hydrate what comes near view.
+  function hydrate(clip) {
+    if (clip.dataset.hydrated) return;
+    clip.dataset.hydrated = '1';
+    var item = clip._item;
+    var src = mediaUrl(item.path);
+
+    if (item.type === 'video') {
+      var v = document.createElement('video');
+      v.preload = 'metadata'; v.muted = true; v.playsInline = true;
+      v.tabIndex = -1; v.setAttribute('aria-hidden', 'true');
+      v.src = src + '#t=0.1';
+      clip.insertBefore(v, clip.firstChild);
+    } else {
+      var img = document.createElement('img');
+      img.loading = 'lazy'; img.decoding = 'async'; img.alt = '';
+      img.src = src;
+      clip.insertBefore(img, clip.firstChild);
+    }
+  }
+
+  /* ---------- rail ---------- */
+
+  function renderRail() {
+    chapters.forEach(function (ch) {
+      var a = document.createElement('a');
+      a.className = 'rail__link';
+      a.href = '#ch-' + slug(ch.region);
+      a.textContent = ch.region + ' ' + ch.items.length;
+      a.dataset.region = ch.region;
+      el.rail.appendChild(a);
+    });
+
+    if (!('IntersectionObserver' in window)) return;
+    var spy = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        var id = e.target.id.replace(/^ch-/, '');
+        Array.prototype.forEach.call(el.rail.children, function (a) {
+          var on = slug(a.dataset.region) === id;
+          a.setAttribute('aria-current', String(on));
+          if (on) a.scrollIntoView({ block: 'nearest', inline: 'center' });
+        });
+        highlightLeg(e.target.id.replace(/^ch-/, ''));
+      });
+    }, { rootMargin: '-45% 0px -50% 0px' });
+    document.querySelectorAll('.chapter').forEach(function (c) { spy.observe(c); });
+  }
+
+  /* ---------- route map ---------- */
+
+  var NS = 'http://www.w3.org/2000/svg';
+  var mapEls = { legs: [], stops: [], here: null, halo: null };
+  var routePath = [];
+
+  function renderMap() {
+    routePath = (manifest.route && manifest.route.path) || [];
+    if (!routePath.length) { el.map.closest('.mapbar').remove(); return; }
+
+    var W = 300, H = 330, PAD = 10;
+
+    // Frame on the basemap's bbox, not the route's, so the coastline isn't cropped
+    // mid-peninsula and the route sits inside recognisable geography.
+    var box = (basemap && basemap.bbox) || null;
+    var lats = routePath.map(function (p) { return p.lat; });
+    var lons = routePath.map(function (p) { return p.lon; });
+    var minLat = box ? box.minLat : Math.min.apply(null, lats);
+    var maxLat = box ? box.maxLat : Math.max.apply(null, lats);
+    var minLon = box ? box.minLon : Math.min.apply(null, lons);
+    var maxLon = box ? box.maxLon : Math.max.apply(null, lons);
+
+    // Equirectangular with a cos(lat) correction so India isn't stretched sideways.
+    var kx = Math.cos(((minLat + maxLat) / 2) * Math.PI / 180);
+    var spanX = (maxLon - minLon) * kx, spanY = maxLat - minLat;
+    var scale = Math.min((W - PAD * 2) / spanX, (H - PAD * 2) / spanY);
+    var offX = (W - spanX * scale) / 2, offY = (H - spanY * scale) / 2;
+
+    function project(lon, lat) {
+      return [offX + (lon - minLon) * kx * scale, H - (offY + (lat - minLat) * scale)];
+    }
+
+    var sea = document.createElementNS(NS, 'rect');
+    sea.setAttribute('class', 'sea');
+    sea.setAttribute('x', 0); sea.setAttribute('y', 0);
+    sea.setAttribute('width', W); sea.setAttribute('height', H);
+    el.map.appendChild(sea);
+
+    if (basemap) {
+      basemap.countries.forEach(function (c) {
+        c.rings.forEach(function (ring) {
+          var poly = document.createElementNS(NS, 'polygon');
+          poly.setAttribute('class', 'land' + (c.role === 'primary' ? ' land--primary' : ''));
+          poly.setAttribute('points', ring.map(function (p) { return project(p[0], p[1]).join(','); }).join(' '));
+          el.map.appendChild(poly);
+        });
+      });
+    }
+
+    // One polyline per contiguous run of nights in the same region, tagged with the
+    // night number it starts at so scroll position can colour past / active / future.
+    var runs = [];
+    routePath.forEach(function (p) {
+      var last = runs[runs.length - 1];
+      if (last && last.region === p.region) { last.pts.push(p); last.to = p.n; }
+      else runs.push({ region: p.region, from: p.n, to: p.n, pts: last ? [last.pts[last.pts.length - 1], p] : [p] });
+    });
+
+    runs.forEach(function (run) {
+      if (run.pts.length < 2) return;
+      var line = document.createElementNS(NS, 'polyline');
+      line.setAttribute('class', 'leg');
+      line.setAttribute('points', run.pts.map(function (p) { return project(p.lon, p.lat).join(','); }).join(' '));
+      line.dataset.region = slug(run.region || '');
+      line.dataset.from = run.from;
+      el.map.appendChild(line);
+      mapEls.legs.push(line);
+    });
+
+    routePath.forEach(function (p) {
+      var xy = project(p.lon, p.lat);
+      var dot = document.createElementNS(NS, 'circle');
+      dot.setAttribute('class', 'stop');
+      dot.setAttribute('cx', xy[0]); dot.setAttribute('cy', xy[1]); dot.setAttribute('r', 1.5);
+      dot.dataset.region = slug(p.region || '');
+      dot.dataset.n = p.n;
+      el.map.appendChild(dot);
+      mapEls.stops.push(dot);
+    });
+
+    // Home. Start and finish are the same front door, so it gets one marker, not two.
+    var home = routePath[0];
+    var hxy = project(home.lon, home.lat);
+    var ring = document.createElementNS(NS, 'circle');
+    ring.setAttribute('class', 'homecap');
+    ring.setAttribute('cx', hxy[0]); ring.setAttribute('cy', hxy[1]); ring.setAttribute('r', 4.5);
+    el.map.appendChild(ring);
+    var hl = document.createElementNS(NS, 'text');
+    hl.setAttribute('class', 'maplabel');
+    hl.setAttribute('x', hxy[0] - 2); hl.setAttribute('y', hxy[1] + 13);
+    hl.setAttribute('text-anchor', 'end');
+    hl.textContent = 'START + END · ' + home.name;
+    el.map.appendChild(hl);
+
+    // "You are here" marker, moved as chapters scroll past.
+    mapEls.halo = document.createElementNS(NS, 'circle');
+    mapEls.halo.setAttribute('class', 'here-halo');
+    mapEls.halo.setAttribute('r', 7);
+    mapEls.halo.setAttribute('cx', hxy[0]); mapEls.halo.setAttribute('cy', hxy[1]);
+    el.map.appendChild(mapEls.halo);
+
+    mapEls.here = document.createElementNS(NS, 'circle');
+    mapEls.here.setAttribute('class', 'here');
+    mapEls.here.setAttribute('r', 3.4);
+    mapEls.here.setAttribute('cx', hxy[0]); mapEls.here.setAttribute('cy', hxy[1]);
+    el.map.appendChild(mapEls.here);
+
+    mapEls.project = project;
+  }
+
+  function highlightLeg(regionSlug) {
+    if (!mapEls.legs.length) return;
+
+    // Where this region starts in the night sequence — everything earlier is "past".
+    var startNight = Infinity;
+    mapEls.stops.forEach(function (d) {
+      if (d.dataset.region === regionSlug) startNight = Math.min(startNight, +d.dataset.n);
+    });
+    if (!isFinite(startNight)) startNight = 0;
+
+    mapEls.legs.forEach(function (line) {
+      line.dataset.phase = line.dataset.region === regionSlug ? 'active'
+        : (+line.dataset.from < startNight ? 'past' : 'future');
+    });
+
+    var last = null;
+    mapEls.stops.forEach(function (d) {
+      var mine = d.dataset.region === regionSlug;
+      d.dataset.phase = mine ? 'active' : (+d.dataset.n < startNight ? 'past' : 'future');
+      if (mine) last = d;
+    });
+
+    // Park the marker on the last stop of the region being read.
+    if (last && mapEls.here) {
+      mapEls.here.setAttribute('cx', last.getAttribute('cx'));
+      mapEls.here.setAttribute('cy', last.getAttribute('cy'));
+      mapEls.halo.setAttribute('cx', last.getAttribute('cx'));
+      mapEls.halo.setAttribute('cy', last.getAttribute('cy'));
+    }
+
+    var ch = chapters.filter(function (c) { return slug(c.region) === regionSlug; })[0];
+    if (ch) {
+      el.mapRegion.textContent = ch.region;
+      el.mapStops.textContent = ch.stops.length ? ch.stops.join(' → ') : 'Ridden through';
+      var total = routePath.length ? routePath[routePath.length - 1].n : 0;
+      var night = last ? +last.dataset.n : 0;
+      el.mapNight.textContent = night ? 'night ' + night + '/' + total : '';
+      el.mapBar.style.width = total ? Math.round((night / total) * 100) + '%' : '0%';
+    }
+  }
+
+  /* ---------- lightbox ---------- */
+
+  function open(i) {
+    if (i < 0 || i >= flat.length) return;
+    pos = i;
+    var item = flat[i];
+
+    el.lbStage.replaceChildren();
+    if (item.type === 'video') {
+      var v = document.createElement('video');
+      v.src = mediaUrl(item.path);
+      v.controls = true; v.autoplay = true; v.muted = true; v.playsInline = true;
+      el.lbStage.appendChild(v);
+    } else {
+      var img = document.createElement('img');
+      img.src = mediaUrl(item.path); img.alt = item.caption || item.name;
+      el.lbStage.appendChild(img);
+    }
+
+    el.lbWhere.textContent = item.state + (item.country && item.country !== 'India' && item.country !== item.state ? ', ' + item.country : '');
+    el.lbWhen.textContent = item.captured ? fmtDateFull(item.captured) : '';
+    el.lbCaption.textContent = item.caption || '';
+    el.lbRaw.href = mediaUrl(item.path);
+    el.lbPos.textContent = (i + 1) + ' / ' + flat.length;
+    el.lbPrev.disabled = i === 0;
+    el.lbNext.disabled = i === flat.length - 1;
+
+    if (!el.lb.open) el.lb.showModal ? el.lb.showModal() : el.lb.setAttribute('open', '');
+  }
+
+  function close() { el.lb.open && el.lb.close ? el.lb.close() : el.lb.removeAttribute('open'); }
+
+  el.lb.addEventListener('close', function () { el.lbStage.replaceChildren(); pos = -1; });
+  el.lb.addEventListener('click', function (e) { if (e.target === el.lb) close(); });
+  el.lbClose.addEventListener('click', close);
+  el.lbPrev.addEventListener('click', function () { open(pos - 1); });
+  el.lbNext.addEventListener('click', function () { open(pos + 1); });
+
+  document.addEventListener('keydown', function (e) {
+    if (pos === -1) return;
+    if (e.key === 'ArrowRight') { e.preventDefault(); open(pos + 1); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); open(pos - 1); }
+  });
+
+  el.chapters.addEventListener('click', function (e) {
+    var clip = e.target.closest && e.target.closest('.clip');
+    if (clip) open(Number(clip.dataset.pos));
+  });
+
+  /* ---------- boot ---------- */
+
+  fetch('manifest.json', { cache: 'no-cache' })
+    .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+    .then(function (m) {
+      return Promise.all([
+        fetch('route.json').then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; }),
+        fetch('basemap.json').then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; })
+      ]).then(function (extra) {
+        m.route = Object.assign({}, m.route, extra[0] || {});
+        basemap = extra[1];
+        return m;
+      });
+    })
+    .then(function (m) {
+      manifest = m;
+      chapters = collect(m);
+      chapters.forEach(function (ch) { ch.items.forEach(function (i) { flat.push(i); }); });
+
+      renderChapters();
+      renderRail();
+      renderMap();
+
+      var dated = flat.filter(function (i) { return i.captured; });
+      var days = dated.length
+        ? Math.round((new Date(dated[dated.length - 1].captured) - new Date(dated[0].captured)) / 86400000)
+        : null;
+
+      fact(el.heroFacts, (m.route && m.route.nights) || '—', 'Nights');
+      fact(el.heroFacts, chapters.length, 'Regions');
+      fact(el.heroFacts, flat.length, 'Clips');
+      if (days) fact(el.heroFacts, days, 'Days on the road');
+
+      el.outro.hidden = false;
+      el.outroText.textContent =
+        'Out of Trivandrum and back to the same front door — ' + chapters.length + ' regions, ' +
+        ((m.route && m.route.nights) || '?') + ' nights, and ' + flat.length +
+        ' clips that survived the ride.';
+      fact(el.outroFacts, chapters.map(function (c) { return c.region; }).filter(function (r) { return r !== 'Nepal' && r !== 'Bhutan'; }).length, 'Indian states & UTs');
+      fact(el.outroFacts, chapters.filter(function (c) { return c.country && c.country !== 'India'; }).length, 'Countries beyond India');
+      if (m.route && m.route.spend) fact(el.outroFacts, fmtInr(m.route.spend), 'Total spend');
+    })
+    .catch(function (err) {
+      el.loading.textContent = window.location.protocol === 'file:'
+        ? 'Browsers block fetch() over file:// — serve the folder instead (npx serve .) and reload.'
+        : 'Could not load manifest.json — run node generate-manifest.cjs.';
+      console.error(err);
+    });
+})();
+</script>
+</body>
+</html>

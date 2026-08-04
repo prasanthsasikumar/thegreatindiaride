@@ -1,0 +1,1596 @@
+{
+  "generated": "2026-08-04T03:21:02.602Z",
+  "source": "Pan India Trip  - Trip expenses.csv",
+  "nights": 93,
+  "regionOrder": [
+    "Tamil Nadu",
+    "Puducherry",
+    "Karnataka",
+    "Goa",
+    "Maharashtra",
+    "Dadra and Nagar Haveli and Daman and Diu",
+    "Gujarat",
+    "Rajasthan",
+    "Delhi",
+    "Uttarakhand",
+    "Himachal Pradesh",
+    "Jammu and Kashmir",
+    "Punjab",
+    "Chandigarh",
+    "Haryana",
+    "Madhya Pradesh",
+    "Uttar Pradesh",
+    "Nepal",
+    "West Bengal",
+    "Sikkim",
+    "Assam",
+    "Arunachal Pradesh",
+    "Meghalaya",
+    "Nagaland",
+    "Jharkhand",
+    "Odisha",
+    "Andhra Pradesh",
+    "Telangana",
+    "Kerala"
+  ],
+  "legs": [
+    {
+      "order": 1,
+      "region": "Tamil Nadu",
+      "country": "India",
+      "stops": [
+        "Kanyakumari",
+        "Rameshwaram",
+        "Thanjavur"
+      ],
+      "nights": 3,
+      "firstNight": 1,
+      "lastNight": 3,
+      "spend": 12770,
+      "lat": 8.079252,
+      "lon": 77.5499338
+    },
+    {
+      "order": 2,
+      "region": "Puducherry",
+      "country": "India",
+      "stops": [
+        "Puducherry"
+      ],
+      "nights": 1,
+      "firstNight": 4,
+      "lastNight": 4,
+      "spend": 4090,
+      "lat": 10.9156489,
+      "lon": 79.8069488
+    },
+    {
+      "order": 3,
+      "region": "Karnataka",
+      "country": "India",
+      "stops": [
+        "Banglore",
+        "Chitradurga",
+        "Gokarna"
+      ],
+      "nights": 3,
+      "firstNight": 5,
+      "lastNight": 7,
+      "spend": 10421,
+      "lat": 12.9767936,
+      "lon": 77.590082
+    },
+    {
+      "order": 4,
+      "region": "Goa",
+      "country": "India",
+      "stops": [
+        "Goa"
+      ],
+      "nights": 1,
+      "firstNight": 8,
+      "lastNight": 8,
+      "spend": 3324,
+      "lat": 15.3004543,
+      "lon": 74.0855134
+    },
+    {
+      "order": 5,
+      "region": "Maharashtra",
+      "country": "India",
+      "stops": [
+        "Devrukh",
+        "Mumbai",
+        "South Mumbai"
+      ],
+      "nights": 3,
+      "firstNight": 9,
+      "lastNight": 11,
+      "spend": 16880,
+      "lat": 17.0638489,
+      "lon": 73.6208971
+    },
+    {
+      "order": 6,
+      "region": "Dadra and Nagar Haveli and Daman and Diu",
+      "country": "India",
+      "stops": [
+        "Daman"
+      ],
+      "nights": 1,
+      "firstNight": 12,
+      "lastNight": 12,
+      "spend": 3180,
+      "lat": 20.4169701,
+      "lon": 72.833173
+    },
+    {
+      "order": 7,
+      "region": "Gujarat",
+      "country": "India",
+      "stops": [
+        "Surat",
+        "Bhavnagar",
+        "Rajkot",
+        "Bhuj",
+        "N.sarovar",
+        "Dhordo",
+        "Palanpur"
+      ],
+      "nights": 7,
+      "firstNight": 13,
+      "lastNight": 19,
+      "spend": 24826,
+      "lat": 21.2094892,
+      "lon": 72.8317058
+    },
+    {
+      "order": 8,
+      "region": "Rajasthan",
+      "country": "India",
+      "stops": [
+        "Udaipur",
+        "Jaipur"
+      ],
+      "nights": 3,
+      "firstNight": 20,
+      "lastNight": 22,
+      "spend": 10414,
+      "lat": 24.578721,
+      "lon": 73.6862571
+    },
+    {
+      "order": 9,
+      "region": "Delhi",
+      "country": "India",
+      "stops": [
+        "Delhi"
+      ],
+      "nights": 1,
+      "firstNight": 23,
+      "lastNight": 23,
+      "spend": 4531,
+      "lat": 28.6328027,
+      "lon": 77.2197713
+    },
+    {
+      "order": 10,
+      "region": "Uttarakhand",
+      "country": "India",
+      "stops": [
+        "Rishikesh",
+        "Mussoorie",
+        "Dehradun"
+      ],
+      "nights": 4,
+      "firstNight": 24,
+      "lastNight": 27,
+      "spend": 11184,
+      "lat": 30.1086537,
+      "lon": 78.2916193
+    },
+    {
+      "order": 11,
+      "region": "Himachal Pradesh",
+      "country": "India",
+      "stops": [
+        "Shimla",
+        "dharamshala",
+        "Triund",
+        "dharamshala"
+      ],
+      "nights": 7,
+      "firstNight": 28,
+      "lastNight": 34,
+      "spend": 15764,
+      "lat": 31.1040393,
+      "lon": 77.1707923
+    },
+    {
+      "order": 12,
+      "region": "Jammu and Kashmir",
+      "country": "India",
+      "stops": [
+        "Jammu"
+      ],
+      "nights": 1,
+      "firstNight": 35,
+      "lastNight": 35,
+      "spend": 3591,
+      "lat": 32.7185614,
+      "lon": 74.8580917
+    },
+    {
+      "order": 13,
+      "region": "Punjab",
+      "country": "India",
+      "stops": [
+        "Amritsar"
+      ],
+      "nights": 1,
+      "firstNight": 36,
+      "lastNight": 36,
+      "spend": 2053,
+      "lat": 31.6356659,
+      "lon": 74.8787496
+    },
+    {
+      "order": 14,
+      "region": "Chandigarh",
+      "country": "India",
+      "stops": [
+        "Chandigarh"
+      ],
+      "nights": 1,
+      "firstNight": 37,
+      "lastNight": 37,
+      "spend": 4720,
+      "lat": 30.7334421,
+      "lon": 76.7797143
+    },
+    {
+      "order": 15,
+      "region": "Haryana",
+      "country": "India",
+      "stops": [
+        "Kurukshetra"
+      ],
+      "nights": 1,
+      "firstNight": 38,
+      "lastNight": 38,
+      "spend": 2395,
+      "lat": 29.9693747,
+      "lon": 76.8482787
+    },
+    {
+      "order": 16,
+      "region": "Delhi",
+      "country": "India",
+      "stops": [
+        "Delhi"
+      ],
+      "nights": 2,
+      "firstNight": 39,
+      "lastNight": 40,
+      "spend": 5201,
+      "lat": 28.6328027,
+      "lon": 77.2197713
+    },
+    {
+      "order": 17,
+      "region": "Madhya Pradesh",
+      "country": "India",
+      "stops": [
+        "Gwalior"
+      ],
+      "nights": 1,
+      "firstNight": 41,
+      "lastNight": 41,
+      "spend": 3473,
+      "lat": 26.2037247,
+      "lon": 78.1573628
+    },
+    {
+      "order": 18,
+      "region": "Uttar Pradesh",
+      "country": "India",
+      "stops": [
+        "Lucknow",
+        "Varanasi"
+      ],
+      "nights": 9,
+      "firstNight": 42,
+      "lastNight": 50,
+      "spend": 35533,
+      "lat": 26.8381,
+      "lon": 80.9346001
+    },
+    {
+      "order": 19,
+      "region": "Nepal",
+      "country": "Nepal",
+      "stops": [
+        "Lumbini",
+        "Pokhara",
+        "Kathmandu",
+        "Janakpur"
+      ],
+      "nights": 7,
+      "firstNight": 51,
+      "lastNight": 57,
+      "spend": 33812,
+      "lat": 27.980713,
+      "lon": 82.9531851
+    },
+    {
+      "order": 20,
+      "region": "West Bengal",
+      "country": "India",
+      "stops": [
+        "Siliguri"
+      ],
+      "nights": 1,
+      "firstNight": 58,
+      "lastNight": 58,
+      "spend": 3582,
+      "lat": 26.7164127,
+      "lon": 88.4309916
+    },
+    {
+      "order": 21,
+      "region": "Sikkim",
+      "country": "India",
+      "stops": [
+        "Buddha Park"
+      ],
+      "nights": 1,
+      "firstNight": 59,
+      "lastNight": 59,
+      "spend": 3277,
+      "lat": 27.3116732,
+      "lon": 88.3635699
+    },
+    {
+      "order": 22,
+      "region": "West Bengal",
+      "country": "India",
+      "stops": [
+        "Jaigaon"
+      ],
+      "nights": 1,
+      "firstNight": 60,
+      "lastNight": 60,
+      "spend": 3162,
+      "lat": 26.854859,
+      "lon": 89.3767318
+    },
+    {
+      "order": 23,
+      "region": "Assam",
+      "country": "India",
+      "stops": [
+        "Guwahati"
+      ],
+      "nights": 2,
+      "firstNight": 61,
+      "lastNight": 62,
+      "spend": 4516,
+      "lat": 26.1805978,
+      "lon": 91.753943
+    },
+    {
+      "order": 24,
+      "region": "Arunachal Pradesh",
+      "country": "India",
+      "stops": [
+        "Bomdila",
+        "Tawang",
+        "Brokpublang"
+      ],
+      "nights": 3,
+      "firstNight": 63,
+      "lastNight": 65,
+      "spend": 12940,
+      "lat": 27.264445,
+      "lon": 92.4206519
+    },
+    {
+      "order": 25,
+      "region": "Assam",
+      "country": "India",
+      "stops": [
+        "Guwahati"
+      ],
+      "nights": 2,
+      "firstNight": 66,
+      "lastNight": 67,
+      "spend": 6307,
+      "lat": 26.1805978,
+      "lon": 91.753943
+    },
+    {
+      "order": 26,
+      "region": "Meghalaya",
+      "country": "India",
+      "stops": [
+        "Shillong",
+        "Dawki"
+      ],
+      "nights": 2,
+      "firstNight": 68,
+      "lastNight": 69,
+      "spend": 8188,
+      "lat": 25.5759931,
+      "lon": 91.8827872
+    },
+    {
+      "order": 27,
+      "region": "Assam",
+      "country": "India",
+      "stops": [
+        "Guwahati"
+      ],
+      "nights": 2,
+      "firstNight": 70,
+      "lastNight": 71,
+      "spend": 3497,
+      "lat": 26.1805978,
+      "lon": 91.753943
+    },
+    {
+      "order": 28,
+      "region": "Nagaland",
+      "country": "India",
+      "stops": [
+        "Dimapur",
+        "Kohima",
+        "Mokochung"
+      ],
+      "nights": 3,
+      "firstNight": 72,
+      "lastNight": 74,
+      "spend": 10678,
+      "lat": 25.9041378,
+      "lon": 93.7177609
+    },
+    {
+      "order": 29,
+      "region": "Assam",
+      "country": "India",
+      "stops": [
+        "Sonari"
+      ],
+      "nights": 1,
+      "firstNight": 75,
+      "lastNight": 75,
+      "spend": 4476,
+      "lat": 27.0557101,
+      "lon": 95.120299
+    },
+    {
+      "order": 30,
+      "region": "Arunachal Pradesh",
+      "country": "India",
+      "stops": [
+        "Chongkham"
+      ],
+      "nights": 1,
+      "firstNight": 76,
+      "lastNight": 76,
+      "spend": 3248,
+      "lat": 27.8099085,
+      "lon": 96.0842123
+    },
+    {
+      "order": 31,
+      "region": "Assam",
+      "country": "India",
+      "stops": [
+        "Dibrugargh"
+      ],
+      "nights": 1,
+      "firstNight": 77,
+      "lastNight": 77,
+      "spend": 7706,
+      "lat": 27.4844597,
+      "lon": 94.9019447
+    },
+    {
+      "order": 32,
+      "region": "West Bengal",
+      "country": "India",
+      "stops": [
+        "Kolkata"
+      ],
+      "nights": 2,
+      "firstNight": 78,
+      "lastNight": 79,
+      "spend": 12181,
+      "lat": 22.5726459,
+      "lon": 88.3638953
+    },
+    {
+      "order": 33,
+      "region": "Jharkhand",
+      "country": "India",
+      "stops": [
+        "Jamshedpur"
+      ],
+      "nights": 1,
+      "firstNight": 80,
+      "lastNight": 80,
+      "spend": 3645,
+      "lat": 22.8015194,
+      "lon": 86.2029579
+    },
+    {
+      "order": 34,
+      "region": "Odisha",
+      "country": "India",
+      "stops": [
+        "Cuttack",
+        "Puri",
+        "Brahmapur"
+      ],
+      "nights": 3,
+      "firstNight": 81,
+      "lastNight": 83,
+      "spend": 13936,
+      "lat": 20.4686,
+      "lon": 85.8792
+    },
+    {
+      "order": 35,
+      "region": "Andhra Pradesh",
+      "country": "India",
+      "stops": [
+        "Vishakapatanam",
+        "Vijayawada"
+      ],
+      "nights": 2,
+      "firstNight": 84,
+      "lastNight": 85,
+      "spend": 7733,
+      "lat": 17.6935526,
+      "lon": 83.2921297
+    },
+    {
+      "order": 36,
+      "region": "Telangana",
+      "country": "India",
+      "stops": [
+        "Hyderabad"
+      ],
+      "nights": 3,
+      "firstNight": 86,
+      "lastNight": 88,
+      "spend": 11421,
+      "lat": 17.360589,
+      "lon": 78.4740613
+    },
+    {
+      "order": 37,
+      "region": "Andhra Pradesh",
+      "country": "India",
+      "stops": [
+        "Kurnool"
+      ],
+      "nights": 1,
+      "firstNight": 89,
+      "lastNight": 89,
+      "spend": 2063,
+      "lat": 15.8309251,
+      "lon": 78.0425373
+    },
+    {
+      "order": 38,
+      "region": "Karnataka",
+      "country": "India",
+      "stops": [
+        "Banglore"
+      ],
+      "nights": 1,
+      "firstNight": 90,
+      "lastNight": 90,
+      "spend": 4387,
+      "lat": 12.9767936,
+      "lon": 77.590082
+    },
+    {
+      "order": 39,
+      "region": "Tamil Nadu",
+      "country": "India",
+      "stops": [
+        "Coimbatore"
+      ],
+      "nights": 1,
+      "firstNight": 91,
+      "lastNight": 91,
+      "spend": 3816,
+      "lat": 11.0018115,
+      "lon": 76.9628425
+    },
+    {
+      "order": 40,
+      "region": "Kerala",
+      "country": "India",
+      "stops": [
+        "Allapuzha",
+        "Trivandrum"
+      ],
+      "nights": 2,
+      "firstNight": 92,
+      "lastNight": 93,
+      "spend": 2481,
+      "lat": 9.5003416,
+      "lon": 76.4123364
+    }
+  ],
+  "regions": [
+    {
+      "region": "Tamil Nadu",
+      "country": "India",
+      "nights": 4,
+      "stops": [
+        "Kanyakumari",
+        "Rameshwaram",
+        "Thanjavur",
+        "Coimbatore"
+      ],
+      "spend": 16586
+    },
+    {
+      "region": "Puducherry",
+      "country": "India",
+      "nights": 1,
+      "stops": [
+        "Puducherry"
+      ],
+      "spend": 4090
+    },
+    {
+      "region": "Karnataka",
+      "country": "India",
+      "nights": 4,
+      "stops": [
+        "Banglore",
+        "Chitradurga",
+        "Gokarna"
+      ],
+      "spend": 14808
+    },
+    {
+      "region": "Goa",
+      "country": "India",
+      "nights": 1,
+      "stops": [
+        "Goa"
+      ],
+      "spend": 3324
+    },
+    {
+      "region": "Maharashtra",
+      "country": "India",
+      "nights": 3,
+      "stops": [
+        "Devrukh",
+        "Mumbai",
+        "South Mumbai"
+      ],
+      "spend": 16880
+    },
+    {
+      "region": "Dadra and Nagar Haveli and Daman and Diu",
+      "country": "India",
+      "nights": 1,
+      "stops": [
+        "Daman"
+      ],
+      "spend": 3180
+    },
+    {
+      "region": "Gujarat",
+      "country": "India",
+      "nights": 7,
+      "stops": [
+        "Surat",
+        "Bhavnagar",
+        "Rajkot",
+        "Bhuj",
+        "N.sarovar",
+        "Dhordo",
+        "Palanpur"
+      ],
+      "spend": 24826
+    },
+    {
+      "region": "Rajasthan",
+      "country": "India",
+      "nights": 3,
+      "stops": [
+        "Udaipur",
+        "Jaipur"
+      ],
+      "spend": 10414
+    },
+    {
+      "region": "Delhi",
+      "country": "India",
+      "nights": 3,
+      "stops": [
+        "Delhi"
+      ],
+      "spend": 9732
+    },
+    {
+      "region": "Uttarakhand",
+      "country": "India",
+      "nights": 4,
+      "stops": [
+        "Rishikesh",
+        "Mussoorie",
+        "Dehradun"
+      ],
+      "spend": 11184
+    },
+    {
+      "region": "Himachal Pradesh",
+      "country": "India",
+      "nights": 7,
+      "stops": [
+        "Shimla",
+        "dharamshala",
+        "Triund"
+      ],
+      "spend": 15764
+    },
+    {
+      "region": "Jammu and Kashmir",
+      "country": "India",
+      "nights": 1,
+      "stops": [
+        "Jammu"
+      ],
+      "spend": 3591
+    },
+    {
+      "region": "Punjab",
+      "country": "India",
+      "nights": 1,
+      "stops": [
+        "Amritsar"
+      ],
+      "spend": 2053
+    },
+    {
+      "region": "Chandigarh",
+      "country": "India",
+      "nights": 1,
+      "stops": [
+        "Chandigarh"
+      ],
+      "spend": 4720
+    },
+    {
+      "region": "Haryana",
+      "country": "India",
+      "nights": 1,
+      "stops": [
+        "Kurukshetra"
+      ],
+      "spend": 2395
+    },
+    {
+      "region": "Madhya Pradesh",
+      "country": "India",
+      "nights": 1,
+      "stops": [
+        "Gwalior"
+      ],
+      "spend": 3473
+    },
+    {
+      "region": "Uttar Pradesh",
+      "country": "India",
+      "nights": 9,
+      "stops": [
+        "Lucknow",
+        "Varanasi"
+      ],
+      "spend": 35533
+    },
+    {
+      "region": "Nepal",
+      "country": "Nepal",
+      "nights": 7,
+      "stops": [
+        "Lumbini",
+        "Pokhara",
+        "Kathmandu",
+        "Janakpur"
+      ],
+      "spend": 33812
+    },
+    {
+      "region": "West Bengal",
+      "country": "India",
+      "nights": 4,
+      "stops": [
+        "Siliguri",
+        "Jaigaon",
+        "Kolkata"
+      ],
+      "spend": 18925
+    },
+    {
+      "region": "Sikkim",
+      "country": "India",
+      "nights": 1,
+      "stops": [
+        "Buddha Park"
+      ],
+      "spend": 3277
+    },
+    {
+      "region": "Assam",
+      "country": "India",
+      "nights": 8,
+      "stops": [
+        "Guwahati",
+        "Sonari",
+        "Dibrugargh"
+      ],
+      "spend": 26502
+    },
+    {
+      "region": "Arunachal Pradesh",
+      "country": "India",
+      "nights": 4,
+      "stops": [
+        "Bomdila",
+        "Tawang",
+        "Brokpublang",
+        "Chongkham"
+      ],
+      "spend": 16188
+    },
+    {
+      "region": "Meghalaya",
+      "country": "India",
+      "nights": 2,
+      "stops": [
+        "Shillong",
+        "Dawki"
+      ],
+      "spend": 8188
+    },
+    {
+      "region": "Nagaland",
+      "country": "India",
+      "nights": 3,
+      "stops": [
+        "Dimapur",
+        "Kohima",
+        "Mokochung"
+      ],
+      "spend": 10678
+    },
+    {
+      "region": "Jharkhand",
+      "country": "India",
+      "nights": 1,
+      "stops": [
+        "Jamshedpur"
+      ],
+      "spend": 3645
+    },
+    {
+      "region": "Odisha",
+      "country": "India",
+      "nights": 3,
+      "stops": [
+        "Cuttack",
+        "Puri",
+        "Brahmapur"
+      ],
+      "spend": 13936
+    },
+    {
+      "region": "Andhra Pradesh",
+      "country": "India",
+      "nights": 3,
+      "stops": [
+        "Vishakapatanam",
+        "Vijayawada",
+        "Kurnool"
+      ],
+      "spend": 9796
+    },
+    {
+      "region": "Telangana",
+      "country": "India",
+      "nights": 3,
+      "stops": [
+        "Hyderabad"
+      ],
+      "spend": 11421
+    },
+    {
+      "region": "Kerala",
+      "country": "India",
+      "nights": 2,
+      "stops": [
+        "Allapuzha",
+        "Trivandrum"
+      ],
+      "spend": 2481
+    }
+  ],
+  "path": [
+    {
+      "n": 0,
+      "name": "Trivandrum",
+      "region": "Kerala",
+      "lat": 8.4882267,
+      "lon": 76.947551,
+      "origin": true
+    },
+    {
+      "n": 1,
+      "name": "Kanyakumari",
+      "region": "Tamil Nadu",
+      "lat": 8.079252,
+      "lon": 77.5499338
+    },
+    {
+      "n": 2,
+      "name": "Rameshwaram",
+      "region": "Tamil Nadu",
+      "lat": 9.2844657,
+      "lon": 79.3125553
+    },
+    {
+      "n": 3,
+      "name": "Thanjavur",
+      "region": "Tamil Nadu",
+      "lat": 10.659037,
+      "lon": 79.2014278
+    },
+    {
+      "n": 4,
+      "name": "Puducherry",
+      "region": "Puducherry",
+      "lat": 10.9156489,
+      "lon": 79.8069488
+    },
+    {
+      "n": 5,
+      "name": "Banglore",
+      "region": "Karnataka",
+      "lat": 12.9767936,
+      "lon": 77.590082
+    },
+    {
+      "n": 6,
+      "name": "Chitradurga",
+      "region": "Karnataka",
+      "lat": 14.3049174,
+      "lon": 76.5296667
+    },
+    {
+      "n": 7,
+      "name": "Gokarna",
+      "region": "Karnataka",
+      "lat": 14.5439629,
+      "lon": 74.3184418
+    },
+    {
+      "n": 8,
+      "name": "Goa",
+      "region": "Goa",
+      "lat": 15.3004543,
+      "lon": 74.0855134
+    },
+    {
+      "n": 9,
+      "name": "Devrukh",
+      "region": "Maharashtra",
+      "lat": 17.0638489,
+      "lon": 73.6208971
+    },
+    {
+      "n": 10,
+      "name": "Mumbai",
+      "region": "Maharashtra",
+      "lat": 19.054999,
+      "lon": 72.8692035
+    },
+    {
+      "n": 11,
+      "name": "South Mumbai",
+      "region": "Maharashtra",
+      "lat": 18.9752099,
+      "lon": 72.8239654
+    },
+    {
+      "n": 12,
+      "name": "Daman",
+      "region": "Dadra and Nagar Haveli and Daman and Diu",
+      "lat": 20.4169701,
+      "lon": 72.833173
+    },
+    {
+      "n": 13,
+      "name": "Surat",
+      "region": "Gujarat",
+      "lat": 21.2094892,
+      "lon": 72.8317058
+    },
+    {
+      "n": 14,
+      "name": "Bhavnagar",
+      "region": "Gujarat",
+      "lat": 21.7718836,
+      "lon": 72.1416449
+    },
+    {
+      "n": 15,
+      "name": "Rajkot",
+      "region": "Gujarat",
+      "lat": 22.3053263,
+      "lon": 70.8028377
+    },
+    {
+      "n": 16,
+      "name": "Bhuj",
+      "region": "Gujarat",
+      "lat": 23.2472446,
+      "lon": 69.668339
+    },
+    {
+      "n": 17,
+      "name": "N.sarovar",
+      "region": "Gujarat",
+      "lat": 23.6735553,
+      "lon": 68.5394695
+    },
+    {
+      "n": 18,
+      "name": "Dhordo",
+      "region": "Gujarat",
+      "lat": 23.7584931,
+      "lon": 69.5105632
+    },
+    {
+      "n": 19,
+      "name": "Palanpur",
+      "region": "Gujarat",
+      "lat": 24.1709794,
+      "lon": 72.4366375
+    },
+    {
+      "n": 20,
+      "name": "Udaipur",
+      "region": "Rajasthan",
+      "lat": 24.578721,
+      "lon": 73.6862571
+    },
+    {
+      "n": 21,
+      "name": "Udaipur",
+      "region": "Rajasthan",
+      "lat": 24.578721,
+      "lon": 73.6862571
+    },
+    {
+      "n": 22,
+      "name": "Jaipur",
+      "region": "Rajasthan",
+      "lat": 26.9154576,
+      "lon": 75.8189817
+    },
+    {
+      "n": 23,
+      "name": "Delhi",
+      "region": "Delhi",
+      "lat": 28.6328027,
+      "lon": 77.2197713
+    },
+    {
+      "n": 24,
+      "name": "Rishikesh",
+      "region": "Uttarakhand",
+      "lat": 30.1086537,
+      "lon": 78.2916193
+    },
+    {
+      "n": 25,
+      "name": "Rishikesh",
+      "region": "Uttarakhand",
+      "lat": 30.1086537,
+      "lon": 78.2916193
+    },
+    {
+      "n": 26,
+      "name": "Mussoorie",
+      "region": "Uttarakhand",
+      "lat": 30.4569012,
+      "lon": 78.0782906
+    },
+    {
+      "n": 27,
+      "name": "Dehradun",
+      "region": "Uttarakhand",
+      "lat": 30.3255646,
+      "lon": 78.0436813
+    },
+    {
+      "n": 28,
+      "name": "Shimla",
+      "region": "Himachal Pradesh",
+      "lat": 31.1040393,
+      "lon": 77.1707923
+    },
+    {
+      "n": 29,
+      "name": "Shimla",
+      "region": "Himachal Pradesh",
+      "lat": 31.1040393,
+      "lon": 77.1707923
+    },
+    {
+      "n": 30,
+      "name": "dharamshala",
+      "region": "Himachal Pradesh",
+      "lat": 32.2143039,
+      "lon": 76.3196717
+    },
+    {
+      "n": 31,
+      "name": "dharamshala",
+      "region": "Himachal Pradesh",
+      "lat": 32.2143039,
+      "lon": 76.3196717
+    },
+    {
+      "n": 32,
+      "name": "Triund",
+      "region": "Himachal Pradesh",
+      "lat": 32.7287809,
+      "lon": 75.9909864
+    },
+    {
+      "n": 33,
+      "name": "dharamshala",
+      "region": "Himachal Pradesh",
+      "lat": 32.2143039,
+      "lon": 76.3196717
+    },
+    {
+      "n": 34,
+      "name": "dharamshala",
+      "region": "Himachal Pradesh",
+      "lat": 32.2143039,
+      "lon": 76.3196717
+    },
+    {
+      "n": 35,
+      "name": "Jammu",
+      "region": "Jammu and Kashmir",
+      "lat": 32.7185614,
+      "lon": 74.8580917
+    },
+    {
+      "n": 36,
+      "name": "Amritsar",
+      "region": "Punjab",
+      "lat": 31.6356659,
+      "lon": 74.8787496
+    },
+    {
+      "n": 37,
+      "name": "Chandigarh",
+      "region": "Chandigarh",
+      "lat": 30.7334421,
+      "lon": 76.7797143
+    },
+    {
+      "n": 38,
+      "name": "Kurukshetra",
+      "region": "Haryana",
+      "lat": 29.9693747,
+      "lon": 76.8482787
+    },
+    {
+      "n": 39,
+      "name": "Delhi",
+      "region": "Delhi",
+      "lat": 28.6328027,
+      "lon": 77.2197713
+    },
+    {
+      "n": 40,
+      "name": "Delhi",
+      "region": "Delhi",
+      "lat": 28.6328027,
+      "lon": 77.2197713
+    },
+    {
+      "n": 41,
+      "name": "Gwalior",
+      "region": "Madhya Pradesh",
+      "lat": 26.2037247,
+      "lon": 78.1573628
+    },
+    {
+      "n": 42,
+      "name": "Lucknow",
+      "region": "Uttar Pradesh",
+      "lat": 26.8381,
+      "lon": 80.9346001
+    },
+    {
+      "n": 43,
+      "name": "Lucknow",
+      "region": "Uttar Pradesh",
+      "lat": 26.8381,
+      "lon": 80.9346001
+    },
+    {
+      "n": 44,
+      "name": "Varanasi",
+      "region": "Uttar Pradesh",
+      "lat": 25.3356491,
+      "lon": 83.0076292
+    },
+    {
+      "n": 45,
+      "name": "Varanasi",
+      "region": "Uttar Pradesh",
+      "lat": 25.3356491,
+      "lon": 83.0076292
+    },
+    {
+      "n": 46,
+      "name": "Varanasi",
+      "region": "Uttar Pradesh",
+      "lat": 25.3356491,
+      "lon": 83.0076292
+    },
+    {
+      "n": 47,
+      "name": "Varanasi",
+      "region": "Uttar Pradesh",
+      "lat": 25.3356491,
+      "lon": 83.0076292
+    },
+    {
+      "n": 48,
+      "name": "Varanasi",
+      "region": "Uttar Pradesh",
+      "lat": 25.3356491,
+      "lon": 83.0076292
+    },
+    {
+      "n": 49,
+      "name": "Varanasi",
+      "region": "Uttar Pradesh",
+      "lat": 25.3356491,
+      "lon": 83.0076292
+    },
+    {
+      "n": 50,
+      "name": "Varanasi",
+      "region": "Uttar Pradesh",
+      "lat": 25.3356491,
+      "lon": 83.0076292
+    },
+    {
+      "n": 51,
+      "name": "Lumbini",
+      "region": "Nepal",
+      "lat": 27.980713,
+      "lon": 82.9531851
+    },
+    {
+      "n": 52,
+      "name": "Lumbini",
+      "region": "Nepal",
+      "lat": 27.980713,
+      "lon": 82.9531851
+    },
+    {
+      "n": 53,
+      "name": "Pokhara",
+      "region": "Nepal",
+      "lat": 28.209538,
+      "lon": 83.991402
+    },
+    {
+      "n": 54,
+      "name": "Pokhara",
+      "region": "Nepal",
+      "lat": 28.209538,
+      "lon": 83.991402
+    },
+    {
+      "n": 55,
+      "name": "Kathmandu",
+      "region": "Nepal",
+      "lat": 27.708317,
+      "lon": 85.3205817
+    },
+    {
+      "n": 56,
+      "name": "Kathmandu",
+      "region": "Nepal",
+      "lat": 27.708317,
+      "lon": 85.3205817
+    },
+    {
+      "n": 57,
+      "name": "Janakpur",
+      "region": "Nepal",
+      "lat": 26.7284541,
+      "lon": 85.9249005
+    },
+    {
+      "n": 58,
+      "name": "Siliguri",
+      "region": "West Bengal",
+      "lat": 26.7164127,
+      "lon": 88.4309916
+    },
+    {
+      "n": 59,
+      "name": "Buddha Park",
+      "region": "Sikkim",
+      "lat": 27.3116732,
+      "lon": 88.3635699
+    },
+    {
+      "n": 60,
+      "name": "Jaigaon",
+      "region": "West Bengal",
+      "lat": 26.854859,
+      "lon": 89.3767318
+    },
+    {
+      "n": 61,
+      "name": "Guwahati",
+      "region": "Assam",
+      "lat": 26.1805978,
+      "lon": 91.753943
+    },
+    {
+      "n": 62,
+      "name": "Guwahati",
+      "region": "Assam",
+      "lat": 26.1805978,
+      "lon": 91.753943
+    },
+    {
+      "n": 63,
+      "name": "Bomdila",
+      "region": "Arunachal Pradesh",
+      "lat": 27.264445,
+      "lon": 92.4206519
+    },
+    {
+      "n": 64,
+      "name": "Tawang",
+      "region": "Arunachal Pradesh",
+      "lat": 27.5879186,
+      "lon": 91.863733
+    },
+    {
+      "n": 65,
+      "name": "Brokpublang",
+      "region": "Arunachal Pradesh",
+      "lat": 27.36008,
+      "lon": 92.24121
+    },
+    {
+      "n": 66,
+      "name": "Guwahati",
+      "region": "Assam",
+      "lat": 26.1805978,
+      "lon": 91.753943
+    },
+    {
+      "n": 67,
+      "name": "Guwahati",
+      "region": "Assam",
+      "lat": 26.1805978,
+      "lon": 91.753943
+    },
+    {
+      "n": 68,
+      "name": "Shillong",
+      "region": "Meghalaya",
+      "lat": 25.5759931,
+      "lon": 91.8827872
+    },
+    {
+      "n": 69,
+      "name": "Dawki",
+      "region": "Meghalaya",
+      "lat": 25.1856343,
+      "lon": 92.0215717
+    },
+    {
+      "n": 70,
+      "name": "Guwahati",
+      "region": "Assam",
+      "lat": 26.1805978,
+      "lon": 91.753943
+    },
+    {
+      "n": 71,
+      "name": "Guwahati",
+      "region": "Assam",
+      "lat": 26.1805978,
+      "lon": 91.753943
+    },
+    {
+      "n": 72,
+      "name": "Dimapur",
+      "region": "Nagaland",
+      "lat": 25.9041378,
+      "lon": 93.7177609
+    },
+    {
+      "n": 73,
+      "name": "Kohima",
+      "region": "Nagaland",
+      "lat": 25.6618755,
+      "lon": 94.1019156
+    },
+    {
+      "n": 74,
+      "name": "Mokochung",
+      "region": "Nagaland",
+      "lat": 26.4795861,
+      "lon": 94.5105275
+    },
+    {
+      "n": 75,
+      "name": "Sonari",
+      "region": "Assam",
+      "lat": 27.0557101,
+      "lon": 95.120299
+    },
+    {
+      "n": 76,
+      "name": "Chongkham",
+      "region": "Arunachal Pradesh",
+      "lat": 27.8099085,
+      "lon": 96.0842123
+    },
+    {
+      "n": 77,
+      "name": "Dibrugargh",
+      "region": "Assam",
+      "lat": 27.4844597,
+      "lon": 94.9019447
+    },
+    {
+      "n": 78,
+      "name": "Kolkata",
+      "region": "West Bengal",
+      "lat": 22.5726459,
+      "lon": 88.3638953
+    },
+    {
+      "n": 79,
+      "name": "Kolkata",
+      "region": "West Bengal",
+      "lat": 22.5726459,
+      "lon": 88.3638953
+    },
+    {
+      "n": 80,
+      "name": "Jamshedpur",
+      "region": "Jharkhand",
+      "lat": 22.8015194,
+      "lon": 86.2029579
+    },
+    {
+      "n": 81,
+      "name": "Cuttack",
+      "region": "Odisha",
+      "lat": 20.4686,
+      "lon": 85.8792
+    },
+    {
+      "n": 82,
+      "name": "Puri",
+      "region": "Odisha",
+      "lat": 19.8076083,
+      "lon": 85.8252538
+    },
+    {
+      "n": 83,
+      "name": "Brahmapur",
+      "region": "Odisha",
+      "lat": 19.3098134,
+      "lon": 84.7971562
+    },
+    {
+      "n": 84,
+      "name": "Vishakapatanam",
+      "region": "Andhra Pradesh",
+      "lat": 17.6935526,
+      "lon": 83.2921297
+    },
+    {
+      "n": 85,
+      "name": "Vijayawada",
+      "region": "Andhra Pradesh",
+      "lat": 16.5115306,
+      "lon": 80.6160469
+    },
+    {
+      "n": 86,
+      "name": "Hyderabad",
+      "region": "Telangana",
+      "lat": 17.360589,
+      "lon": 78.4740613
+    },
+    {
+      "n": 87,
+      "name": "Hyderabad",
+      "region": "Telangana",
+      "lat": 17.360589,
+      "lon": 78.4740613
+    },
+    {
+      "n": 88,
+      "name": "Hyderabad",
+      "region": "Telangana",
+      "lat": 17.360589,
+      "lon": 78.4740613
+    },
+    {
+      "n": 89,
+      "name": "Kurnool",
+      "region": "Andhra Pradesh",
+      "lat": 15.8309251,
+      "lon": 78.0425373
+    },
+    {
+      "n": 90,
+      "name": "Banglore",
+      "region": "Karnataka",
+      "lat": 12.9767936,
+      "lon": 77.590082
+    },
+    {
+      "n": 91,
+      "name": "Coimbatore",
+      "region": "Tamil Nadu",
+      "lat": 11.0018115,
+      "lon": 76.9628425
+    },
+    {
+      "n": 92,
+      "name": "Allapuzha",
+      "region": "Kerala",
+      "lat": 9.5003416,
+      "lon": 76.4123364
+    },
+    {
+      "n": 93,
+      "name": "Trivandrum",
+      "region": "Kerala",
+      "lat": 8.4882267,
+      "lon": 76.947551
+    }
+  ],
+  "home": "Trivandrum",
+  "totals": {
+    "nights": 93,
+    "spend": 341400,
+    "regions": 29
+  }
+}
