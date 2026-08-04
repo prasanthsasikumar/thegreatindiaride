@@ -41,7 +41,8 @@ const COUNTRIES = {
 };
 
 const BBOX = { minLon: 66, maxLon: 98, minLat: 5, maxLat: 37 };
-const TOLERANCE = 0.06;   // degrees ≈ 6km
+const TOLERANCE = 0.015;  // degrees ~1.6km — fine enough at render size
+const PRECISION = 3;      // decimals kept, ~110m
 const MIN_RING = 6;       // points, after simplifying
 const MIN_SPAN = 0.6;     // degrees — drops specks and small islands
 
@@ -49,6 +50,9 @@ if (!SRC || !fs.existsSync(SRC)) {
   console.error('Usage: node build-basemap.cjs <ne_50m_admin_0_countries.geojson>');
   process.exit(1);
 }
+
+const P10 = Math.pow(10, PRECISION);
+const round = n => Math.round(n * P10) / P10;
 
 /* ---------- Douglas–Peucker ---------- */
 
@@ -103,7 +107,10 @@ for (const f of geo.features) {
     if (maxLon - minLon < MIN_SPAN && maxLat - minLat < MIN_SPAN) continue;
 
     const simplified = simplify(ring, TOLERANCE)
-      .map(p => [Math.round(p[0] * 100) / 100, Math.round(p[1] * 100) / 100]);
+      // Round AFTER simplifying, and keep enough precision to be worth it. At 2
+      // decimals every point snapped to a ~1.1km grid, which staircased the
+      // coastline and undid any tolerance finer than that.
+      .map(p => [round(p[0]), round(p[1])]);
     if (simplified.length < MIN_RING) continue;
 
     keptPts += simplified.length;
@@ -115,7 +122,7 @@ for (const f of geo.features) {
 
 fs.writeFileSync(OUT, JSON.stringify({
   generated: new Date().toISOString(),
-  source: 'Natural Earth 1:50m admin_0 countries (public domain)',
+  source: 'Natural Earth 1:10m admin_0 countries, India point-of-view (public domain)',
   bbox: BBOX,
   countries: out,
 }));

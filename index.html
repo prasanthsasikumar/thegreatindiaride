@@ -122,6 +122,28 @@ button { font: inherit; color: inherit; }
 }
 .map__badge[hidden] { display: none; }
 
+.map__toggle {
+  position: absolute; right: 0; top: 0; z-index: 2;
+  background: var(--color-bg); color: var(--color-text);
+  border: 1px solid var(--color-divider); cursor: pointer;
+  font-family: var(--font-heading); font-weight: var(--fw-bold);
+  font-size: 10px; letter-spacing: 0.08em; padding: 4px 8px; text-transform: uppercase;
+}
+.map__toggle:hover { border-color: var(--color-text); }
+.map__toggle[aria-pressed="true"] { background: var(--color-accent); border-color: var(--color-accent); color: #fff; }
+
+.map__attr {
+  font-size: 9px; color: var(--color-neutral-700); margin-top: 2px; text-align: right;
+}
+.map__attr[hidden] { display: none; }
+
+/* Over tiles the fills would hide the map, so the countries become outlines only.
+   India keeps its full stroke: OSM draws the Line of Control, and the official
+   boundary sitting on top is the point. */
+.atlas[data-mode="map"] .india { fill: none; stroke-width: 1.5; }
+.atlas[data-mode="map"] .neighbour { stroke: color-mix(in srgb, #201e1d 45%, transparent); }
+.atlas .tile-img { image-rendering: auto; }
+
 /* ─── legs + regions ───────────────────────────────────────────────────── */
 .leg__head { background: var(--color-accent); color: #f8f4f4; }
 .leg__meta { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-3); }
@@ -258,7 +280,9 @@ button { font: inherit; color: inherit; }
 .region__meta { font-size: 11px; }
 .region { border-bottom: 1px solid var(--color-divider); }
 
-.clips { grid-template-columns: repeat(3, minmax(0, 1fr)); padding: 0 0 20px; }
+/* auto-fill rather than a fixed count: tiles stay a consistent size and the
+   column count follows the width, so more of the ride is on screen at once. */
+.clips { grid-template-columns: repeat(auto-fill, minmax(78px, 1fr)); padding: 0 0 20px; }
 .region[data-expanded="false"] .clips { display: none; }
 
 .close { margin-top: 56px; padding: 28px 20px 32px; }
@@ -267,7 +291,7 @@ button { font: inherit; color: inherit; }
 .pagefoot { margin-top: 32px; border-top: var(--rule); padding-top: 12px; font-size: 11px; color: var(--color-neutral-700); }
 
 /* ══ DESKTOP — "Atlas Split" ═════════════════════════════════════════════ */
-@media (min-width: 900px) {
+@media (min-width: 1080px) {
   .shell {
     max-width: none; margin: 0; padding: 0;
     display: grid; grid-template-columns: 460px minmax(0, 1fr);
@@ -301,7 +325,7 @@ button { font: inherit; color: inherit; }
   .region__bar:hover { background: transparent; }
   .region__name { font-size: 24px; }
   .region__sign { display: none; }              /* nothing collapses on desktop */
-  .clips { grid-template-columns: repeat(6, minmax(0, 1fr)); padding: 0; }
+  .clips { grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); padding: 0; }
   .region[data-expanded="false"] .clips { display: grid; }
 
   .close { margin: 56px 0 0; padding: 32px 28px 36px; }
@@ -348,9 +372,11 @@ button { font: inherit; color: inherit; }
         <span class="mapsection__hint">tap a stop to jump</span>
       </div>
       <div class="mapwrap">
-        <svg class="atlas" id="atlas" role="img" aria-label="Map of the route across India, Nepal and Bhutan"></svg>
+        <svg class="atlas" id="atlas" data-mode="outline" role="img" aria-label="Map of the route across India, Nepal and Bhutan"></svg>
         <div class="map__badge" id="map-badge" hidden></div>
+        <button type="button" class="map__toggle" id="map-toggle" aria-pressed="false">Real map</button>
       </div>
+      <p class="map__attr" id="map-attr" hidden>© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors</p>
     </section>
 
     <div class="pane__foot">Click a stop to jump. The map follows your scroll.</div>
@@ -426,7 +452,10 @@ button { font: inherit; color: inherit; }
     'Dadra and Nagar Haveli and Daman and Diu': [73.0, 20.3],
   };
 
-  var DESKTOP = window.matchMedia('(min-width: 900px)');
+  // Must match the CSS breakpoint below. The pane is a fixed 460px, so under
+  // ~1080px the legs column drops to three columns — narrower than the mobile
+  // layout manages in its 600px measure. Below this the Journey layout is better.
+  var DESKTOP = window.matchMedia('(min-width: 1080px)');
 
   var manifest = null, basemap = null;
   var legs = [], regionsFlat = [], flatClips = [];
@@ -435,6 +464,10 @@ button { font: inherit; color: inherit; }
 
   // The lightbox builds a fresh <video> per clip, so unmuting used to last exactly
   // one clip. Remember the choice, and keep it across visits.
+  var MAP_KEY = 'ride:map-mode';
+  var mapMode = 'outline';
+  try { mapMode = localStorage.getItem(MAP_KEY) === 'map' ? 'map' : 'outline'; } catch (e) { /* private mode */ }
+
   var SOUND_KEY = 'ride:sound-on';
   var soundOn = false;
   try { soundOn = localStorage.getItem(SOUND_KEY) === '1'; } catch (e) { /* private mode */ }
@@ -449,6 +482,8 @@ button { font: inherit; color: inherit; }
     statClips: document.getElementById('stat-clips'),
     atlas: document.getElementById('atlas'),
     badge: document.getElementById('map-badge'),
+    mapToggle: document.getElementById('map-toggle'),
+    mapAttr: document.getElementById('map-attr'),
     lb: document.getElementById('lb'),
     lbTitle: document.getElementById('lb-title'),
     lbCount: document.getElementById('lb-count'),
@@ -668,8 +703,43 @@ button { font: inherit; color: inherit; }
     btn.appendChild(date);
 
     btn._clip = c;
+    wireHover(btn);
     mediaObserver ? mediaObserver.observe(btn) : hydrate(btn);
     return btn;
+  }
+
+  /* ─── hover to preview (pointer devices only) ───────────────────────── */
+  //
+  // Only ever one clip plays at a time: sweeping the grid would otherwise leave a
+  // trail of videos running, since play() resolves after the pointer has moved on.
+  //
+  var CAN_HOVER = window.matchMedia('(hover: hover) and (pointer: fine)');
+  var hoverVideo = null;
+
+  function stopHover() {
+    if (!hoverVideo) return;
+    var v = hoverVideo;
+    hoverVideo = null;
+    v.pause();
+    v.loop = false;
+    try { v.currentTime = 0.5; } catch (e) { /* not seekable yet */ }
+  }
+
+  function wireHover(btn) {
+    btn.addEventListener('mouseenter', function () {
+      if (!CAN_HOVER.matches || !DESKTOP.matches) return;
+      hydrate(btn);
+      var v = btn.querySelector('video');
+      if (!v) return;
+      stopHover();
+      hoverVideo = v;
+      v.loop = true;
+      v.play().catch(function () { /* still buffering, or the tab is hidden */ });
+    });
+
+    btn.addEventListener('mouseleave', function () {
+      if (hoverVideo && btn.contains(hoverVideo)) stopHover();
+    });
   }
 
   // 222 clips would be 222 metadata fetches up front; only load what nears the view.
@@ -755,6 +825,8 @@ button { font: inherit; color: inherit; }
   /* ─── map ───────────────────────────────────────────────────────────── */
   var NS = 'http://www.w3.org/2000/svg';
   var mapStops = [];
+  var mapFrame = null;   // projection constants, shared with the tile layer
+  var mapTiles = null;   // the <g> of OSM tiles, when the real map is on
 
   function renderMap() {
     if (!basemap) return;
@@ -841,7 +913,71 @@ button { font: inherit; color: inherit; }
       if (n && n.dataset && n.dataset.idx) jump(+n.dataset.idx);
     });
 
+    // Everything the tile layer needs to sit on the same projection.
+    mapFrame = { W: W, H: H, k: k, minX: minX, minY: minY, offX: offX, offY: offY };
+    if (mapMode === 'map') drawTiles();
+
     syncMap();
+  }
+
+  /* ─── optional OpenStreetMap underlay ───────────────────────────────── */
+  //
+  // The map already draws in Mercator, and Web Mercator is the same projection up to
+  // a linear transform — so tiles land exactly on the drawn coastline, no reprojection:
+  //   x = worldPx · nx + Bx     where nx = (mx + π) / 2π
+  //   y = worldPx · ny + By     where ny = (π − my) / 2π
+  //
+  function drawTiles() {
+    var f = mapFrame;
+    if (!f) return;
+    clearTiles();
+
+    var worldPx = 2 * Math.PI * f.k;
+    var Bx = f.offX - (Math.PI + f.minX) * f.k;
+    var By = f.H - f.offY - (Math.PI - f.minY) * f.k;
+
+    // One zoom finer than the exact fit, so tiles are downscaled rather than blown up.
+    var z = Math.max(0, Math.min(19, Math.round(Math.log(worldPx / 256) / Math.LN2) + 1));
+    var n = Math.pow(2, z);
+    var size = worldPx / n;
+
+    var x0 = Math.max(0, Math.floor((0 - Bx) / size));
+    var x1 = Math.min(n - 1, Math.ceil((f.W - Bx) / size));
+    var y0 = Math.max(0, Math.floor((0 - By) / size));
+    var y1 = Math.min(n - 1, Math.ceil((f.H - By) / size));
+
+    var g = document.createElementNS(NS, 'g');
+    g.setAttribute('class', 'tiles');
+    for (var tx = x0; tx <= x1; tx++) {
+      for (var ty = y0; ty <= y1; ty++) {
+        var img = document.createElementNS(NS, 'image');
+        img.setAttribute('class', 'tile-img');
+        img.setAttribute('x', (Bx + tx * size).toFixed(2));
+        img.setAttribute('y', (By + ty * size).toFixed(2));
+        // Half a pixel of overlap; exact edges leave hairline seams once scaled.
+        img.setAttribute('width', (size + 0.5).toFixed(2));
+        img.setAttribute('height', (size + 0.5).toFixed(2));
+        img.setAttribute('href', 'https://tile.openstreetmap.org/' + z + '/' + tx + '/' + ty + '.png');
+        g.appendChild(img);
+      }
+    }
+    el.atlas.insertBefore(g, el.atlas.firstChild);   // behind coastlines and route
+    mapTiles = g;
+  }
+
+  function clearTiles() {
+    if (mapTiles && mapTiles.parentNode) mapTiles.parentNode.removeChild(mapTiles);
+    mapTiles = null;
+  }
+
+  function setMapMode(mode) {
+    mapMode = mode;
+    try { localStorage.setItem(MAP_KEY, mode); } catch (e) { /* private mode */ }
+    el.atlas.dataset.mode = mode;
+    el.mapToggle.setAttribute('aria-pressed', String(mode === 'map'));
+    el.mapToggle.textContent = mode === 'map' ? 'Outline' : 'Real map';
+    el.mapAttr.hidden = mode !== 'map';
+    if (mode === 'map') drawTiles(); else clearTiles();
   }
 
   function syncMap() {
@@ -888,6 +1024,7 @@ button { font: inherit; color: inherit; }
   /* ─── lightbox ──────────────────────────────────────────────────────── */
   function openLb(pos) {
     if (pos < 0 || pos >= flatClips.length) return;
+    stopHover();   // don't leave a tile looping behind the overlay
     lbPos = pos;
     var entry = flatClips[pos];
     var c = entry.clip, r = entry.region;
@@ -966,6 +1103,11 @@ button { font: inherit; color: inherit; }
     renderStrip();
     renderMap();
     syncStrip();
+
+    setMapMode(mapMode);
+    el.mapToggle.addEventListener('click', function () {
+      setMapMode(mapMode === 'map' ? 'outline' : 'map');
+    });
   }).catch(function (err) {
     el.loading.remove();
     el.error.hidden = false;

@@ -95,10 +95,21 @@ expires after 4 days.
 `index.html` is the whole site — it tells the ride as a story. It implements two designs from the
 "Great India Ride redesign" project (Claude Design `1e0800a2`), on one DOM:
 
-- **≥900px — Desktop A, Atlas Split.** A 460px sticky pane holds the brand, title,
+- **≥1080px — Desktop A, Atlas Split.** A 460px sticky pane holds the brand, title,
   stats and the route map; the right column runs the legs, every region expanded.
-- **<900px — Journey.** Single column, a sticky strip of region chips, and regions
-  as accordions that expand into a 3-up grid.
+- **<1080px — Journey.** Single column, a sticky strip of region chips, and regions
+  as accordions.
+
+The breakpoint is 1080px, not 900: the pane is a fixed 460px, so below that the legs
+column drops to three columns — narrower than the mobile layout manages in its 600px
+measure. Keep the CSS media queries and the `DESKTOP` matchMedia in `index.html` in
+lockstep; the JS decides what collapses and the CSS decides how it looks.
+
+Clip grids are `auto-fill` rather than a fixed column count, so tile size stays
+constant and the count follows the width — 4 up on a phone, 8 on a wide desktop.
+
+On pointer devices a tile plays muted on hover, one at a time. Sound preference in the
+lightbox persists in localStorage.
 
 Both use the `modernist` design system: Archivo throughout, #f3f2f2 paper, #201e1d
 ink, #ec3013 accent, square corners, grayscale video thumbnails.
@@ -130,6 +141,12 @@ This reuses `basemap.json` instead — Natural Earth outlines baked in at ~32KB 
 `build-basemap.cjs`, with a hand-rolled Mercator fit to India. Same drawing, no
 external requests, works offline.
 
+The map has an **outline / real map toggle**. Outline is the default and fetches
+nothing; the toggle lays OpenStreetMap tiles underneath, with attribution, and the
+choice persists. Alignment is free — the map already draws in Mercator, and Web
+Mercator is the same projection up to a linear transform, so tiles land on the drawn
+coastline with no reprojection.
+
 **Build it from the `_ind` point-of-view file.** Natural Earth's default country set
 draws India along the Line of Control, which clips Aksai Chin and Pakistan-administered
 Kashmir — India stops at lat 35.5 instead of 37.05 and the northern tip is visibly cut
@@ -142,6 +159,10 @@ node build-basemap.cjs ne_10m_admin_0_countries_ind.geojson
 ```
 
 Regenerating from the default file would silently reintroduce the clipped boundary.
+
+Round coordinates *after* simplifying and keep 3 decimals. At 2 decimals every point
+snapped to a ~1.1km grid, which staircased the coastline and made any tolerance finer
+than that pointless.
 
 Region centroids come from the design's `india-map.js`.
 
