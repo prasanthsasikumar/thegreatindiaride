@@ -505,8 +505,13 @@ button { font: inherit; color: inherit; }
   try { mapMode = localStorage.getItem(MAP_KEY) === 'map' ? 'map' : 'outline'; } catch (e) { /* private mode */ }
 
   var SOUND_KEY = 'ride:sound-on';
-  var soundOn = false;
-  try { soundOn = localStorage.getItem(SOUND_KEY) === '1'; } catch (e) { /* private mode */ }
+  // Sound on unless you've turned it off. Opening a clip is a deliberate click, so
+  // there's a gesture to autoplay against; the fallback below covers the refusals.
+  var soundOn = true;
+  try {
+    var pref = localStorage.getItem(SOUND_KEY);
+    if (pref !== null) soundOn = pref === '1';
+  } catch (e) { /* private mode */ }
 
   var el = {
     legs: document.getElementById('legs'),
