@@ -361,6 +361,15 @@ button { font: inherit; color: inherit; }
   .leg__sub { font-size: 14px; }
 
   .region { padding: 20px 0 28px; border-bottom: var(--rule); scroll-margin-top: 16px; }
+
+  /* Two-up on wide screens: a short block takes half the width so the next one can
+     sit beside it. Only above 1400px, where a half column is still wide enough for
+     a sensible number of tiles. */
+  @media (min-width: 1400px) {
+    .regions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-8); align-items: start; }
+    .region { grid-column: span 2; }
+    .region[data-span="1"] { grid-column: span 1; }
+  }
   .region__bar { cursor: default; padding: 0; min-height: 0; margin-bottom: 14px; gap: 16px; align-items: baseline; }
   .region__bar:hover { background: transparent; }
   .region__name { font-size: 24px; }
@@ -398,11 +407,11 @@ button { font: inherit; color: inherit; }
     <div class="pane__head hero">
       <p class="kicker eyebrow">JAN – APR 2025 · ONE MOTORCYCLE</p>
       <h1>The Great India Ride</h1>
-      <p class="hero__blurb">Home in Trivandrum to Kanyakumari, up to Ladakh, across to the Arunachal border, and back down the east coast — told in the order it happened.</p>
+      <p class="hero__blurb">Home in Trivandrum to Kanyakumari, up to Ladakh, across to the Arunachal border, and back down the east coast, told in the order it happened.</p>
       <div class="stats">
         <div><div class="stat__n">93</div><div class="stat__l">Nights</div></div>
-        <div><div class="stat__n" id="stat-regions">—</div><div class="stat__l">Regions</div></div>
-        <div><div class="stat__n" id="stat-clips">—</div><div class="stat__l">Clips</div></div>
+        <div><div class="stat__n" id="stat-regions">…</div><div class="stat__l">Regions</div></div>
+        <div><div class="stat__n" id="stat-clips">…</div><div class="stat__l">Clips</div></div>
       </div>
     </div>
 
@@ -492,6 +501,9 @@ button { font: inherit; color: inherit; }
   // ~1080px the legs column drops to three columns — narrower than the mobile
   // layout manages in its 600px measure. Below this the Journey layout is better.
   var DESKTOP = window.matchMedia('(min-width: 1080px)');
+
+  // Blocks at or under this many clips may share a row with the next one.
+  var PAIR_MAX = 6;
 
   var manifest = null, basemap = null;
   var legs = [], regionsFlat = [], flatClips = [];
@@ -743,9 +755,26 @@ button { font: inherit; color: inherit; }
       var sub = document.createElement('div'); sub.className = 'leg__sub'; sub.textContent = L.sub; head.appendChild(sub);
       sec.appendChild(head);
 
-      L.regions.forEach(function (r) {
-        sec.appendChild(regionBlock(r));
+      var wrap = document.createElement('div');
+      wrap.className = 'regions';
+
+      // Half-width only in genuine pairs. Marking every short block half-width left
+      // lone ones stranded beside an empty half and a half-length rule, which looked
+      // broken; a block only narrows when the next one can actually come up beside
+      // it. Packing stays sparse — dense would reorder, and the order is the story.
+      var spans = L.regions.map(function () { return 2; });
+      for (var i = 0; i < L.regions.length - 1; i++) {
+        if (L.regions[i].clips.length <= PAIR_MAX && L.regions[i + 1].clips.length <= PAIR_MAX) {
+          spans[i] = 1; spans[i + 1] = 1; i++;
+        }
+      }
+
+      L.regions.forEach(function (r, i) {
+        var block = regionBlock(r);
+        block.dataset.span = String(spans[i]);
+        wrap.appendChild(block);
       });
+      sec.appendChild(wrap);
       frag.appendChild(sec);
     });
 
