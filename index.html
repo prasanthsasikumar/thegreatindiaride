@@ -6,7 +6,8 @@
 <title>The Great India Ride — 93 nights, one motorcycle</title>
 <meta name="description" content="Kanyakumari to Ladakh to the Arunachal border and home again. 93 nights, 31 regions, 222 clips, told in the order it happened.">
 <meta name="color-scheme" content="light">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%23201e1d'/><path d='M13 10.5l9 5.5-9 5.5z' fill='%23ec3013'/></svg>">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800&display=swap" rel="stylesheet">
@@ -574,93 +575,132 @@ button { font: inherit; color: inherit; }
 
   function build(m) {
     function usable(c) { return c.type === 'video' && c.captured; }
-    var stories = (m.stories || []).filter(usable)
-      .map(function (c) { return Object.assign({ category: 'story' }, c); })
-      .sort(function (a, b) { return a.captured < b.captured ? -1 : 1; });
-    var reels = (m.reels || []).filter(usable)
-      .map(function (c) { return Object.assign({ category: 'reel' }, c); })
-      .sort(function (a, b) { return a.captured < b.captured ? -1 : 1; });
+    var clips = []
+      .concat((m.stories || []).filter(usable).map(function (c) { return Object.assign({ category: 'story' }, c); }))
+      .concat((m.reels || []).filter(usable).map(function (c) { return Object.assign({ category: 'reel' }, c); }))
+      .sort(function (a, b) { return a.captured < b.captured ? -1 : a.captured > b.captured ? 1 : 0; });
 
-    var idx = 0;
-    var built = LEGS.map(function (def) {
-      var inLeg = stories.filter(function (s) { return s.captured >= def.from && s.captured < def.to; });
-      var groups = [];
-      inLeg.forEach(function (s) {
-        var name = s.state || 'On the road';
-        var g = groups.filter(function (x) { return x.name === name; })[0];
-        if (!g) { g = { name: name, items: [] }; groups.push(g); }
-        g.items.push(s);
-      });
-      return { def: def, groups: groups };
+    // ── Order comes from the itinerary, never from the clips ──────────────
+    //
+    // Deriving order from clip dates broke the flow of the ride. Haryana is one
+    // stop — Kurukshetra, night 38, on the way back from Chandigarh — but a stray
+    // early clip tagged Haryana dragged the whole block up before Punjab, and Delhi
+    // (nights 23 and 39-40) collapsed into a single early block, so the return leg
+    // vanished and the map jumped Punjab → Madhya Pradesh.
+    //
+    // The sheet is one row per night in travel order and is exact, so the runs of
+    // it are the spine. Clips are placed into that spine; they never define it.
+    var runs = ((m.route && m.route.legs) || []).map(function (l, i) {
+      return {
+        order: i + 1, region: l.region, country: l.country,
+        firstNight: l.firstNight, lastNight: l.lastNight, items: [],
+      };
     });
 
-    // Attach every reel to the block for its region.
-    reels.forEach(function (r) {
-      var name = r.state || 'On the road';
-      var candidates = [];
-      built.forEach(function (L) {
-        L.groups.forEach(function (g) { if (g.name === name) candidates.push({ L: L, g: g }); });
-      });
+    // Home, at the front. The sheet only records nights that were paid for, so
+    // leaving Trivandrum on day one has no row — but the prep clips from 10-11 Jan
+    // are Kerala, and without a run to land in they fell into the homecoming block
+    // at the end, three months out of place.
+    var origin = ((m.route && m.route.stops) || []).filter(function (s) { return s.origin; })[0];
+    if (origin && origin.region && (!runs.length || runs[0].region !== origin.region)) {
+      runs.unshift({ order: 0, region: origin.region, country: origin.country,
+                     firstNight: 0, lastNight: 0, items: [], home: true });
+    }
 
-      if (!candidates.length) {
-        // A region with reels but no stories (Goa, Daman, Puducherry) — give it its
-        // own block, placed by the reel's own date.
-        var host = built.filter(function (L) { return r.captured >= L.def.from && r.captured < L.def.to; })[0] || built[0];
-        var fresh = { name: name, items: [] };
-        host.groups.push(fresh);
-        fresh.items.push(r);
-        return;
-      }
+    var dates = clips.filter(isDatable).map(function (c) { return +new Date(c.captured); });
+    var t0 = dates.length ? Math.min.apply(null, dates) : 0;
+    var t1 = dates.length ? Math.max.apply(null, dates) : 0;
+    var lastNight = runs.length ? runs[runs.length - 1].lastNight : 1;
 
+    // The sheet has no dates, only night numbers — interpolate across the trip. It
+    // only has to be good enough to tell one visit from another, and the two Delhi
+    // stops are three weeks apart.
+    runs.forEach(function (r) {
+      r.at = t0 + (t1 - t0) * (((r.firstNight + r.lastNight) / 2) / lastNight);
+      r.start = t0 + (t1 - t0) * (r.firstNight / lastNight);
+    });
+
+    var byRegion = {};
+    runs.forEach(function (r) { (byRegion[r.region] = byRegion[r.region] || []).push(r); });
+
+    var orphans = [];
+    clips.forEach(function (c) {
+      var name = c.state || 'On the road';
+      var candidates = byRegion[name];
+      if (!candidates || !candidates.length) { orphans.push(c); return; }
+
+      // One visit: everything lands there, whatever its timestamp says. Several:
+      // pick the nearest, which is what separates the two Delhis.
       var best = candidates[0];
       if (candidates.length > 1) {
-        var bestGap = Infinity;
-        candidates.forEach(function (c) {
-          var mid = c.g.items[Math.floor(c.g.items.length / 2)].captured;
-          var gap = Math.abs(new Date(mid) - new Date(r.captured));
-          if (gap < bestGap) { bestGap = gap; best = c; }
+        var t = +new Date(c.captured), bestGap = Infinity;
+        candidates.forEach(function (r) {
+          var gap = Math.abs(r.at - t);
+          if (gap < bestGap) { bestGap = gap; best = r; }
         });
       }
-      best.g.items.push(r);
+      best.items.push(c);
+    });
+
+    // Bihar and Bhutan have clips but no row in the sheet — ridden through and a day
+    // trip out of Jaigaon. Give each its own run, slotted in by date.
+    var extra = {};
+    orphans.forEach(function (c) {
+      var name = c.state || 'On the road';
+      (extra[name] = extra[name] || []).push(c);
+    });
+    Object.keys(extra).forEach(function (name) {
+      var items = extra[name];
+      var at = +new Date(items[0].captured);
+      // Compare against each run's start, not its midpoint: Bihar was ridden through
+      // on the way out of Nepal, and against Nepal's midpoint it sorted before it.
+      var after = runs.filter(function (r) { return r.start != null && r.start <= at; }).pop();
+      runs.push({ order: (after ? after.order : -1) + 0.5, region: name,
+                  country: items[0].country || null, items: items, at: at, firstNight: 0, lastNight: 0 });
+    });
+
+    runs.sort(function (a, b) { return a.order - b.order; });
+
+    var live = runs.filter(function (r) { return r.items.length; });
+    live.forEach(function (r) {
+      r.items.sort(function (a, b) { return a.captured < b.captured ? -1 : a.captured > b.captured ? 1 : 0; });
+    });
+
+    // Each run belongs to the narrative leg its dates fall in.
+    var idx = 0;
+    var built = LEGS.map(function (def) { return { def: def, runs: [] }; });
+    live.forEach(function (r) {
+      var span = r.items.filter(isDatable);
+      var when = (span.length ? span[0] : r.items[0]).captured;
+      var L = built.filter(function (x) { return when >= x.def.from && when < x.def.to; })[0] || built[built.length - 1];
+      L.runs.push(r);
     });
 
     legs = built.map(function (L) {
-      // Reels landed at the end of their block; restore chronological order.
-      L.groups.forEach(function (g) {
-        g.items.sort(function (a, b) { return a.captured < b.captured ? -1 : a.captured > b.captured ? 1 : 0; });
-      });
-
-      // Then order the blocks themselves. Blocks are created as stories are walked, so
-      // a region with no stories at all (Goa, Daman, Puducherry — reels only) got
-      // appended after everything else: Goa on 19 Jan and Daman on 25 Jan sat below
-      // Gujarat on 28 Jan. Sort on the same date the block displays, so the ride reads
-      // in order and the printed ranges never go backwards.
-      L.groups.sort(function (a, b) { return blockStart(a) < blockStart(b) ? -1 : blockStart(a) > blockStart(b) ? 1 : 0; });
-      var all = L.groups.reduce(function (n, g) { return n + g.items.length; }, 0);
-
-      // Date labels come from stories only. A reel attached to this leg carries an
-      // upload date that can sit weeks outside it — letting those set the range made
-      // "Into the Himalaya" read 1 Feb – 15 Mar when the leg ends on 1 Mar.
-      var dated = L.groups.reduce(function (acc, g) { return acc.concat(g.items.filter(isDatable)); }, [])
+      var all = L.runs.reduce(function (n, r) { return n + r.items.length; }, 0);
+      var dated = L.runs.reduce(function (acc, r) { return acc.concat(r.items.filter(isDatable)); }, [])
         .sort(function (a, b) { return a.captured < b.captured ? -1 : 1; });
 
       return {
         id: L.def.id, title: L.def.title, sub: L.def.sub, count: all,
         dates: dated.length
           ? (fmt(dated[0].captured) + ' – ' + fmt(dated[dated.length - 1].captured)).toUpperCase() : '',
-        regions: L.groups.map(function (g) {
-          var span = g.items.filter(isDatable);
-          if (!span.length) span = g.items;   // reel-only region: its dates are all we have
-          var r = {
-            index: idx, name: g.name, abbr: abbrev(g.name),
+        regions: L.runs.map(function (r) {
+          var span = r.items.filter(isDatable);
+          if (!span.length) span = r.items;
+          var block = {
+            index: idx, name: r.region, abbr: abbrev(r.region),
+            // The nights this run covers, so map markers can be matched to it exactly
+            // rather than by walking names and hoping the counts line up.
+            firstNight: r.firstNight, lastNight: r.lastNight, home: !!r.home,
             num: String(idx + 1).padStart(2, '0'),
-            count: g.items.length,
+            count: r.items.length,
             range: fmt(span[0].captured) +
               (span.length > 1 ? ' – ' + fmt(span[span.length - 1].captured) : ''),
-            clips: g.items,
+            clips: r.items,
           };
           idx++;
-          return r;
+          return block;
         }),
       };
     }).filter(function (L) { return L.regions.length; });
@@ -670,8 +710,8 @@ button { font: inherit; color: inherit; }
     regionsFlat.forEach(function (r) {
       r.clips.forEach(function (c) { flatClips.push({ clip: c, region: r }); });
     });
-    // Distinct places, not blocks: Tamil Nadu and Karnataka each get two blocks
-    // because they were ridden twice, and "35 regions" would overstate the ride.
+
+    // Distinct places, not blocks: Delhi and Assam get a block per visit.
     var distinct = {};
     regionsFlat.forEach(function (r) { distinct[r.name] = true; });
     return { totalClips: flatClips.length, totalRegions: Object.keys(distinct).length };
@@ -922,19 +962,35 @@ button { font: inherit; color: inherit; }
   // regions have two of them because they were ridden twice. Walk both lists forward
   // together so the second run of Tamil Nadu points at the homecoming block rather
   // than the opening one.
+  // Match each map marker to the block it belongs to by NIGHT NUMBER. Both sides
+  // come from the same sheet, so this is exact. The previous version walked region
+  // names with a moving pointer, which drifted whenever a region's marker count and
+  // block count disagreed — Arunachal has two blocks but four stops, West Bengal
+  // three of each in a different grouping, and markers lit up under the wrong heading.
   function matchStopsToRegions(stops) {
-    var ptr = 0;
     return stops.map(function (s) {
-      var at = -1, i;
-      for (i = ptr; i < regionsFlat.length; i++) {
-        if (regionsFlat[i].name === s.region) { at = i; break; }
+      var candidates = regionsFlat.filter(function (b) { return b.name === s.region; });
+      if (!candidates.length) return { stop: s, idx: -1 };
+
+      if (s.origin) {
+        var home = candidates.filter(function (b) { return b.home; })[0];
+        return { stop: s, idx: (home || candidates[0]).index };
       }
-      if (at < 0) {
-        for (i = 0; i < regionsFlat.length; i++) {
-          if (regionsFlat[i].name === s.region) { at = i; break; }
-        }
-      } else ptr = at;
-      return { stop: s, idx: at >= 0 ? regionsFlat[at].index : -1 };
+
+      var within = candidates.filter(function (b) {
+        return !b.home && s.firstNight >= b.firstNight && s.firstNight <= b.lastNight;
+      })[0];
+      if (within) return { stop: s, idx: within.index };
+
+      // A stop outside every run of its region (shouldn't happen, but the sheet and
+      // the clips are edited independently) goes to the nearest run by night.
+      var best = null, bestGap = Infinity;
+      candidates.forEach(function (b) {
+        if (b.home) return;
+        var gap = Math.min(Math.abs(s.firstNight - b.firstNight), Math.abs(s.firstNight - b.lastNight));
+        if (gap < bestGap) { bestGap = gap; best = b; }
+      });
+      return { stop: s, idx: best ? best.index : candidates[0].index };
     });
   }
 
@@ -982,6 +1038,11 @@ button { font: inherit; color: inherit; }
       }
       el.cardList.appendChild(li);
     });
+
+    // Clicking a stop scrolls straight there — the card is the detail, not a
+    // second step. The Jump button stays for keyboard users and for re-jumping
+    // after the page has scrolled away.
+    if (c.idx >= 0) jump(c.idx);
 
     el.cardJump.hidden = c.idx < 0;
     // The card is about a third of the map's height; anything below ~two thirds down

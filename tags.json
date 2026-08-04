@@ -1,12 +1,12 @@
 {
-  "generated": "2026-08-04T03:01:13.510Z",
+  "generated": "2026-08-04T19:53:33.044Z",
   "source": "instagram-thegreatindiaride-2026-08-03-XQld81EN",
   "stats": {
     "total": 222,
-    "gps": 159,
+    "gps": 156,
     "route": 21,
     "time": 32,
-    "manual": 10,
+    "manual": 13,
     "untagged": 0,
     "capturedFromExif": 59
   },
@@ -206,9 +206,9 @@
     "media/reels/202501/17930416217877813.mp4": {
       "captured": "2025-01-17T13:41:10.000Z",
       "timeSource": "upload",
-      "state": "Karnataka",
+      "state": "Puducherry",
       "country": "India",
-      "stateSource": "gps",
+      "stateSource": "manual",
       "nearby": [
         "Karnataka",
         "Puducherry",
@@ -435,9 +435,9 @@
     "media/reels/202501/17876087088164233.mp4": {
       "captured": "2025-01-27T09:04:56.000Z",
       "timeSource": "upload",
-      "state": "Gujarat",
+      "state": "Dadra and Nagar Haveli and Daman and Diu",
       "country": "India",
-      "stateSource": "gps",
+      "stateSource": "manual",
       "nearby": [
         "Gujarat",
         "Dadra and Nagar Haveli and Daman and Diu",
@@ -1689,9 +1689,9 @@
     "media/stories/202503/18138755302377973.mp4": {
       "captured": "2025-03-12T11:37:21.000Z",
       "timeSource": "exif",
-      "state": "West Bengal",
-      "country": "India",
-      "stateSource": "gps",
+      "state": "Bhutan",
+      "country": "Bhutan",
+      "stateSource": "manual",
       "nearby": [
         "West Bengal",
         "Sikkim",

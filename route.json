@@ -1,5 +1,5 @@
 {
-  "generated": "2026-08-04T19:15:16.883Z",
+  "generated": "2026-08-04T19:53:32.996Z",
   "source": "Pan India Trip  - Trip expenses.csv",
   "nights": 93,
   "regionOrder": [
@@ -324,6 +324,19 @@
     },
     {
       "order": 20,
+      "region": "Bihar",
+      "country": "India",
+      "stops": [],
+      "nights": 0,
+      "firstNight": 57,
+      "lastNight": 57,
+      "spend": 0,
+      "lat": null,
+      "lon": null,
+      "transit": true
+    },
+    {
+      "order": 21,
       "region": "West Bengal",
       "country": "India",
       "stops": [
@@ -337,7 +350,7 @@
       "lon": 88.3334914
     },
     {
-      "order": 21,
+      "order": 22,
       "region": "Sikkim",
       "country": "India",
       "stops": [
@@ -351,7 +364,7 @@
       "lon": 88.3620903
     },
     {
-      "order": 22,
+      "order": 23,
       "region": "West Bengal",
       "country": "India",
       "stops": [
@@ -365,7 +378,20 @@
       "lon": 89.3782327
     },
     {
-      "order": 23,
+      "order": 24,
+      "region": "Bhutan",
+      "country": "Bhutan",
+      "stops": [],
+      "nights": 0,
+      "firstNight": 60,
+      "lastNight": 60,
+      "spend": 0,
+      "lat": null,
+      "lon": null,
+      "transit": true
+    },
+    {
+      "order": 25,
       "region": "Assam",
       "country": "India",
       "stops": [
@@ -379,7 +405,7 @@
       "lon": 91.7846926
     },
     {
-      "order": 24,
+      "order": 26,
       "region": "Arunachal Pradesh",
       "country": "India",
       "stops": [
@@ -395,7 +421,7 @@
       "lon": 92.425316
     },
     {
-      "order": 25,
+      "order": 27,
       "region": "Assam",
       "country": "India",
       "stops": [
@@ -409,7 +435,7 @@
       "lon": 91.7371378
     },
     {
-      "order": 26,
+      "order": 28,
       "region": "Meghalaya",
       "country": "India",
       "stops": [
@@ -424,7 +450,7 @@
       "lon": 91.8136987
     },
     {
-      "order": 27,
+      "order": 29,
       "region": "Assam",
       "country": "India",
       "stops": [
@@ -438,7 +464,7 @@
       "lon": 91.7371378
     },
     {
-      "order": 28,
+      "order": 30,
       "region": "Nagaland",
       "country": "India",
       "stops": [
@@ -454,7 +480,7 @@
       "lon": 93.7280498
     },
     {
-      "order": 29,
+      "order": 31,
       "region": "Assam",
       "country": "India",
       "stops": [
@@ -468,7 +494,7 @@
       "lon": 95.0152243
     },
     {
-      "order": 30,
+      "order": 32,
       "region": "Arunachal Pradesh",
       "country": "India",
       "stops": [
@@ -482,7 +508,7 @@
       "lon": 96.028021
     },
     {
-      "order": 31,
+      "order": 33,
       "region": "Assam",
       "country": "India",
       "stops": [
@@ -496,7 +522,7 @@
       "lon": 94.9375596
     },
     {
-      "order": 32,
+      "order": 34,
       "region": "West Bengal",
       "country": "India",
       "stops": [
@@ -510,7 +536,7 @@
       "lon": 88.350936
     },
     {
-      "order": 33,
+      "order": 35,
       "region": "Jharkhand",
       "country": "India",
       "stops": [
@@ -524,7 +550,7 @@
       "lon": 86.1850975
     },
     {
-      "order": 34,
+      "order": 36,
       "region": "Odisha",
       "country": "India",
       "stops": [
@@ -540,7 +566,7 @@
       "lon": 85.8692539
     },
     {
-      "order": 35,
+      "order": 37,
       "region": "Andhra Pradesh",
       "country": "India",
       "stops": [
@@ -555,7 +581,7 @@
       "lon": 83.3158836
     },
     {
-      "order": 36,
+      "order": 38,
       "region": "Telangana",
       "country": "India",
       "stops": [
@@ -569,7 +595,7 @@
       "lon": 78.4740613
     },
     {
-      "order": 37,
+      "order": 39,
       "region": "Andhra Pradesh",
       "country": "India",
       "stops": [
@@ -583,7 +609,7 @@
       "lon": 78.0425373
     },
     {
-      "order": 38,
+      "order": 40,
       "region": "Karnataka",
       "country": "India",
       "stops": [
@@ -597,7 +623,7 @@
       "lon": 77.590082
     },
     {
-      "order": 39,
+      "order": 41,
       "region": "Tamil Nadu",
       "country": "India",
       "stops": [
@@ -611,7 +637,7 @@
       "lon": 76.9628847
     },
     {
-      "order": 40,
+      "order": 42,
       "region": "Kerala",
       "country": "India",
       "stops": [

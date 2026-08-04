@@ -40,6 +40,15 @@ const SKIP_NIGHTS = new Set([71]);
 // the story as the homecoming chapter.
 const ORIGIN = 'Trivandrum';
 
+// Regions ridden through without sleeping, so they have no row in the sheet — but
+// clips from them exist and need a place in the running order. Inserted straight
+// after the night given, which is the only thing that fixes their position: guessing
+// from clip dates put Bhutan before West Bengal and Bihar before Nepal.
+const TRANSIT = [
+  { region: 'Bihar',  country: 'India',  afterNight: 57 },  // Nepal → Siliguri crosses Bihar
+  { region: 'Bhutan', country: 'Bhutan', afterNight: 60 },  // day trip over the border from Jaigaon
+];
+
 if (!CSV || !fs.existsSync(CSV)) {
   console.error('Usage: node build-route.cjs <trip-expenses.csv>');
   process.exit(1);
@@ -161,6 +170,19 @@ nights.forEach((n, i) => {
   }
 });
 
+// Splice the transit regions into the running order. They carry no nights and no
+// spend; they exist so the narrative doesn't jump straight from Sikkim to Assam.
+TRANSIT.forEach(t => {
+  const at = legs.findIndex(l => l.firstNight > t.afterNight);
+  const entry = {
+    order: 0, region: t.region, country: t.country, stops: [], nights: 0, spend: 0,
+    firstNight: t.afterNight, lastNight: t.afterNight, transit: true,
+    lat: null, lon: null,
+  };
+  if (at === -1) legs.push(entry); else legs.splice(at, 0, entry);
+});
+legs.forEach((l, i) => { l.order = i + 1; });
+
 /* ---------- region-level rollup ---------- */
 
 const byRegion = {};
@@ -214,6 +236,7 @@ fs.writeFileSync(OUT, JSON.stringify({
     order: l.order, region: l.region, country: l.country, stops: l.stops,
     nights: l.nights, firstNight: l.firstNight, lastNight: l.lastNight,
     spend: Math.round(l.spend), lat: l.lat, lon: l.lon,
+    ...(l.transit && { transit: true }),
   })),
   regions: regionOrder.map(r => ({
     region: r, country: byRegion[r].country, nights: byRegion[r].nights,
