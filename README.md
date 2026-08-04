@@ -126,9 +126,22 @@ leg ends on 1 Mar.
 ### The map
 
 The design fetched d3, topojson-client and a world-atlas TopoJSON from CDNs at runtime.
-This reuses `basemap.json` instead — the same Natural Earth outlines, baked in at 20KB
-by `build-basemap.cjs`, with a hand-rolled Mercator fit to India. Same drawing, no
+This reuses `basemap.json` instead — Natural Earth outlines baked in at ~32KB by
+`build-basemap.cjs`, with a hand-rolled Mercator fit to India. Same drawing, no
 external requests, works offline.
+
+**Build it from the `_ind` point-of-view file.** Natural Earth's default country set
+draws India along the Line of Control, which clips Aksai Chin and Pakistan-administered
+Kashmir — India stops at lat 35.5 instead of 37.05 and the northern tip is visibly cut
+away. Natural Earth publishes per-country POV variants; `_ind` is India's own
+depiction. It exists only at 10m:
+
+```
+curl -sSLO https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_10m_admin_0_countries_ind.geojson
+node build-basemap.cjs ne_10m_admin_0_countries_ind.geojson
+```
+
+Regenerating from the default file would silently reintroduce the clipped boundary.
 
 Region centroids come from the design's `india-map.js`.
 

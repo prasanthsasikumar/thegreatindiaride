@@ -83,7 +83,6 @@ button { font: inherit; color: inherit; }
   font-family: var(--font-heading); font-weight: var(--fw-bold);
   font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
 }
-.grayscale { filter: grayscale(1) contrast(1.08); }
 
 /* ─── shell ────────────────────────────────────────────────────────────── */
 .shell { min-height: 100vh; }
@@ -210,6 +209,11 @@ button { font: inherit; color: inherit; }
 /* ══ MOBILE — "Journey" ══════════════════════════════════════════════════ */
 .shell { max-width: 600px; margin: 0 auto; padding: 0 20px 64px; }
 
+/* A sticky child only sticks inside its parent's box. Leaving the strip inside
+   .pane meant it unstuck as soon as the pane ended — right where the legs begin,
+   which is the whole stretch it exists for. display:contents dissolves the pane
+   on mobile so its children sit directly in .shell, which spans the page. */
+.pane { display: contents; }
 .pane__brand { padding-top: 18px; }
 .pane__foot { display: none; }
 
@@ -428,6 +432,12 @@ button { font: inherit; color: inherit; }
   var legs = [], regionsFlat = [], flatClips = [];
   var activeIdx = 0, lbPos = -1;
   var expanded = {};
+
+  // The lightbox builds a fresh <video> per clip, so unmuting used to last exactly
+  // one clip. Remember the choice, and keep it across visits.
+  var SOUND_KEY = 'ride:sound-on';
+  var soundOn = false;
+  try { soundOn = localStorage.getItem(SOUND_KEY) === '1'; } catch (e) { /* private mode */ }
 
   var el = {
     legs: document.getElementById('legs'),
@@ -678,7 +688,6 @@ button { font: inherit; color: inherit; }
     btn.dataset.hydrated = '1';
     var c = btn._clip;
     var v = document.createElement('video');
-    v.className = 'grayscale';
     v.preload = 'metadata';
     v.muted = true; v.playsInline = true; v.tabIndex = -1;
     v.setAttribute('aria-hidden', 'true');
@@ -886,8 +895,27 @@ button { font: inherit; color: inherit; }
     el.lbStage.replaceChildren();
     var v = document.createElement('video');
     v.src = mediaUrl(c.path);
-    v.controls = true; v.autoplay = true; v.muted = true; v.playsInline = true;
+    v.controls = true; v.playsInline = true;
+    v.muted = !soundOn;
+
+    // Guard the programmatic mute below, or the autoplay fallback would overwrite
+    // the very preference we're trying to keep.
+    var syncing = false;
+    v.addEventListener('volumechange', function () {
+      if (syncing) return;
+      soundOn = !v.muted;
+      try { localStorage.setItem(SOUND_KEY, soundOn ? '1' : '0'); } catch (e) { /* private mode */ }
+    });
+
     el.lbStage.appendChild(v);
+
+    // Browsers refuse unmuted autoplay until they trust the gesture. Drop back to
+    // muted playback rather than leaving a paused black frame.
+    var started = v.play();
+    if (started && started.catch) started.catch(function () {
+      syncing = true; v.muted = true; syncing = false;
+      v.play().catch(function () { /* user can press play */ });
+    });
 
     el.lbTitle.textContent = (r.name + ' · ' + fmt(c.captured)).toUpperCase();
 
