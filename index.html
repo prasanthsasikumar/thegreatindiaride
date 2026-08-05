@@ -38,13 +38,16 @@
   --color-line:        rgba(255, 255, 255, 0.10);
   --color-line-strong: rgba(255, 255, 255, 0.22);
 
-  --color-accent:      #5b78f6;
-  --color-accent-soft: rgba(91, 120, 246, 0.18);
+  --color-accent:      #8b5cf6;   /* figures, route, active marks */
+  --color-accent-2:    #ec4899;   /* the live section, eyebrow, CTA sweep */
+  --color-accent-soft: rgba(139, 92, 246, 0.18);
 
   --font-heading: "Space Grotesk", system-ui, sans-serif;
   --font-body:    "Space Grotesk", system-ui, sans-serif;
   --font-mono:    "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
   --fw-bold: 700;
+
+  --pad-x: clamp(20px, 5.6vw, 72px);
 
   --space-1: 4px;  --space-2: 8px;  --space-3: 12px;
   --space-4: 16px; --space-6: 24px; --space-8: 32px;
@@ -90,38 +93,117 @@ button { font: inherit; color: inherit; }
   font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
 }
 
+
+/* ─── hero, from design 4a ─────────────────────────────────────────────── */
+.hero {
+  position: relative; isolation: isolate; background: #000;
+  min-height: clamp(460px, 74vh, 720px);
+  display: flex; flex-direction: column;
+}
+
+.hero__img {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover; object-position: 50% 42%; z-index: -2;
+}
+/* Flat scrims rather than a wash: enough to hold white type over the photo. */
+.hero__veil {
+  position: absolute; inset: 0; z-index: -1;
+  background: rgba(10, 10, 12, 0.44);
+  box-shadow: inset 0 -140px 120px -60px rgba(10, 10, 12, 0.92),
+              inset 0 120px 90px -60px rgba(10, 10, 12, 0.70);
+}
+
+.hero__bar {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--space-4); padding: var(--space-6) var(--pad-x);
+}
+.hero__brand {
+  font-family: var(--font-heading); font-weight: var(--fw-bold);
+  font-size: 17px; color: var(--color-text); text-decoration: none;
+}
+.hero__brand span { color: var(--color-accent-2); }
+.hero__nav { display: flex; gap: var(--space-8); }
+.hero__nav a {
+  font-family: var(--font-mono); font-size: 13px; letter-spacing: 0.08em;
+  color: var(--color-text); text-decoration: none;
+}
+.hero__nav a[aria-current="page"] { color: var(--color-accent-2); }
+.hero__nav a:hover { color: var(--color-accent-2); }
+
+.hero__body { margin-top: auto; padding: var(--space-8) var(--pad-x) clamp(28px, 5vh, 52px); }
+.hero__eyebrow {
+  font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.16em;
+  color: var(--color-accent-2); text-transform: uppercase; margin: 0;
+}
+.hero h1 {
+  font-size: clamp(40px, 7.4vw, 76px); line-height: 1.02;
+  letter-spacing: -0.025em; margin: var(--space-3) 0 0; color: var(--color-text);
+}
+.hero__foot {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  gap: var(--space-8); flex-wrap: wrap; margin-top: var(--space-4);
+}
+.hero__blurb { font-size: 16px; line-height: 1.6; max-width: 56ch; color: var(--color-text); margin: 0; }
+.hero__cta {
+  flex: 0 0 auto; text-decoration: none; white-space: nowrap;
+  font-family: var(--font-heading); font-weight: var(--fw-bold);
+  font-size: 13px; letter-spacing: 0.08em; color: var(--color-text);
+  padding: 14px 26px; border-radius: 999px;
+  background: linear-gradient(90deg, var(--color-accent-2), var(--color-accent));
+}
+.hero__cta:hover { color: var(--color-text); filter: brightness(1.12); }
+
+/* stats band */
+.band {
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
+  border-top: var(--rule); border-bottom: var(--rule);
+  margin: 0 var(--pad-x) 0; position: relative;
+}
+.band > div { padding: var(--space-6) var(--space-4); }
+.band > div + div { border-left: var(--rule); }
+.band__n {
+  font-family: var(--font-heading); font-weight: var(--fw-bold);
+  font-size: clamp(26px, 3vw, 38px); line-height: 1; color: var(--color-accent);
+  letter-spacing: -0.02em; font-variant-numeric: tabular-nums; white-space: nowrap;
+}
+.band__l {
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--color-muted); margin-top: var(--space-2);
+}
+
+@media (max-width: 700px) {
+  .hero__bar { flex-wrap: wrap; row-gap: var(--space-2); }
+  .hero__brand { font-size: 15px; }
+  .hero__nav { gap: var(--space-4); }
+  .hero__nav a { font-size: 11px; }
+  .hero__body { padding-top: clamp(70px, 22vh, 150px); }
+  .hero__cta { width: 100%; text-align: center; }
+  .band { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .band > div:nth-child(3), .band > div:nth-child(4) { border-top: var(--rule); }
+  .band > div:nth-child(odd) { border-left: 0; }
+}
+
 /* ─── shell ────────────────────────────────────────────────────────────── */
 .shell { min-height: 100vh; }
 
 /* ─── the left pane (desktop) / hero stack (mobile) ─────────────────────── */
-.pane__brand {
-  display: flex; justify-content: space-between; align-items: baseline;
-  gap: var(--space-3); border-bottom: var(--rule); padding-bottom: 14px;
-}
-.pane__brand a { text-decoration: none; }
-.brandmark { font-family: var(--font-heading); font-weight: var(--fw-bold); font-size: 13px; letter-spacing: 0.08em; }
 
-.eyebrow { color: var(--color-muted); }
 
-.stats {
-  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-3);
-  border-top: var(--rule); padding-top: 10px;
-}
-.stat__n {
-  font-family: var(--font-heading); font-weight: var(--fw-bold);
-  font-size: 24px; line-height: 1; font-variant-numeric: tabular-nums;
-  letter-spacing: -0.02em; white-space: nowrap;
-}
-.stat__l { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-dim); }
+
+
+
+
+
+
 
 /* ─── map ──────────────────────────────────────────────────────────────── */
 .mapwrap { position: relative; width: 100%; }
 .atlas { display: block; width: 100%; height: auto; }
-.atlas .neighbour { fill: none; stroke: var(--color-faint); stroke-width: 1; }
-.atlas .india { fill: var(--color-surface); stroke: var(--color-text); stroke-width: 1.25; }
-.atlas .route { fill: none; stroke: var(--color-accent); stroke-width: 1.75; stroke-linejoin: round; stroke-linecap: round; }
+.atlas .neighbour { fill: none; stroke: rgba(255,255,255,0.22); stroke-width: 1; }
+.atlas .india { fill: #2b2b34; stroke: rgba(255,255,255,0.55); stroke-width: 1.25; }
+.atlas .route { fill: none; stroke: var(--color-accent-2); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
 /* 74 stops, not 29 regions — dots are small so a dense stretch still reads as a line. */
-.atlas .stop { fill: var(--color-bg); stroke: rgba(255,255,255,0.55); stroke-width: 1.1; }
+.atlas .stop { fill: #10101a; stroke: rgba(255,255,255,0.75); stroke-width: 1.1; }
 .atlas .stop[data-active="true"] { fill: var(--color-accent); stroke: var(--color-accent); stroke-width: 1.4; }
 .atlas .stop[data-sel="true"] { fill: var(--color-accent); stroke: var(--color-text); stroke-width: 1.6; }
 .atlas .hit { fill: transparent; cursor: pointer; }
@@ -286,7 +368,6 @@ button { font: inherit; color: inherit; }
    which is the whole stretch it exists for. display:contents dissolves the pane
    on mobile so its children sit directly in .shell, which spans the page. */
 .pane { display: contents; }
-.pane__brand { padding-top: 18px; }
 .pane__foot { display: none; }
 
 .strip {
@@ -305,12 +386,6 @@ button { font: inherit; color: inherit; }
 .strip__btn:hover { background: var(--color-accent-soft); color: var(--color-muted); }
 .strip__btn[aria-current="true"] { background: var(--color-accent); color: #fff; }
 
-.hero { padding: 40px 0 0; }
-.hero h1 { font-size: clamp(44px, 11vw, 64px); line-height: 0.98; letter-spacing: -0.02em; margin: 12px 0 16px; }
-.hero__blurb { font-size: 16px; max-width: 44ch; margin: 0 0 28px; }
-.hero .stats { gap: var(--space-4); padding-top: 12px; }
-.hero .stat__n { font-size: 30px; }
-.hero .stat__l { font-size: 11px; }
 
 .mapsection { margin-top: 32px; border-top: var(--rule); padding-top: 14px; }
 .mapsection__head { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-3); }
@@ -352,15 +427,9 @@ button { font: inherit; color: inherit; }
     display: flex; flex-direction: column;
     border-right: var(--rule); padding: 24px 28px; overflow: hidden;
   }
-  .pane__brand { padding-top: 0; }
-  .pane__head { padding: 20px 0 0; }
-  .pane__head h1 { font-size: 38px; line-height: 1; letter-spacing: -0.02em; margin: 10px 0 12px; }
   /* Four across fits the 460px pane: 18,000 at 24px bold is about 80px wide. */
   /* Four across the 460px pane: Space Grotesk sets "18,000" wider than Archivo did
      and it collided with the next column at 24px. */
-  .stats { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-2); }
-  .stats .stat__n { font-size: 20px; }
-  .hero__blurb { display: none; }              /* the pane is tight; the legs carry the story */
   .mapsection { flex: 1; min-height: 0; margin-top: 0; border-top: 0; padding-top: 16px; }
   .mapsection__head { display: none; }
   .pane__foot {
@@ -402,6 +471,13 @@ button { font: inherit; color: inherit; }
   .lb__nav { gap: 16px; }
 }
 
+/* The brand and three links stop fitting on one line here. */
+@media (max-width: 430px) {
+  .hero__brand { font-size: 13px; }
+  .hero__nav { gap: var(--space-3); }
+  .hero__nav a { font-size: 10px; letter-spacing: 0.06em; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }
@@ -409,29 +485,41 @@ button { font: inherit; color: inherit; }
 </head>
 <body>
 
+<header class="hero" id="hero">
+  <img class="hero__img" src="hero.jpg" alt="" aria-hidden="true">
+  <div class="hero__veil"></div>
+
+  <nav class="hero__bar">
+    <a class="hero__brand" href="https://prasanthsasikumar.com">PrasanthSasikumar<span>.com</span></a>
+    <span class="hero__nav">
+      <a href="https://prasanthsasikumar.com/posts">POSTS</a>
+      <a href="https://thegreatindiaride.prasanthsasikumar.com/" aria-current="page">RIDES</a>
+      <a href="https://prasanthsasikumar.com/garage">GARAGE</a>
+    </span>
+  </nav>
+
+  <div class="hero__body">
+    <p class="hero__eyebrow">JAN – APR 2025 · ONE MOTORCYCLE</p>
+    <h1>The Great India Ride</h1>
+    <div class="hero__foot">
+      <p class="hero__blurb">Home in Trivandrum to Kanyakumari, up to Ladakh, across to the Arunachal border, and back down the east coast, told in the order it happened.</p>
+      <a class="hero__cta" href="#region-0">SEE THE CLIPS →</a>
+    </div>
+  </div>
+
+</header>
+
+<div class="band">
+    <div><div class="band__n">18,000+</div><div class="band__l">km ridden</div></div>
+    <div><div class="band__n" id="stat-regions">…</div><div class="band__l">Regions</div></div>
+    <div><div class="band__n" id="stat-countries">3</div><div class="band__l">Countries</div></div>
+  <div><div class="band__n" id="stat-clips">…</div><div class="band__l">Clips</div></div>
+</div>
+
 <div class="shell">
 
   <aside class="pane">
-    <div class="pane__brand">
-      <div class="brandmark">THE GREAT INDIA RIDE</div>
-      <a class="kicker" href="manifest.json">MANIFEST ↗</a>
-    </div>
-
     <div class="strip" id="strip" role="group" aria-label="Jump to a region"></div>
-
-    <div class="pane__head hero">
-      <p class="kicker eyebrow">JAN – APR 2025 · ONE MOTORCYCLE</p>
-      <h1>The Great India Ride</h1>
-      <p class="hero__blurb">Home in Trivandrum to Kanyakumari, up to Ladakh, across to the Arunachal border, and back down the east coast, told in the order it happened.</p>
-      <!-- Days and kilometres are the ride's own banner figures, given by the rider;
-           regions and clips are counted from the manifest. -->
-      <div class="stats">
-        <div><div class="stat__n">100</div><div class="stat__l">Days</div></div>
-        <div><div class="stat__n">18,000</div><div class="stat__l">km</div></div>
-        <div><div class="stat__n" id="stat-regions">…</div><div class="stat__l">Regions</div></div>
-        <div><div class="stat__n" id="stat-clips">…</div><div class="stat__l">Clips</div></div>
-      </div>
-    </div>
 
     <section class="mapsection">
       <div class="mapsection__head">
@@ -550,6 +638,7 @@ button { font: inherit; color: inherit; }
     strip: document.getElementById('strip'),
     statRegions: document.getElementById('stat-regions'),
     statClips: document.getElementById('stat-clips'),
+    statCountries: document.getElementById('stat-countries'),
     atlas: document.getElementById('atlas'),
     badge: document.getElementById('map-badge'),
     mapToggle: document.getElementById('map-toggle'),
@@ -735,7 +824,7 @@ button { font: inherit; color: inherit; }
           var span = r.items.filter(isDatable);
           if (!span.length) span = r.items;
           var block = {
-            index: idx, name: r.region, abbr: abbrev(r.region),
+            index: idx, name: r.region, abbr: abbrev(r.region), country: r.country,
             // The nights this run covers, so map markers can be matched to it exactly
             // rather than by walking names and hoping the counts line up.
             firstNight: r.firstNight, lastNight: r.lastNight, home: !!r.home,
@@ -1403,6 +1492,11 @@ button { font: inherit; color: inherit; }
     var totals = build(manifest);
     el.statRegions.textContent = String(totals.totalRegions);
     el.statClips.textContent = String(totals.totalClips);
+    if (el.statCountries) {
+      var countries = {};
+      regionsFlat.forEach(function (r) { countries[r.country || 'India'] = true; });
+      el.statCountries.textContent = String(Object.keys(countries).length);
+    }
 
     render();
     renderStrip();
