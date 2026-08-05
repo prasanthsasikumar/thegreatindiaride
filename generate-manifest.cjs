@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 // Written by tag-media.cjs from an Instagram export: capture time, state, caption,
-// subtitle pairing. Optional — without it the manifest is exactly what it was before.
+// subtitle pairing. Optional: without it the manifest is exactly what it was before.
 const tags = fs.existsSync('./tags.json')
   ? JSON.parse(fs.readFileSync('./tags.json', 'utf8')).files || {}
   : {};
@@ -38,14 +38,14 @@ function scanDirectory(dir, folderName) {
           name: file,
           path: mediaPath,
           size: stat.size,
-          // mtime is the checkout date, not the capture date — `captured` is the real one.
+          // mtime is the checkout date, not the capture date; `captured` is the real one.
           modified: stat.mtime,
           type: file.endsWith('.mp4') ? 'video' : 'image',
           ...(tag.captured && { captured: tag.captured, timeSource: tag.timeSource }),
           ...(tag.state && {
             state: tag.state,
             country: tag.country,
-            // gps | time | manual — "time" is the low-confidence one.
+            // gps | time | manual. "time" is the low-confidence one.
             stateSource: tag.stateSource
           }),
           ...(tag.nearby && { nearby: tag.nearby }),
@@ -116,7 +116,7 @@ if (route) {
     spend: route.totals.spend,
     regionOrder: route.regionOrder,
     legs: route.legs,
-    // Every place slept, in order — the map draws its line and markers from this.
+    // Every place slept, in order. The map draws its line and markers from this.
     stops: route.stops,
   };
 }

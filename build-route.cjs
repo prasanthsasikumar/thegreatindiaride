@@ -1,14 +1,14 @@
 /*
- * build-route.cjs — turns the trip spreadsheet into route.json.
+ * build-route.cjs: turns the trip spreadsheet into route.json.
  *
  *   node build-route.cjs "/path/to/Pan India Trip  - Trip expenses.csv"
  *
  * The sheet is one row per night, in travel order, which is the only authoritative
- * record of the route — GPS fixes drift and upload timestamps lag by hours, but the
+ * record of the route. GPS fixes drift and upload timestamps lag by hours, but the
  * order you slept in places is exact.
  *
  * PRIVACY: route.json is published (netlify.toml publishes "."). It carries
- * region-level spend aggregates, the trip total, and — by explicit choice — a `stops`
+ * region-level spend aggregates, the trip total, and, by explicit choice, a `stops`
  * list naming each place stayed, its Google Maps link, nights, and what was paid.
  * That is a public record of where the rider slept on 93 nights; it is published
  * because the map is meant to be browsable, not because it is incidental.
@@ -31,20 +31,20 @@ const STAY_DATES = 'stay-dates.json';
 const OUT = 'route.json';
 
 // Rows that are in the sheet but not on the motorcycle route. Keeping them would
-// insert a phantom leg — TVM is the flight home mid-trip (out of Guwahati, on to
+// insert a phantom leg. TVM is the flight home mid-trip (out of Guwahati, on to
 // Singapore, then back to Guwahati), which would otherwise drop a Kerala chapter
 // into the middle of the northeast and inflate Kerala's visit count.
 // Keyed by 1-based data row (i.e. spreadsheet line minus the header).
 const SKIP_NIGHTS = new Set([71]);
 
 // The ride started and finished at home in Trivandrum. That first departure isn't in
-// the sheet — the sheet only records nights that were paid for, and the first of those
+// the sheet, which only records nights that were paid for, and the first of those
 // was Kanyakumari. Prepended to the drawn path so the line starts where the ride did;
 // deliberately NOT added to legs, nights or regionOrder, since Kerala already closes
 // the story as the homecoming chapter.
 const ORIGIN = 'Trivandrum';
 
-// Regions ridden through without sleeping, so they have no row in the sheet — but
+// Regions ridden through without sleeping, so they have no row in the sheet. But
 // clips from them exist and need a place in the running order. Inserted straight
 // after the night given, which is the only thing that fixes their position: guessing
 // from clip dates put Bhutan before West Bengal and Bihar before Nepal.
@@ -58,7 +58,7 @@ if (!CSV || !fs.existsSync(CSV)) {
   process.exit(1);
 }
 if (!fs.existsSync(STOP_CACHE)) {
-  console.error(`Missing ${STOP_CACHE} — geocode the stop names first.`);
+  console.error(`Missing ${STOP_CACHE}. Geocode the stop names first.`);
   process.exit(1);
 }
 
@@ -134,7 +134,7 @@ for (const r of rows.slice(1)) {
   const clean = name.replace(/\*\d+$/, ''); // "Banglore*2" is a note about nights, not a place
   const link = bareLink(r[6]);
   // "Home" marks a night that cost nothing and has no hotel to point at. Nights with no
-  // link at all fall back to a name-keyed entry — a hostel that never made it into the
+  // link at all fall back to a name-keyed entry: a hostel that never made it into the
   // sheet, or somebody's house.
   const stay = (link && link !== 'Home') ? stayGeo[link] : stayGeo['name:' + clean];
   // Friends' and family's homes get a name but keep the town centre: they are other
@@ -145,7 +145,7 @@ for (const r of rows.slice(1)) {
     region: geo.state || null,
     country: geo.country || null,
     // The stay's own coordinates where we have them; the town centre otherwise. The
-    // region always comes from the stop name, never from the stay — a few hotels sit
+    // region always comes from the stop name, never from the stay. A few hotels sit
     // just over a border (Zirakpur for Chandigarh, Noida for Delhi) and re-deriving
     // the region from them would silently drop chapters out of the narrative.
     lat: sited ? stay.lat : geo.lat,
@@ -154,7 +154,7 @@ for (const r of rows.slice(1)) {
     private: !!(stay && stay.private),
     stay: stay ? stay.stay : null,
     // The sheet's own link where there is one. A stay we sited by hand (Decostel) has
-    // real coordinates but no link, so point at those instead — no reason for it to be
+    // real coordinates but no link, so point at those instead. There is no reason for it to be
     // the one marker you can't open. Private homes never get a link.
     link: sited
       ? ((link && link !== 'Home') ? link
@@ -222,7 +222,7 @@ nights.forEach(n => {
   if (!byRegion[n.region].stops.includes(n.name)) byRegion[n.region].stops.push(n.name);
 });
 
-// First appearance along the route — the only ordering that means anything here.
+// First appearance along the route: the only ordering that means anything here.
 const regionOrder = [];
 nights.forEach(n => { if (n.region && !regionOrder.includes(n.region)) regionOrder.push(n.region); });
 
@@ -271,7 +271,7 @@ fs.writeFileSync(OUT, JSON.stringify({
     region: r, country: byRegion[r].country, nights: byRegion[r].nights,
     stops: byRegion[r].stops, spend: Math.round(byRegion[r].spend),
   })),
-  // One entry per place slept, in travel order — this is what the map draws and what
+  // One entry per place slept, in travel order. This is what the map draws and what
   // its markers read from. Rounded to 5dp (~1m); more digits than that is noise.
   stops: (() => {
     const g = stopGeo[ORIGIN] || {};
@@ -296,4 +296,4 @@ if (skipped.length) console.log(`  skipped (not on the route): ${skipped.join(',
 console.log(`  ${nights.length} nights · ${legs.length} legs · ${regionOrder.length} regions · ${stops.length} stops`);
 console.log(`  route: ${regionOrder.slice(0, 6).join(' → ')} … ${regionOrder.slice(-3).join(' → ')}`);
 console.log(`  ${stops.filter(s => s.precise).length}/${stops.length} stops at their real address; the rest fall back to the town centre`);
-console.log(`  publishes stop names, hotel links and per-stop spend — misc labels stay out`);
+console.log(`  publishes stop names, hotel links and per-stop spend; misc labels stay out`);

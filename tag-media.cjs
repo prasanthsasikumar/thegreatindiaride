@@ -1,5 +1,5 @@
 /*
- * tag-media.cjs — joins an Instagram data export against media/ and writes tags.json.
+ * tag-media.cjs: joins an Instagram data export against media/ and writes tags.json.
  *
  *   node tag-media.cjs <path-to-instagram-export>
  *
@@ -8,7 +8,7 @@
  * two files that matter, keeps only what the media library needs, and writes a
  * committed sidecar that generate-manifest.cjs merges in.
  *
- * WHAT THE EXPORT ACTUALLY GIVES YOU — and why the output needs hand-correcting:
+ * WHAT THE EXPORT ACTUALLY GIVES YOU, and why the output needs hand-correcting:
  *
  *   - 204/222 files are source_type "library", i.e. uploaded from the camera roll.
  *     For those, `creation_timestamp` is the UPLOAD time, not the capture time.
@@ -41,7 +41,7 @@ const OUT_FILE = 'tags.json';
 // Nominatim asks for a descriptive UA and max 1 req/sec. We respect both.
 const USER_AGENT = 'ride-assets-tagger/1.0 (+https://thegreatindiaride.prasanthsasikumar.com)';
 const RATE_LIMIT_MS = 1100;
-const GEO_PRECISION = 2; // ~1.1 km — finer than any state boundary question we care about
+const GEO_PRECISION = 2; // ~1.1 km, finer than any state boundary question we care about
 const CANDIDATES = 6;    // length of the shortlist offered in the UI dropdown
 
 // EXIF date_time_original carries no timezone; the whole ride was in IST (+5:30).
@@ -106,7 +106,7 @@ function subtitlesOf(item) {
 
 // Outside India the sub-national names Nominatim returns ("Lumbini Province",
 // "Trongsa District") are finer than this library needs and read as noise next to
-// Indian states — the country is the useful label there.
+// Indian states, and the country is the useful label there.
 function regionName(hit) {
   if (!hit) return null;
   if (hit.country && hit.country !== 'India') return hit.country;
@@ -202,7 +202,7 @@ async function geocodeAll() {
       };
       process.stdout.write(`\r  geocoded ${n + 1}/${uncached.length}          `);
     } catch (err) {
-      console.warn(`\n  ! ${key} failed (${err.message}) — left untagged, re-run to retry`);
+      console.warn(`\n  ! ${key} failed (${err.message}). Left untagged, re-run to retry`);
       // Do not cache failures: a cached null would never be retried.
     }
     fs.writeFileSync(CACHE_FILE, JSON.stringify(cache, null, 2));
@@ -228,7 +228,7 @@ function build() {
     }
   }
 
-  // (b) Region centroids, derived from the measured points themselves — this is what
+  // (b) Region centroids, derived from the measured points themselves. This is what
   //     lets the UI offer a geographically sensible shortlist without shipping coords.
   const acc = {};
   for (const item of present) {
@@ -243,7 +243,7 @@ function build() {
   // (c) Fill the gaps from the surrounding anchors.
   //
   // A file sandwiched between two GPS fixes in the SAME region is safe regardless of
-  // how badly its own timestamp drifted — you cannot leave and re-enter a state
+  // how badly its own timestamp drifted: you cannot leave and re-enter a state
   // between two fixes without a fix in between. That's "route" confidence. Only when
   // the brackets disagree is it a real guess, and those stay flagged as "time".
   const anchors = present
@@ -271,7 +271,7 @@ function build() {
     item.source = bracketed ? 'route' : 'time';
     item.gapHours = Math.round((Math.abs(best.captured - item.captured) / 3600) * 10) / 10;
 
-    // When the brackets disagree the file sits on a leg between two regions — offer
+    // When the brackets disagree the file sits on a leg between two regions, so offer
     // both ends first in the dropdown rather than a distance ranking from nowhere.
     if (!bracketed && prev && next) item.between = [prev.state, next.state];
   }
@@ -285,7 +285,7 @@ function build() {
         .sort((a, b) => a.d - b.d)
         .map(c => c.state);
     } else {
-      // No fix of its own — offer whatever the temporally closest files resolved to.
+      // No fix of its own, so offer whatever the temporally closest files resolved to.
       ranked = present
         .filter(o => o.state && o.captured && o !== item)
         .sort((a, b) => Math.abs(a.captured - item.captured) - Math.abs(b.captured - item.captured))
@@ -355,7 +355,7 @@ function build() {
   console.log(`\nWrote ${OUT_FILE}`);
   console.log(`  from GPS      ${stats.gps}`);
   console.log(`  bracketed     ${stats.route}   (between two fixes in the same region)`);
-  console.log(`  from timing   ${stats.time}   (low confidence — brackets disagree)`);
+  console.log(`  from timing   ${stats.time}   (low confidence, brackets disagree)`);
   console.log(`  hand-corrected ${stats.manual}`);
   console.log(`  untagged      ${stats.untagged}`);
   if (!overridden) {

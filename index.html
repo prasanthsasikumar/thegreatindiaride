@@ -14,7 +14,7 @@
 <style>
 /* Hallmark · macrostructure: Atlas Split (desktop) / Long Document (mobile)
  * tone: modernist-editorial · anchor hue: vermilion
- * theme: studied-DNA — "Great India Ride redesign", design system `modernist`
+ * theme: studied-DNA · "Great India Ride redesign", design system `modernist`
  *        (project 1e0800a2-c2e8-4968-b522-14d1c29aad8e). Desktop A - Atlas Split
  *        above 900px, Journey below it, one DOM and one data layer.
  * paper: #f3f2f2 · ink: #201e1d · accent: #ec3013 · type: Archivo (single family)
@@ -154,9 +154,27 @@ button { font: inherit; color: inherit; }
   font-family: var(--font-heading); font-weight: var(--fw-bold);
   font-size: 13px; letter-spacing: 0.08em; color: var(--color-bg);
   padding: 14px 26px; border-radius: 999px;
+  /* The border is invisible on the filled pill and load-bearing on the ghost one
+     below. Both carry it so the two sit at exactly the same height. */
+  border: 1px solid var(--color-text);
   background: var(--color-text);
 }
-.hero__cta:hover { color: var(--color-bg); background: var(--color-muted); }
+.hero__cta:hover { color: var(--color-bg); background: var(--color-muted); border-color: var(--color-muted); }
+/* The route book is a second destination, not a lesser one, so it takes the same
+   pill rather than a shape invented for it. Outlined instead of filled, because
+   two solid pills side by side read as one wide slab and neither leads. */
+.hero__cta--ghost { color: var(--color-text); background: transparent; border-color: var(--color-line-strong); }
+.hero__cta--ghost:hover { color: var(--color-bg); background: var(--color-text); border-color: var(--color-text); }
+.hero__cta + .hero__cta { margin-left: var(--space-3); }
+/* The CTA and its escape hatch travel together, or space-between in .hero__foot
+   would throw the quiet link to the far edge of the hero. */
+.hero__acts { flex: 0 0 auto; display: flex; align-items: baseline; flex-wrap: wrap; }
+.hero__alt {
+  display: inline-block; margin-left: var(--space-4); font-size: 13px;
+  color: var(--color-muted); text-decoration: none;
+  border-bottom: 1px solid var(--color-line-strong);
+}
+.hero__alt:hover { color: var(--color-text); }
 
 /* stats band */
 .band {
@@ -178,7 +196,12 @@ button { font: inherit; color: inherit; }
 
 @media (max-width: 700px) {
   .hero__body { padding-top: clamp(36px, 9vh, 80px); }
-  .hero__cta { width: 100%; text-align: center; }
+  .hero__acts { width: 100%; }
+  .hero__cta { width: 100%; text-align: center; justify-content: center; }
+  /* Stacked, not side by side: two full-width pills cannot share a row, and a
+     left margin on the second one would push it off the right edge. */
+  .hero__cta + .hero__cta { margin: var(--space-3) 0 0; }
+  .hero__alt { margin: var(--space-3) auto 0; }
   .band { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .band > div { padding: var(--space-4) var(--space-4); }
   .band > div:nth-child(3), .band > div:nth-child(4) { border-top: var(--rule); }
@@ -208,7 +231,7 @@ button { font: inherit; color: inherit; }
    sits far enough above #0f0f0f to hold its own shape. */
 .atlas .india { fill: #34343f; stroke: rgba(255,255,255,0.92); stroke-width: 1.4; }
 .atlas .route { fill: none; stroke: var(--color-accent-2); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
-/* 74 stops, not 29 regions — dots are small so a dense stretch still reads as a line. */
+/* 74 stops, not 29 regions: dots are small so a dense stretch still reads as a line. */
 .atlas .stop { fill: #10101a; stroke: rgba(255,255,255,0.75); stroke-width: 1.1; }
 .atlas .stop[data-active="true"] { fill: var(--color-accent); stroke: var(--color-accent); stroke-width: 1.4; }
 .atlas .stop[data-sel="true"] { fill: var(--color-accent); stroke: var(--color-text); stroke-width: 1.6; }
@@ -232,7 +255,7 @@ button { font: inherit; color: inherit; }
 }
 .map__card[hidden] { display: none; }
 /* Flipped when the chosen stop is low on the map, so the card never covers the dot
-   it is describing — the whole Kerala/Tamil Nadu run sits in the bottom third. */
+   it is describing. The whole Kerala/Tamil Nadu run sits in the bottom third. */
 .map__card[data-pos="top"] { bottom: auto; top: 26px; }
 .map__card-x {
   position: absolute; right: 2px; top: 2px;
@@ -268,11 +291,69 @@ button { font: inherit; color: inherit; }
 }
 .map__toggle:hover { border-color: var(--color-text); }
 .map__toggle[aria-pressed="true"] { background: var(--color-accent); border-color: var(--color-accent); color: #fff; }
+.map__toggle--alt { top: auto; bottom: 10px; }
+.map__toggle--k2k { top: auto; bottom: 40px; }
+.map__toggle[hidden] { display: none; }
+/* The planned loop, drawn under everything. Dashed and dimmed: it is the route that
+   was not ridden, and it must never read as equal in weight to the one that was. */
+.atlas .route--planned {
+  fill: none; stroke: var(--color-dim); stroke-width: 1.4;
+  stroke-dasharray: 5 4; opacity: 0.75;
+  stroke-linejoin: round; stroke-linecap: round;
+}
+
+/* ─── K2K ──────────────────────────────────────────────────────────────────
+   Two more lines on a 420px map that already carries a solid ridden route and a
+   dashed planned loop. Four at once is a tangle, so K2K is off until asked for and
+   the other two step back while it is on:
+
+     - the planned loop goes out entirely, because the K2K west-coast line traces
+       the same template hops. Drawing both would be one route drawn twice.
+     - the ridden route dims to a ghost. It stays visible, because "the loop
+       already contains most of a K2K" is the whole point of the overlay and you
+       cannot see that if one of the two lines is gone.
+
+   Both K2K lines share one hue so they read as one route, and differ in dash so
+   the two directions stay apart from each other. Neither is the ridden pink. */
+.atlas .route--k2k { display: none; fill: none; stroke: var(--color-accent); stroke-width: 2.2; }
+.atlas .route--k2k-n { stroke-linejoin: round; stroke-linecap: round; }
+/* Dash-dot rather than an even dash, so it is not the planned loop's pattern in a
+   different colour, and so the printed book's key can show one glyph for both media. */
+.atlas .route--k2k-s { stroke-dasharray: 9 4 1.5 4; stroke-linejoin: round; stroke-linecap: round; }
+.atlas[data-k2k="on"] .route--k2k { display: inline; }
+/* The step back is carried by weight, not by opacity. #ec4899 at 0.22 over #0f0f0f
+   composites to a 1.30:1 contrast ratio, which is not a dimmed line, it is an absent
+   one, and an absent line cannot be compared with anything. 0.7 holds 3.19:1, past
+   WCAG 1.4.11's 3:1 for a meaningful graphic, and the hierarchy comes from 1.2px
+   against K2K's 2.2px instead. */
+.atlas[data-k2k="on"] .route { opacity: 0.7; stroke-width: 1.2; }
+.atlas[data-k2k="on"] .route--planned { display: none !important; }
+.atlas[data-k2k="on"] .stop { opacity: 0.7; }
+
+/* And when something else is driving the map, K2K stands down the same way the
+   planned loop does. The overview moves the viewBox a chapter at a time and a
+   country-length overlay it does not control would ride along on top of every
+   frame. These rules come after the ones above so they win the tie. */
+.atlas[data-busy="yes"] .route--k2k { display: none; }
+.atlas[data-busy="yes"] .route { opacity: 1; stroke-width: 2; }
+.atlas[data-busy="yes"] .stop { opacity: 1; }
+
+/* K2K takes the planned loop off the map, so its toggle is turned off with it rather
+   than left reading "Hide planned" over a line that is not there. */
+.map__toggle:disabled { opacity: 0.4; cursor: default; }
+.map__toggle:disabled:hover { border-color: var(--color-line); }
 
 .map__attr {
   font-size: 9px; color: var(--color-dim); margin-top: 2px; text-align: right;
 }
 .map__attr[hidden] { display: none; }
+
+/* "Planned route" is a two-word label for a distinction that needs a sentence,
+   and the sentence used to live in a long section below the clips that is now a
+   single link to the route book. It sits under the map instead, beside the
+   button it explains, which is where a reader who presses that button is
+   looking anyway. */
+.map__note { font-size: 11px; line-height: 1.5; color: var(--color-dim); margin-top: 6px; }
 
 /* Over tiles the fills would hide the map, so the countries become outlines only.
    India keeps its full stroke: OSM draws the Line of Control, and the official
@@ -280,6 +361,48 @@ button { font: inherit; color: inherit; }
 .atlas[data-mode="map"] .india { fill: none; stroke-width: 1.5; }
 .atlas[data-mode="map"] .neighbour { stroke: color-mix(in srgb, #201e1d 45%, transparent); }
 .atlas .tile-img { image-rendering: auto; }
+
+/* ─── the overview ─────────────────────────────────────────────────────── */
+.ov { border-top: var(--rule); padding-top: var(--space-3); margin-top: var(--space-3); }
+.ov[hidden] { display: none; }
+.ov__leg {
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.12em;
+  color: var(--color-accent-2);
+}
+.ov__where {
+  font-family: var(--font-heading); font-weight: var(--fw-bold);
+  font-size: 18px; margin-top: 2px;
+}
+.ov__text { font-size: 13px; color: var(--color-muted); margin: 6px 0 0; min-height: 3em; }
+.ov__caption { transition: opacity 260ms ease; }
+.ov__caption[data-fade="true"] { opacity: 0; }
+.ov__bar { display: flex; align-items: center; gap: var(--space-3); margin-top: var(--space-3); }
+.ov__btn {
+  background: none; border: 1px solid var(--color-line-strong); border-radius: var(--radius);
+  color: var(--color-text); font: inherit; font-size: 12px; padding: 5px 10px; cursor: pointer;
+}
+.ov__btn:hover { border-color: var(--color-text); }
+.ov__btn--x { margin-left: auto; font-family: var(--font-mono); letter-spacing: 0.08em; }
+.ov__dots { display: flex; gap: 6px; flex: 1; }
+.ov__dot {
+  flex: 1; height: 3px; border: 0; padding: 0; cursor: pointer;
+  background: var(--color-line-strong);
+  position: relative;
+}
+/* The bar carries play/pause, these dots, sound and exit, and no next button, so on
+   touch a dot is the ONLY way to jump a chapter. A 3px-tall target fails WCAG 2.5.8,
+   which wants 24x24. The hit area is a transparent pseudo-element centred on the
+   rule and overflowing it, rather than padding on the button itself: the dot's own
+   box stays 3px, so nothing in the bar moves and the visible rule is unchanged. The
+   6px gap keeps neighbouring hit areas from overlapping. */
+.ov__dot::after {
+  content: ''; position: absolute; left: 0; right: 0;
+  top: 50%; height: 24px; transform: translateY(-50%);
+}
+.ov__dot[data-on="true"] { background: var(--color-accent); }
+/* No reduced-motion rule for .ov__caption: the blanket transition-duration override
+   at the foot of this sheet is !important and already outranks anything written here.
+   The player drops the fade's delay to 0 in JS to match. */
 
 /* ─── legs + regions ───────────────────────────────────────────────────── */
 .leg__head { background: var(--color-surface); color: var(--color-text); border: var(--rule); border-radius: var(--radius); }
@@ -338,6 +461,45 @@ button { font: inherit; color: inherit; }
 }
 .close a:hover { background: var(--color-accent-soft); border-color: var(--color-accent); color: var(--color-text); }
 
+/* ─── the route book, and the K2K note beside it ───────────────────────────
+   This block used to dress the route book itself, printed into this page: a
+   five-figure glance band, five expandable sectors with a waypoint table each,
+   and a projected cost table. booklet.html carries every one of those in fuller
+   form, and printing them here made the page a third longer than the story it
+   exists to tell, so what is left is the door to the book. The typography stays
+   because the K2K section, which is still prose, still uses it. */
+.tpl { border-top: var(--rule); padding-top: var(--space-8); margin-top: var(--space-8); }
+.tpl[hidden] { display: none; }
+.tpl__eyebrow {
+  font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.12em;
+  color: var(--color-accent-2); margin: 0 0 var(--space-3);
+}
+.tpl__h { margin: 0 0 var(--space-4); }
+.tpl__lede { font-size: 16px; line-height: 1.6; max-width: 62ch; color: var(--color-muted); }
+.tpl__source { font-size: 13px; color: var(--color-dim); max-width: 62ch; }
+.tpl__note { font-size: 14px; color: var(--color-muted); max-width: 62ch; margin: 0 0 var(--space-4); }
+
+/* One line of figures, read out of template.json rather than typed here, so the
+   page can never advertise a loop the book does not contain. Hidden outright
+   when template.json is missing: the door still opens, it just stops quoting. */
+.tpl__figs {
+  font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--color-dim);
+  font-variant-numeric: tabular-nums; margin-top: var(--space-4);
+}
+.tpl__figs[hidden] { display: none; }
+
+.tpl--cta .tpl__h { font-size: clamp(30px, 5vw, 46px); line-height: 1.02; }
+.tpl__cta {
+  display: inline-flex; align-items: center; margin-top: var(--space-6);
+  font-family: var(--font-heading); font-weight: var(--fw-bold);
+  font-size: 15px; letter-spacing: 0.08em; text-decoration: none;
+  color: var(--color-bg); background: var(--color-text);
+  border: 1px solid var(--color-text); border-radius: 999px;
+  padding: 16px 30px;
+}
+.tpl__cta:hover { background: var(--color-accent); border-color: var(--color-accent); color: #fff; }
+
 .state-msg { font-size: 13px; color: var(--color-dim); }
 .state-msg[hidden] { display: none; }
 
@@ -374,11 +536,11 @@ button { font: inherit; color: inherit; }
 .lb__nav a { color: var(--color-text); font-family: var(--font-heading); font-weight: var(--fw-bold); font-size: 12px; letter-spacing: 0.06em; text-decoration: none; }
 .lb__spacer { flex: 1; }
 
-/* ══ MOBILE — "Journey" ══════════════════════════════════════════════════ */
+/* ══ MOBILE · "Journey" ══════════════════════════════════════════════════ */
 .shell { max-width: 600px; margin: 0 auto; padding: 0 20px 64px; }
 
 /* A sticky child only sticks inside its parent's box. Leaving the strip inside
-   .pane meant it unstuck as soon as the pane ended — right where the legs begin,
+   .pane meant it unstuck as soon as the pane ended, right where the legs begin,
    which is the whole stretch it exists for. display:contents dissolves the pane
    on mobile so its children sit directly in .shell, which spans the page. */
 .pane { display: contents; }
@@ -446,7 +608,7 @@ button { font: inherit; color: inherit; }
 }
 .lb__auto[aria-pressed="true"] { color: var(--color-bg); background: var(--color-text); border-color: var(--color-text); }
 
-/* ══ DESKTOP — "Atlas Split" ═════════════════════════════════════════════ */
+/* ══ DESKTOP · "Atlas Split" ═════════════════════════════════════════════ */
 @media (min-width: 1080px) {
   .shell {
     max-width: none; margin: 0; padding: 0;
@@ -465,7 +627,11 @@ button { font: inherit; color: inherit; }
   /* Four across fits the 460px pane: 18,000 at 24px bold is about 80px wide. */
   /* Four across the 460px pane: Space Grotesk sets "18,000" wider than Archivo did
      and it collided with the next column at 24px. */
-  .mapsection { flex: 1; min-height: 0; margin-top: 0; border-top: 0; padding-top: 16px; }
+  /* The pane is exactly 100vh and clips whatever will not fit. The map alone always
+     did; the overview adds a caption and a control bar under it, and those are the
+     last things that should fall off the bottom of a short window. Let this section
+     scroll instead. When it fits, which is every ordinary laptop, nothing changes. */
+  .mapsection { flex: 1; min-height: 0; margin-top: 0; border-top: 0; padding-top: 16px; overflow-y: auto; }
   .mapsection__head { display: none; }
   .pane__foot {
     display: block; border-top: var(--rule); padding-top: 10px;
@@ -479,7 +645,7 @@ button { font: inherit; color: inherit; }
      stops being stretched to fill a shape it was never shot for, and the
      figures sit on ink instead of competing with a mountainside.
 
-     Mobile keeps the stack — photo, then figures on solid ground beneath it. */
+     Mobile keeps the stack: photo, then figures on solid ground beneath it. */
   .top { display: grid; grid-template-columns: 70% 30%; }
   .hero { min-height: clamp(320px, 46vh, 520px); }
   /* The photo runs out into the figures' column rather than meeting it on a
@@ -552,7 +718,11 @@ button { font: inherit; color: inherit; }
     <h1>The Great India Ride</h1>
     <div class="hero__foot">
       <p class="hero__blurb">Home in Trivandrum to Kanyakumari, up to Ladakh, across to the Arunachal border, and back down the east coast, told in the order it happened.</p>
-      <a class="hero__cta" href="#region-0">SEE THE CLIPS →</a>
+      <div class="hero__acts">
+        <a class="hero__cta" href="#overview" id="overview-cta">SEE THE OVERVIEW ▸</a>
+        <a class="hero__cta hero__cta--ghost" href="booklet.html">THE ROUTE BOOK ▸</a>
+        <a class="hero__alt" href="#region-0">or go straight to the clips</a>
+      </div>
     </div>
   </div>
 
@@ -578,6 +748,8 @@ button { font: inherit; color: inherit; }
         <svg class="atlas" id="atlas" data-mode="outline" role="img" aria-label="Map of the route across India, Nepal and Bhutan"></svg>
         <div class="map__badge" id="map-badge" hidden></div>
         <button type="button" class="map__toggle" id="map-toggle" aria-pressed="false">Real map</button>
+        <button type="button" class="map__toggle map__toggle--alt" id="plan-toggle" aria-pressed="false">Planned route</button>
+        <button type="button" class="map__toggle map__toggle--k2k" id="k2k-toggle" aria-pressed="false" hidden>K2K</button>
         <div class="map__card" id="map-card" hidden>
           <button type="button" class="map__card-x" id="map-card-x" aria-label="Close">&times;</button>
           <div class="map__card-place" id="map-card-place"></div>
@@ -586,6 +758,23 @@ button { font: inherit; color: inherit; }
           </div>
         </div>
       </div>
+
+      <div class="ov" id="overview" hidden>
+        <div class="ov__caption" id="ov-caption" aria-live="polite">
+          <div class="ov__leg" id="ov-leg"></div>
+          <div class="ov__where" id="ov-where"></div>
+          <p class="ov__text" id="ov-text"></p>
+        </div>
+        <div class="ov__bar">
+          <button type="button" class="ov__btn" id="ov-play" aria-label="Pause">❚❚</button>
+          <div class="ov__dots" id="ov-dots" role="group" aria-label="Chapters"></div>
+          <button type="button" class="ov__btn" id="ov-sound" aria-pressed="false" hidden aria-label="Narration">🔇</button>
+          <button type="button" class="ov__btn ov__btn--x" id="ov-exit">EXIT</button>
+        </div>
+      </div>
+
+      <p class="map__note"><strong>Planned route</strong> lays the loop as it was drawn, dashed, under the line that was actually ridden.</p>
+
       <p class="map__attr" id="map-attr" hidden>© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors</p>
     </section>
 
@@ -604,6 +793,33 @@ button { font: inherit; color: inherit; }
       <h2>100 days.<br>One motorcycle.</h2>
       <p>Every clip above is served straight from this host, CORS enabled, with a machine-readable manifest.</p>
       <a href="https://www.instagram.com/thegreatindiaride/" target="_blank" rel="noopener">THE RIDE ON INSTAGRAM ↗</a>
+    </section>
+
+    <!-- K2K used to be nested inside the template section, which meant it was shown
+         by that section's render and would have gone out with it. It is its own
+         section now, and its own heading level, because it is its own subject. -->
+    <section class="tpl" id="tpl-k2k" hidden>
+      <p class="tpl__eyebrow">THE CLASSIC, INSIDE THIS ONE</p>
+      <h2 class="tpl__h">Kanyakumari to Kashmir, already half here</h2>
+      <div id="tpl-k2k-body"></div>
+      <p class="tpl__note">
+        Turn on <strong>K2K</strong> on the map to see both lines. The planned loop
+        steps out of the way while they are up, because the west-coast line is the
+        same set of legs.
+      </p>
+    </section>
+
+    <section class="tpl tpl--cta" id="routebook">
+      <p class="tpl__eyebrow">THE ROUTE BOOK</p>
+      <h2 class="tpl__h">Ride it yourself</h2>
+      <p class="tpl__lede">
+        The ride was drawn before it was ridden, and the drawing is a loop anyone can
+        run: five sectors, every waypoint with its distance and hours, and two join
+        points at Bengaluru and Delhi where you can start, stop, or go home from
+        where you began. Free to fork.
+      </p>
+      <p class="tpl__figs" id="tpl-figs" hidden></p>
+      <a class="tpl__cta" href="booklet.html">OPEN THE ROUTE BOOK →</a>
     </section>
 
     <footer class="pagefoot">
@@ -636,6 +852,10 @@ button { font: inherit; color: inherit; }
 
 <p class="sr-only" role="status" aria-live="polite" id="live"></p>
 
+<script src="atlas.js"></script>
+<!-- costs.js is not loaded here any more. Its only caller on this page was the
+     cost table inside the old template section. The module itself is untouched
+     and booklet.html, which still prints that table, still loads it. -->
 <script>
 (function () {
   'use strict';
@@ -657,7 +877,7 @@ button { font: inherit; color: inherit; }
 
   // Region centroids, from the design's india-map.js.
   // Must match the CSS breakpoint below. The pane is a fixed 460px, so under
-  // ~1080px the legs column drops to three columns — narrower than the mobile
+  // ~1080px the legs column drops to three columns, narrower than the mobile
   // layout manages in its 600px measure. Below this the Journey layout is better.
   var DESKTOP = window.matchMedia('(min-width: 1080px)');
   var MOTION = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -673,11 +893,39 @@ button { font: inherit; color: inherit; }
   var activeIdx = 0, activeIdxs = [0], lbPos = -1;
   var expanded = {};
 
+  // True while the overview is playing. It lives out here, not behind Overview.isOn(),
+  // because the scroll handler reads it on every frame and is registered before the
+  // player is built, and a bare reference would throw and take scrolling down with it.
+  var overviewOn = false;
+
   // The lightbox builds a fresh <video> per clip, so unmuting used to last exactly
   // one clip. Remember the choice, and keep it across visits.
   var MAP_KEY = 'ride:map-mode';
   var mapMode = 'outline';
   try { mapMode = localStorage.getItem(MAP_KEY) === 'map' ? 'map' : 'outline'; } catch (e) { /* private mode */ }
+
+  // The planned-route overlay is a separate preference from the outline/real-map
+  // toggle above. It lives under its own key, so one never clobbers the other.
+  var PLAN_KEY = 'ride:planned';
+  var planned = false;
+  try { planned = localStorage.getItem(PLAN_KEY) === '1'; } catch (e) { /* private mode */ }
+  var plannedLine = null;
+  // Set while something else is using the map. See syncPlannedLine(). Never stored.
+  var plannedSuppressed = false;
+
+  // K2K is a third overlay, with a fourth and fifth line. Its own key again, so
+  // turning it on can never rewrite either choice above. What it draws, and what it
+  // dims while it is drawn, is CSS keyed off data-k2k on the <svg>: see the map
+  // block in the stylesheet.
+  var K2K_KEY = 'ride:k2k';
+  var k2kOn = false;
+  try { k2kOn = localStorage.getItem(K2K_KEY) === '1'; } catch (e) { /* private mode */ }
+  // Set by renderMap, and only once both lines are actually in the SVG. Having
+  // k2k.json is not the same thing as having a map: basemap.json is a separate
+  // optional fetch and atlas.js is a separate script, and either can be absent while
+  // k2k.json is fine. Everything downstream of "there is a K2K overlay to talk
+  // about" hangs off this rather than off the data alone.
+  var k2kDrawn = false;
 
   var SOUND_KEY = 'ride:sound-on';
   // Sound on unless you've turned it off. Opening a clip is a deliberate click, so
@@ -711,6 +959,8 @@ button { font: inherit; color: inherit; }
     atlas: document.getElementById('atlas'),
     badge: document.getElementById('map-badge'),
     mapToggle: document.getElementById('map-toggle'),
+    planToggle: document.getElementById('plan-toggle'),
+    k2kToggle: document.getElementById('k2k-toggle'),
     mapAttr: document.getElementById('map-attr'),
     card: document.getElementById('map-card'),
     cardX: document.getElementById('map-card-x'),
@@ -726,6 +976,17 @@ button { font: inherit; color: inherit; }
     lbNext: document.getElementById('lb-next'),
     lbClose: document.getElementById('lb-close'),
     live: document.getElementById('live'),
+    tplFigs: document.getElementById('tpl-figs'),
+    overview: document.getElementById('overview'),
+    ovCaption: document.getElementById('ov-caption'),
+    ovLeg: document.getElementById('ov-leg'),
+    ovWhere: document.getElementById('ov-where'),
+    ovText: document.getElementById('ov-text'),
+    ovDots: document.getElementById('ov-dots'),
+    ovPlay: document.getElementById('ov-play'),
+    ovSound: document.getElementById('ov-sound'),
+    ovExit: document.getElementById('ov-exit'),
+    ovCta: document.getElementById('overview-cta'),
   };
 
   /* ─── helpers ───────────────────────────────────────────────────────── */
@@ -745,7 +1006,7 @@ button { font: inherit; color: inherit; }
   /* ─── data layer ────────────────────────────────────────────────────── */
   //
   // The design groups clips into legs by timestamp. That works for stories, which
-  // are posted the same day — but all 41 reels carry an UPLOAD time, not a capture
+  // are posted the same day. But all 41 reels carry an UPLOAD time, not a capture
   // time, and they lag by hours to weeks. Grouping reels by their own date scatters
   // Punjab and Chandigarh into "Across the Northeast".
   //
@@ -754,7 +1015,7 @@ button { font: inherit; color: inherit; }
   // fall back to the nearest block by date.
   //
   // A story is posted the same day, so its timestamp is close enough to trust for
-  // ordering. Reels are edited and posted later — every one carries an upload time.
+  // ordering. Reels are edited and posted later, and every one carries an upload time.
   function isDatable(c) { return c.timeSource === 'manual' || c.timeSource === 'exif' || c.category === 'story'; }
 
   // The date a block is sorted and labelled by: its first trustworthy clip, or its
@@ -774,7 +1035,7 @@ button { font: inherit; color: inherit; }
     // ── Order comes from the itinerary, never from the clips ──────────────
     //
     // Deriving order from clip dates broke the flow of the ride. Haryana is one
-    // stop — Kurukshetra, night 38, on the way back from Chandigarh — but a stray
+    // stop (Kurukshetra, night 38, on the way back from Chandigarh) but a stray
     // early clip tagged Haryana dragged the whole block up before Punjab, and Delhi
     // (nights 23 and 39-40) collapsed into a single early block, so the return leg
     // vanished and the map jumped Punjab → Madhya Pradesh.
@@ -791,7 +1052,7 @@ button { font: inherit; color: inherit; }
     });
 
     // Home, at the front. The sheet only records nights that were paid for, so
-    // leaving Trivandrum on day one has no row — but the prep clips from 10-11 Jan
+    // leaving Trivandrum on day one has no row. But the prep clips from 10-11 Jan
     // are Kerala, and without a run to land in they fell into the homecoming block
     // at the end, three months out of place.
     var origin = ((m.route && m.route.stops) || []).filter(function (s) { return s.origin; })[0];
@@ -805,7 +1066,7 @@ button { font: inherit; color: inherit; }
     var t1 = dates.length ? Math.max.apply(null, dates) : 0;
     var lastNight = runs.length ? runs[runs.length - 1].lastNight : 1;
 
-    // The sheet has no dates, only night numbers — interpolate across the trip. It
+    // The sheet has no dates, only night numbers, so interpolate across the trip. It
     // only has to be good enough to tell one visit from another, and the two Delhi
     // stops are three weeks apart.
     // Real dates where the route has them, carried from the rider's booking
@@ -846,7 +1107,7 @@ button { font: inherit; color: inherit; }
       best.items.push(c);
     });
 
-    // Bihar and Bhutan have clips but no row in the sheet — ridden through and a day
+    // Bihar and Bhutan have clips but no row in the sheet: ridden through and a day
     // trip out of Jaigaon. Give each its own run, slotted in by date.
     var extra = {};
     orphans.forEach(function (c) {
@@ -887,6 +1148,9 @@ button { font: inherit; color: inherit; }
 
       return {
         id: L.def.id, title: L.def.title, sub: L.def.sub, count: all,
+        // Optional narration track, carried through from LEGS. No leg declares one
+        // today; the overview's speaker control only appears if some leg does.
+        narration: L.def.narration || null,
         dates: dated.length
           ? (fmt(dated[0].captured) + ' – ' + fmt(dated[dated.length - 1].captured)).toUpperCase() : '',
         regions: L.runs.map(function (r) {
@@ -964,7 +1228,7 @@ button { font: inherit; color: inherit; }
       // Half-width only in genuine pairs. Marking every short block half-width left
       // lone ones stranded beside an empty half and a half-length rule, which looked
       // broken; a block only narrows when the next one can actually come up beside
-      // it. Packing stays sparse — dense would reorder, and the order is the story.
+      // it. Packing stays sparse; dense would reorder, and the order is the story.
       var spans = L.regions.map(function () { return 2; });
       for (var i = 0; i < L.regions.length - 1; i++) {
         if (L.regions[i].clips.length <= PAIR_MAX && L.regions[i + 1].clips.length <= PAIR_MAX) {
@@ -1012,7 +1276,7 @@ button { font: inherit; color: inherit; }
     wrap.appendChild(bar);
 
     if (r.repeatOf) {
-      // Outside the bar, which is a <button> — an anchor cannot live inside one.
+      // Outside the bar, which is a <button>, because an anchor cannot live inside one.
       var rep = document.createElement('a');
       rep.className = 'region__rep';
       rep.href = '#region-' + r.repeatNext.index;
@@ -1167,43 +1431,21 @@ button { font: inherit; color: inherit; }
   }
 
   /* ─── map ───────────────────────────────────────────────────────────── */
-  var NS = 'http://www.w3.org/2000/svg';
+  // The drawing itself lives in atlas.js, shared with the route book. What stays here
+  // is everything the map means on this page: which block a stop belongs to, what the
+  // card says, what the badge reads.
+  var atlas = null;
   var mapStops = [];
-  var mapFrame = null;   // projection constants, shared with the tile layer
-  var mapTiles = null;   // the <g> of OSM tiles, when the real map is on
-  var mapPlaced = [];    // every stop, projected, in travel order — this draws the line
-  var mapClusters = [];  // stops merged by pixel proximity — these are the markers
+  var mapPlaced = [];    // every stop, projected, in travel order; this draws the line
+  var mapClusters = [];  // stops merged by pixel proximity; these are the markers
   var selStop = -1;      // which cluster's card is open
 
   var rupee = function (n) { return '₹' + Math.round(n).toLocaleString('en-IN'); };
 
-  // India is 420px wide here, so a pixel is roughly 8km: the four Varanasi hotels, and
-  // both Guwahati ones, land on the same dot no matter how the click is resolved.
-  // Merge anything that close into one marker and let the card list what's under it —
-  // better than stacking dots where all but the topmost are unreachable.
-  var CLUSTER_PX = 3.5;
-
-  function clusterStops(placed) {
-    var out = [];
-    placed.forEach(function (p) {
-      if (p.stop.origin) return;   // home starts the line but wasn't a paid night
-      for (var i = 0; i < out.length; i++) {
-        var c = out[i];
-        if (Math.abs(c.x - p.x) <= CLUSTER_PX && Math.abs(c.y - p.y) <= CLUSTER_PX) {
-          c.stops.push(p.stop);
-          if (c.idx < 0) c.idx = p.idx;
-          return;
-        }
-      }
-      out.push({ x: p.x, y: p.y, idx: p.idx, stops: [p.stop] });
-    });
-    return out;
-  }
-
   function clusterLabel(c) {
     var names = [];
-    c.stops.forEach(function (s) { if (names.indexOf(s.name) < 0) names.push(s.name); });
-    var nights = c.stops.reduce(function (a, s) { return a + s.nights; }, 0);
+    c.items.forEach(function (it) { if (names.indexOf(it.ref.name) < 0) names.push(it.ref.name); });
+    var nights = c.items.reduce(function (a, it) { return a + it.ref.nights; }, 0);
     return names.join(' / ') + ' · ' + nights + (nights === 1 ? ' night' : ' nights');
   }
 
@@ -1214,7 +1456,7 @@ button { font: inherit; color: inherit; }
   // Match each map marker to the block it belongs to by NIGHT NUMBER. Both sides
   // come from the same sheet, so this is exact. The previous version walked region
   // names with a moving pointer, which drifted whenever a region's marker count and
-  // block count disagreed — Arunachal has two blocks but four stops, West Bengal
+  // block count disagreed. Arunachal has two blocks but four stops, West Bengal
   // three of each in a different grouping, and markers lit up under the wrong heading.
   function matchStopsToRegions(stops) {
     return stops.map(function (s) {
@@ -1251,12 +1493,13 @@ button { font: inherit; color: inherit; }
     // Distinct place names in the cluster: usually one, but Mussoorie and Dehradun are
     // 20km apart, which is under two pixels at this scale.
     var names = [];
-    c.stops.forEach(function (s) { if (names.indexOf(s.name) < 0) names.push(s.name); });
-    var region = c.stops[0].region;
+    c.items.forEach(function (it) { if (names.indexOf(it.ref.name) < 0) names.push(it.ref.name); });
+    var region = c.items[0].ref.region;
     el.cardPlace.textContent = names.join(' / ') + (region && names.indexOf(region) < 0 ? ' · ' + region : '');
 
     el.cardList.replaceChildren();
-    c.stops.forEach(function (s) {
+    c.items.forEach(function (it) {
+      var s = it.ref;
       var li = document.createElement('li');
 
       var txt = document.createElement('div');
@@ -1302,162 +1545,63 @@ button { font: inherit; color: inherit; }
 
   function renderMap() {
     if (!basemap) return;
+    // The renderer is a second file now. If it didn't arrive, the map is simply absent:
+    // a bare reference would throw out of the boot chain and take the clips, the
+    // lightbox and the keys down with it.
+    if (typeof Atlas === 'undefined') return;
+    atlas = Atlas.create(el.atlas, basemap, { width: 420, height: 470, pad: 10 });
+    if (!atlas) return;
+    atlas.drawBase();
 
-    var W = 420, H = 470, PAD = 10;
-    // Mercator, matching the design's d3.geoMercator().fitExtent to India.
-    function merc(lon, lat) {
-      return [lon * Math.PI / 180, Math.log(Math.tan(Math.PI / 4 + (lat * Math.PI / 180) / 2))];
-    }
-
-    var india = basemap.countries.filter(function (c) { return c.name === 'India'; })[0];
-    if (!india) return;
-    var xs = [], ys = [];
-    india.rings.forEach(function (ring) {
-      ring.forEach(function (p) { var q = merc(p[0], p[1]); xs.push(q[0]); ys.push(q[1]); });
-    });
-    var minX = Math.min.apply(null, xs), maxX = Math.max.apply(null, xs);
-    var minY = Math.min.apply(null, ys), maxY = Math.max.apply(null, ys);
-    var k = Math.min((W - PAD * 2) / (maxX - minX), (H - PAD * 2) / (maxY - minY));
-    var offX = (W - (maxX - minX) * k) / 2, offY = (H - (maxY - minY) * k) / 2;
-
-    function project(lon, lat) {
-      var q = merc(lon, lat);
-      return [offX + (q[0] - minX) * k, H - (offY + (q[1] - minY) * k)];
-    }
-
-    el.atlas.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
-    el.atlas.replaceChildren();
-
-    basemap.countries.forEach(function (c) {
-      if (c.name === 'India') return;
-      c.rings.forEach(function (ring) {
-        var poly = document.createElementNS(NS, 'polygon');
-        poly.setAttribute('class', 'neighbour');
-        poly.setAttribute('points', ring.map(function (p) { return project(p[0], p[1]).join(','); }).join(' '));
-        el.atlas.appendChild(poly);
-      });
-    });
-    india.rings.forEach(function (ring) {
-      var poly = document.createElementNS(NS, 'polygon');
-      poly.setAttribute('class', 'india');
-      poly.setAttribute('points', ring.map(function (p) { return project(p[0], p[1]).join(','); }).join(' '));
-      el.atlas.appendChild(poly);
-    });
-
-    // The line follows the places actually slept in, in order — not a tour of state
+    // The line follows the places actually slept in, in order, not a tour of state
     // centroids, which used to cut Rajasthan-to-Delhi through the middle of Haryana
     // and put "Nepal" in the far west of the country.
     var stops = (manifest.route && manifest.route.stops) || [];
-    mapPlaced = matchStopsToRegions(stops).map(function (o) {
-      var xy = project(o.stop.lon, o.stop.lat);
+    var matched = matchStopsToRegions(stops);
+    mapPlaced = matched.map(function (o) {
+      var xy = atlas.project(o.stop.lon, o.stop.lat);
       return { stop: o.stop, idx: o.idx, x: xy[0], y: xy[1] };
     });
 
-    if (mapPlaced.length > 1) {
-      var line = document.createElementNS(NS, 'polyline');
-      line.setAttribute('class', 'route');
-      line.setAttribute('points', mapPlaced.map(function (p) { return p.x.toFixed(1) + ',' + p.y.toFixed(1); }).join(' '));
-      el.atlas.appendChild(line);
+    // The planned loop, under the ridden one. Drawn from the template's hop list:
+    // the origin of the first hop, then every destination in order.
+    if (template && template.hops.length) {
+      var pts = [{ lat: template.hops[0].fromLat, lon: template.hops[0].fromLon }];
+      template.hops.forEach(function (h) { pts.push({ lat: h.toLat, lon: h.toLon }); });
+      plannedLine = atlas.drawRoute(pts, 'route--planned');
+      syncPlannedLine();
     }
 
-    mapClusters = clusterStops(mapPlaced);
+    atlas.drawRoute(matched.map(function (o) {
+      return { lat: o.stop.lat, lon: o.stop.lon };
+    }), 'route');
 
-    mapStops = [];
-    mapClusters.forEach(function (c, i) {
-      var dot = document.createElementNS(NS, 'circle');
-      dot.setAttribute('class', 'stop');
-      dot.setAttribute('cx', c.x); dot.setAttribute('cy', c.y); dot.setAttribute('r', 2.6);
-      dot.dataset.idx = c.idx; dot.dataset.stop = i;
-      el.atlas.appendChild(dot);
-      mapStops.push(dot);
+    // K2K on top of the ridden line, because while it is showing the ridden line is
+    // the dimmed one. Both lines are drawn once and left in the SVG; the toggle only
+    // ever changes an attribute, so there is nothing to rebuild and nothing to
+    // re-project when a reader flicks it on and off.
+    if (hasK2k()) {
+      atlas.drawRoute(k2k.south.points, 'route--k2k route--k2k-s');
+      atlas.drawRoute(k2k.north.points, 'route--k2k route--k2k-n');
+      k2kDrawn = true;
+      el.k2kToggle.hidden = false;
+    }
 
-      // The visible dot is under 3px; a finger is not. This circle exists for the
-      // hover tooltip — the click itself is resolved by distance, below.
-      var hit = document.createElementNS(NS, 'circle');
-      hit.setAttribute('class', 'hit');
-      hit.setAttribute('cx', c.x); hit.setAttribute('cy', c.y); hit.setAttribute('r', 8);
-      hit.dataset.idx = c.idx; hit.dataset.stop = i;
-      var t = document.createElementNS(NS, 'title');
-      t.textContent = clusterLabel(c);
-      hit.appendChild(t);
-      el.atlas.appendChild(hit);
+    // Home starts the line but wasn't a paid night, so it gets no marker, and it sits
+    // on the same coordinates as the homecoming stop, which it would otherwise absorb.
+    mapClusters = atlas.drawMarkers(matched.filter(function (o) {
+      return !o.stop.origin;
+    }).map(function (o) {
+      return { lat: o.stop.lat, lon: o.stop.lon, idx: o.idx, ref: o.stop };
+    }), {
+      label: clusterLabel,
+      onSelect: showStop,
+      onMiss: hideStop
     });
+    mapStops = mapClusters.map(function (c) { return c.dot; });
 
-    // Resolve a click to the *nearest* stop rather than to whatever circle caught the
-    // event. Through Himachal and the Northeast the stops sit closer together than a
-    // finger-sized target, so the hit circles overlap and the last one drawn swallows
-    // its neighbours — several stops were simply unclickable. Nearest-point gives
-    // every stop its own catchment, and a click on open sea closes the card.
-    el.atlas.addEventListener('click', function (e) {
-      var box = el.atlas.getBoundingClientRect();
-      if (!box.width || !box.height) return;
-      var vb = el.atlas.viewBox.baseVal;
-      var x = (e.clientX - box.left) / box.width * vb.width;
-      var y = (e.clientY - box.top) / box.height * vb.height;
-
-      var best = -1, bestD = Infinity;
-      mapClusters.forEach(function (c, i) {
-        var d = (c.x - x) * (c.x - x) + (c.y - y) * (c.y - y);
-        if (d < bestD) { bestD = d; best = i; }
-      });
-      if (best >= 0 && bestD <= 14 * 14) showStop(best); else hideStop();
-    });
-
-    // Everything the tile layer needs to sit on the same projection.
-    mapFrame = { W: W, H: H, k: k, minX: minX, minY: minY, offX: offX, offY: offY };
-    if (mapMode === 'map') drawTiles();
-
+    if (mapMode === 'map') atlas.setTiles(true);
     syncMap();
-  }
-
-  /* ─── optional OpenStreetMap underlay ───────────────────────────────── */
-  //
-  // The map already draws in Mercator, and Web Mercator is the same projection up to
-  // a linear transform — so tiles land exactly on the drawn coastline, no reprojection:
-  //   x = worldPx · nx + Bx     where nx = (mx + π) / 2π
-  //   y = worldPx · ny + By     where ny = (π − my) / 2π
-  //
-  function drawTiles() {
-    var f = mapFrame;
-    if (!f) return;
-    clearTiles();
-
-    var worldPx = 2 * Math.PI * f.k;
-    var Bx = f.offX - (Math.PI + f.minX) * f.k;
-    var By = f.H - f.offY - (Math.PI - f.minY) * f.k;
-
-    // One zoom finer than the exact fit, so tiles are downscaled rather than blown up.
-    var z = Math.max(0, Math.min(19, Math.round(Math.log(worldPx / 256) / Math.LN2) + 1));
-    var n = Math.pow(2, z);
-    var size = worldPx / n;
-
-    var x0 = Math.max(0, Math.floor((0 - Bx) / size));
-    var x1 = Math.min(n - 1, Math.ceil((f.W - Bx) / size));
-    var y0 = Math.max(0, Math.floor((0 - By) / size));
-    var y1 = Math.min(n - 1, Math.ceil((f.H - By) / size));
-
-    var g = document.createElementNS(NS, 'g');
-    g.setAttribute('class', 'tiles');
-    for (var tx = x0; tx <= x1; tx++) {
-      for (var ty = y0; ty <= y1; ty++) {
-        var img = document.createElementNS(NS, 'image');
-        img.setAttribute('class', 'tile-img');
-        img.setAttribute('x', (Bx + tx * size).toFixed(2));
-        img.setAttribute('y', (By + ty * size).toFixed(2));
-        // Half a pixel of overlap; exact edges leave hairline seams once scaled.
-        img.setAttribute('width', (size + 0.5).toFixed(2));
-        img.setAttribute('height', (size + 0.5).toFixed(2));
-        img.setAttribute('href', 'https://tile.openstreetmap.org/' + z + '/' + tx + '/' + ty + '.png');
-        g.appendChild(img);
-      }
-    }
-    el.atlas.insertBefore(g, el.atlas.firstChild);   // behind coastlines and route
-    mapTiles = g;
-  }
-
-  function clearTiles() {
-    if (mapTiles && mapTiles.parentNode) mapTiles.parentNode.removeChild(mapTiles);
-    mapTiles = null;
   }
 
   function setMapMode(mode) {
@@ -1467,7 +1611,63 @@ button { font: inherit; color: inherit; }
     el.mapToggle.setAttribute('aria-pressed', String(mode === 'map'));
     el.mapToggle.textContent = mode === 'map' ? 'Outline' : 'Real map';
     el.mapAttr.hidden = mode !== 'map';
-    if (mode === 'map') drawTiles(); else clearTiles();
+    if (atlas) atlas.setTiles(mode === 'map');
+  }
+
+  // Whether the second line is drawn is a view question with two independent answers:
+  // does the reader want it, and is anything currently borrowing the map. The overview
+  // borrows the map, and a borrowed map must never reach the stored preference. A
+  // reader who reloads or closes the tab mid-playback would otherwise find their
+  // planned-route choice quietly rewritten.
+  function syncPlannedLine() {
+    if (plannedLine) plannedLine.style.display = (planned && !plannedSuppressed) ? '' : 'none';
+    // "Something is borrowing the map" is not only the planned loop's business: the
+    // K2K overlay has to stand down for the same reason. Written once, here, onto the
+    // element, so the stylesheet can act on it and there is no second copy of the
+    // rule in JS to drift out of step.
+    if (el.atlas) el.atlas.dataset.busy = plannedSuppressed ? 'yes' : 'no';
+  }
+
+  function setPlanned(on) {
+    planned = !!on;
+    try { localStorage.setItem(PLAN_KEY, planned ? '1' : '0'); } catch (e) { /* private mode */ }
+    el.planToggle.setAttribute('aria-pressed', String(planned));
+    el.planToggle.textContent = planned ? 'Hide planned' : 'Planned route';
+    syncPlannedLine();
+  }
+
+  // One predicate for "there are two K2K lines to draw", used by everything that
+  // depends on there being any: the map, the section, and the boot's reset. A
+  // present-but-malformed k2k.json used to satisfy the boot and fail the map, which
+  // left the ridden route dimmed under an overlay that was never drawn and no toggle
+  // on the page to undo it with.
+  function hasK2k() {
+    return !!(k2k && k2k.north && k2k.south &&
+      k2k.north.points && k2k.north.points.length > 1 &&
+      k2k.south.points && k2k.south.points.length > 1);
+  }
+
+  function syncK2k() {
+    if (!el.atlas || !el.k2kToggle) return;
+    el.atlas.dataset.k2k = k2kOn ? 'on' : 'off';
+    el.k2kToggle.setAttribute('aria-pressed', String(k2kOn));
+    el.k2kToggle.textContent = k2kOn ? 'Hide K2K' : 'K2K';
+    // The planned loop is removed from under K2K, not dimmed, because the K2K
+    // west-coast line traces the same hops. A toggle still offering to hide a line
+    // that is already gone would be describing a map that does not exist, so it is
+    // disabled for as long as K2K is up and says why.
+    if (el.planToggle) {
+      el.planToggle.disabled = k2kOn;
+      el.planToggle.title = k2kOn
+        ? 'K2K already draws this side of the loop'
+        : '';
+    }
+  }
+
+  function setK2k(on) {
+    k2kOn = !!on;
+    try { localStorage.setItem(K2K_KEY, k2kOn ? '1' : '0'); } catch (e) { /* private mode */ }
+    syncK2k();
   }
 
   // Which blocks sit on the same row as this one. Two-up rows start level, so a
@@ -1526,6 +1726,10 @@ button { font: inherit; color: inherit; }
     if (raf) return;
     raf = requestAnimationFrame(function () {
       raf = null;
+      // The overview drives the page, not the scroll. jump() scrolls, so without this
+      // the sweep below would re-derive activeIdx from wherever the page happened to
+      // be mid-transition and overwrite the region the player had just chosen.
+      if (overviewOn) return;
       var line = DESKTOP.matches ? 200 : 140;
       var cur = activeIdx;
       document.querySelectorAll('[data-region-idx]').forEach(function (n) {
@@ -1533,12 +1737,200 @@ button { font: inherit; color: inherit; }
       });
       var mates = rowMates(cur);
       // Name the block you reach first when reading, not whichever the sweep
-      // happened to finish on — the right-hand one of a pair used to win.
+      // happened to finish on. The right-hand one of a pair used to win.
       if (mates[0] !== activeIdx || mates.length !== activeIdxs.length) {
         activeIdx = mates[0]; activeIdxs = mates; syncMap(); syncStrip();
       }
     });
   }, { passive: true });
+
+  /* ─── the overview ──────────────────────────────────────────────────── */
+  //
+  // Plays the ride in place: the map eases to each region, the legs column scrolls
+  // with it, and the caption below the map names where you are. It is a reading of
+  // the same data the page already shows, not a second story: every step is a
+  // jump() the reader could have made by hand.
+  //
+  // Narration audio is optional and ships as plumbing only. A leg in LEGS may carry
+  // `narration: "media/narration/leg-01.m4a"`; no leg does today, so the speaker never
+  // appears, and if the named file is absent playback simply carries on. Sound stays
+  // off until asked for. Autoplay policy aside, nobody wants a phone talking at them
+  // in public.
+  var Overview = (function () {
+    var DWELL = 2600;          // ms per region, when not driven by audio
+    var paused = false, pos = 0, timer = null, capTimer = null;
+    var audio = null, narrOn = false;
+
+    function regions() { return regionsFlat; }
+
+    // Every stop the page matched to this block, as a lat/lon box for atlas.focus.
+    // A block with no stops of its own (a run made only of undated clips) gives null,
+    // which resets the map rather than framing nothing.
+    function boundsFor(r) {
+      var pts = mapPlaced.filter(function (p) { return p.idx === r.index; });
+      if (!pts.length) return null;
+      var lats = [], lons = [];
+      pts.forEach(function (p) { lats.push(p.stop.lat); lons.push(p.stop.lon); });
+      return {
+        minLat: Math.min.apply(null, lats), maxLat: Math.max.apply(null, lats),
+        minLon: Math.min.apply(null, lons), maxLon: Math.max.apply(null, lons)
+      };
+    }
+
+    function legOf(r) {
+      for (var i = 0; i < legs.length; i++) {
+        if (legs[i].regions.indexOf(r) >= 0) return legs[i];
+      }
+      return null;
+    }
+
+    function paint(r) {
+      var L = legOf(r);
+      el.ovCaption.dataset.fade = 'true';
+      // Swap the words at the bottom of the fade, not the top of it. Under reduced
+      // motion there is no fade, so the swap is immediate. The pending swap is always
+      // dropped first: a step taken inside the fade, or an exit, would otherwise
+      // land the previous region's words a quarter-second later.
+      clearTimeout(capTimer);
+      capTimer = setTimeout(function () {
+        el.ovLeg.textContent = L ? ('LEG ' + L.id + ' · ' + L.title).toUpperCase() : '';
+        el.ovWhere.textContent = r.name;
+        el.ovText.textContent = r.count + (r.count === 1 ? ' clip · ' : ' clips · ') + r.range +
+          (L && L.sub ? ' · ' + L.sub : '');
+        el.ovCaption.dataset.fade = 'false';
+      }, MOTION.matches ? 0 : 260);
+
+      el.ovDots.querySelectorAll('.ov__dot').forEach(function (d, i) {
+        d.dataset.on = String(legs[i] === L);
+      });
+    }
+
+    function show(i) {
+      var rs = regions();
+      if (i < 0 || i >= rs.length) return stop();
+      pos = i;
+      var r = rs[i];
+
+      // jump() is the single mover: it names the block, lights the map, scrolls the
+      // legs column and opens the accordion on mobile. The page's own scroll handler
+      // is held off while overviewOn, or the scroll jump() causes would bounce back
+      // and overwrite the block the player just chose.
+      jump(r.index);
+      if (atlas) atlas.focus(boundsFor(r), !MOTION.matches);
+      paint(r);
+
+      var L = legOf(r);
+      if (L && L.narration && narrOn) playTrack(L.narration);
+      schedule(DWELL);
+    }
+
+    function schedule(ms) {
+      clearTimeout(timer);
+      if (paused) return;
+      timer = setTimeout(function () { show(pos + 1); }, ms);
+    }
+
+    function playTrack(src) {
+      if (audio && audio.src.indexOf(src) >= 0) return;
+      stopTrack();
+      audio = new Audio(src);
+      audio.play().catch(function () { /* missing file, or no gesture yet */ });
+    }
+    function stopTrack() { if (audio) { audio.pause(); audio = null; } }
+
+    function buildDots() {
+      el.ovDots.replaceChildren();
+      legs.forEach(function (L) {
+        var b = document.createElement('button');
+        b.type = 'button'; b.className = 'ov__dot';
+        b.title = L.title;
+        b.setAttribute('aria-label', L.title);
+        b.addEventListener('click', function () {
+          show(regions().indexOf(L.regions[0]));
+        });
+        el.ovDots.appendChild(b);
+      });
+    }
+
+    function setPaused(p) {
+      paused = p;
+      el.ovPlay.textContent = p ? '▶' : '❚❚';
+      el.ovPlay.setAttribute('aria-label', p ? 'Play' : 'Pause');
+      if (audio) { if (p) audio.pause(); else audio.play().catch(function () {}); }
+      if (p) clearTimeout(timer); else schedule(DWELL);
+    }
+
+    function start() {
+      if (overviewOn || !regions().length) return;
+      overviewOn = true;
+      paused = false;
+      el.ovPlay.textContent = '❚❚';
+      el.ovPlay.setAttribute('aria-label', 'Pause');
+
+      // One line at a time. The planned overlay would confuse a map that is already
+      // moving. Suppression is a view state and stops there: the reader's stored
+      // choice is not read, not written and not restored, so leaving mid-playback
+      // costs them nothing. The toggle stays live, and a click during a run takes
+      // effect the moment the run ends.
+      plannedSuppressed = true;
+      syncPlannedLine();
+      hideStop();
+
+      el.overview.hidden = false;
+      buildDots();
+      // Only offer the sound control if some leg actually declares a track.
+      el.ovSound.hidden = !legs.some(function (L) { return !!L.narration; });
+      el.ovCta.textContent = 'OVERVIEW PLAYING';
+      show(0);
+    }
+
+    function stop() {
+      if (!overviewOn) return;
+      overviewOn = false;
+      clearTimeout(timer);
+      clearTimeout(capTimer);
+      stopTrack();
+      el.overview.hidden = true;
+      el.ovCta.textContent = 'SEE THE OVERVIEW ▸';
+      plannedSuppressed = false;
+      syncPlannedLine();
+      if (atlas) atlas.focus(null, !MOTION.matches);
+    }
+
+    return {
+      start: start, stop: stop,
+      next: function () { show(pos + 1); },
+      toggle: function () { setPaused(!paused); },
+      isOn: function () { return overviewOn; },
+      setSound: function (v) {
+        narrOn = v;
+        el.ovSound.setAttribute('aria-pressed', String(v));
+        el.ovSound.textContent = v ? '🔊' : '🔇';
+        if (!v) stopTrack();
+      }
+    };
+  })();
+
+  el.ovCta.addEventListener('click', function (e) {
+    e.preventDefault();
+    if (Overview.isOn()) Overview.stop(); else Overview.start();
+  });
+  el.ovExit.addEventListener('click', Overview.stop);
+  el.ovPlay.addEventListener('click', Overview.toggle);
+  el.ovSound.addEventListener('click', function () {
+    Overview.setSound(el.ovSound.getAttribute('aria-pressed') !== 'true');
+  });
+  document.addEventListener('keydown', function (e) {
+    // The lightbox owns the keyboard while it is open; it uses ArrowRight too.
+    if (!Overview.isOn() || lbPos !== -1) return;
+    // Space is also how you press the button you have tabbed to. Leave it alone when
+    // something focusable has it, or EXIT could never be reached from the keyboard.
+    var tag = e.target && e.target.tagName;
+    var held = tag === 'BUTTON' || tag === 'A' || tag === 'INPUT' || tag === 'TEXTAREA';
+    if (e.key === 'Escape') Overview.stop();
+    if (e.key === ' ' && !held) { e.preventDefault(); Overview.toggle(); }
+    if (e.key === 'ArrowRight') { e.preventDefault(); Overview.next(); }
+  });
 
   /* ─── lightbox ──────────────────────────────────────────────────────── */
   function openLb(pos) {
@@ -1582,7 +1974,7 @@ button { font: inherit; color: inherit; }
 
     el.lbTitle.textContent = (r.name + ' · ' + fmt(c.captured)).toUpperCase();
 
-    // Position within this region, as the design shows it — not within all 222.
+    // Position within this region, as the design shows it, not within all 222.
     var within = r.clips.indexOf(c);
     el.lbCount.textContent = (within + 1) + ' / ' + r.clips.length;
 
@@ -1626,15 +2018,126 @@ button { font: inherit; color: inherit; }
     if (btn) openLb(+btn.dataset.pos);
   });
 
+  /* ─── the route book ────────────────────────────────────────────────────
+     What stood here rendered the book into the page: a glance band, five
+     expandable sectors with a waypoint table each, and a cost table projected
+     from Costs.project(). All of it is in booklet.html in fuller form, so the
+     page now offers one line of figures and a door.
+
+     template.json is still read, and for two reasons. The planned loop on the
+     map is drawn from its hops, and the figures below are taken from its totals
+     rather than typed into the markup, which is the only arrangement in which
+     the page cannot end up advertising a loop the book does not contain.
+
+     template-notes.json is no longer read here. Nothing left on this page used
+     it: the sourcing line, the planned-versus-ridden paragraph, the per-sector
+     season and permit notes and the points of interest all went with the
+     section above, and renderK2k reads k2k.json alone. booklet.html fetches it
+     for itself, so the file stays and the fetch does not. */
+  var template = null, k2k = null;
+
+  function renderRouteBook() {
+    if (!template || !el.tplFigs) return;
+    var t = template;
+    el.tplFigs.textContent = [
+      Math.round(t.totals.km).toLocaleString('en-IN') + ' km',
+      t.totals.hops + ' legs',
+      t.sectors.length + ' sectors',
+      t.crossings.length + ' join points',
+    ].join(' · ');
+    el.tplFigs.hidden = false;
+  }
+
+  // Every figure in this block is read out of k2k.json rather than typed into the
+  // markup, and the two kinds of figure are kept apart in the prose as well as in
+  // the data: the highway length is quoted with its source and its variance, the
+  // west-coast total is this ride's own measured hops added up. The corridor line on
+  // the map is named as a sketch in the same paragraph that describes it, because a
+  // polyline through sixteen cities looks exactly like a route and is not one.
+  function renderK2k() {
+    // Gated on the map having drawn the overlay, not on k2k.json having loaded. Every
+    // paragraph below describes two lines on a map and tells the reader to turn them
+    // on with a button beside it. With basemap.json or atlas.js missing there is no
+    // map, no button and no lines, and this section used to appear anyway: an essay
+    // about a drawing that is not on the page, pointing at a control that is not
+    // either. It stays hidden instead, which is what the rest of the map's absence
+    // already does.
+    if (!k2kDrawn) return;
+    var n = k2k.north, s = k2k.south, rw = k2k.realWorld || {};
+    var body = document.getElementById('tpl-k2k-body');
+    if (!body) return;
+    var km = function (v) { return Math.round(v).toLocaleString('en-IN'); };
+
+    function para(cls, text) {
+      var p = document.createElement('p');
+      p.className = cls;
+      p.textContent = text;
+      body.appendChild(p);
+    }
+
+    body.replaceChildren();
+
+    para('tpl__note',
+      'K2K is the prestige pan-India route and the one most often attempted: the ' +
+      'length of the country, bottom to top, up NH-44. Its length is commonly given ' +
+      'as ' + km(n.citedKm) + ' km across ' + n.states + ' states, though sources ' +
+      'vary and some quote ' + km(n.citedKmAlt) + ' km. That is the published length ' +
+      'of the highway. Nothing on this site measured it.');
+
+    para('tpl__note',
+      'Almost nobody lives at either end, so the ride is always longer than the road. ' +
+      'Riders add the run to the start line and the run home, and a K2K routinely ' +
+      'totals ' + km(rw.low) + '–' + km(rw.high) + ' km rather than ' + km(n.citedKm) + ' km.');
+
+    para('tpl__note',
+      'It is drawn here as two lines, which is how it is ridden: up one side of the ' +
+      'country and down the other. The two do not meet. The northbound line ends at ' +
+      n.points[n.points.length - 1].name + ' and the southbound one picks up at ' +
+      s.points[0].name + ', because ' + s.points[0].name + ' is where this loop’s ' +
+      'measured west side begins. The northbound line runs through the ' +
+      n.points.length + ' cities NH-44 passes, so you can see where it goes. It is a ' +
+      'corridor sketch and its length on screen is a drawing, not a distance.');
+
+    para('tpl__note',
+      'The southbound line is not a sketch. It is ' + s.hops + ' legs of this loop, ' +
+      s.points[0].name + ' down to ' + s.points[s.points.length - 1].name + ', and ' +
+      'their road distances were measured for this route book: ' + km(s.measuredKm) +
+      ' km. Read that against NH-44 with one thing in front of you: ' +
+      km(s.spurKm) + ' km of it is ' + s.spurName + ', which is not on any K2K. The ' +
+      'line draws it because the figure includes it, and the figure includes it ' +
+      'because there is no measured ' + s.spurFrom + ' to ' + s.spurTo + ' road in ' +
+      'this book to put in its place. Skipping the spur makes the west-coast run ' +
+      'shorter. By how much is not a number this site has, and it is not going to ' +
+      'guess one.');
+
+    para('tpl__note',
+      'None of which takes away the useful part. A rider with three weeks does not ' +
+      'have to plan a K2K from nothing: most of one is already in this template, ' +
+      'spur and all, and the spur is the first thing to cut.');
+
+    if (n.cite) para('tpl__source', n.cite);
+    document.getElementById('tpl-k2k').hidden = false;
+  }
+
   /* ─── boot ──────────────────────────────────────────────────────────── */
   Promise.all([
     fetch('manifest.json', { cache: 'no-cache' }).then(function (r) {
       if (!r.ok) throw new Error('HTTP ' + r.status); return r.json();
     }),
     fetch('basemap.json').then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; }),
+    // Optional: without it the map draws the ridden line only, the planned-route
+    // toggle has nothing to show, and the route book's figures stay hidden. The
+    // book itself is a static link, so it opens either way.
+    fetch('template.json').then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; }),
+    // Optional too: without it the map keeps its two lines, the K2K section stays
+    // hidden, and the K2K toggle never appears.
+    fetch('k2k.json').then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; }),
   ]).then(function (res) {
     manifest = res[0];
     basemap = res[1];
+    template = res[2];
+    k2k = res[3];
+    renderRouteBook();
 
     var totals = build(manifest);
     el.statRegions.textContent = String(totals.totalRegions);
@@ -1648,11 +2151,32 @@ button { font: inherit; color: inherit; }
     render();
     renderStrip();
     renderMap();
+    // After renderMap and not before. The section is an explanation of an overlay on
+    // that map, so it cannot be shown until the map has actually drawn one; renderMap
+    // is what sets k2kDrawn.
+    renderK2k();
     syncStrip();
 
     setMapMode(mapMode);
     el.mapToggle.addEventListener('click', function () {
       setMapMode(mapMode === 'map' ? 'outline' : 'map');
+    });
+
+    setPlanned(planned);
+    el.planToggle.addEventListener('click', function () {
+      setPlanned(!planned);
+    });
+
+    // A remembered "on" with nothing drawn would dim the ridden route and hide the
+    // planned loop in favour of two lines that were never drawn, behind a toggle
+    // that is not on the page to undo it with. k2kDrawn rather than hasK2k(),
+    // because a good k2k.json with no map is exactly that situation: syncK2k would
+    // otherwise leave the planned-route toggle disabled with no visible control to
+    // re-enable it.
+    if (!k2kDrawn) k2kOn = false;
+    syncK2k();
+    el.k2kToggle.addEventListener('click', function () {
+      setK2k(!k2kOn);
     });
 
     el.cardX.addEventListener('click', hideStop);

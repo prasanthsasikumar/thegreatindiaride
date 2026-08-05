@@ -17,7 +17,7 @@
 
 # ORDER MATTERS. When several [[headers]] blocks match the same request, Netlify
 # applies them in file order and the LAST one wins for any header they both set.
-# The catch-all therefore has to come FIRST — when it sat at the bottom it silently
+# The catch-all therefore has to come FIRST. When it sat at the bottom it silently
 # overrode every rule below, so /media/* was being served at max-age=3600 instead of
 # the intended immutable year, and manifest.json at 3600 instead of 300.
 
@@ -33,6 +33,16 @@
 
 [[headers]]
   for = "/manifest.json"
+  [headers.values]
+    Cache-Control = "public, max-age=300"
+
+[[headers]]
+  for = "/template.json"
+  [headers.values]
+    Cache-Control = "public, max-age=300"
+
+[[headers]]
+  for = "/template-notes.json"
   [headers.values]
     Cache-Control = "public, max-age=300"
 
@@ -57,6 +67,20 @@
   [headers.values]
     Cache-Control = "public, max-age=604800"
 
+# --- shared page scripts: loaded by both index.html and booklet.html, so a fix to
+# either one has to reach two pages. Short-lived like the data they render, rather
+# than left on the catch-all's hour. ---
+
+[[headers]]
+  for = "/atlas.js"
+  [headers.values]
+    Cache-Control = "public, max-age=300"
+
+[[headers]]
+  for = "/costs.js"
+  [headers.values]
+    Cache-Control = "public, max-age=300"
+
 # --- pages ---
 
 [[headers]]
@@ -72,3 +96,17 @@
   for = "/media/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
+
+# ...except these eight. media/research/fig-01.jpg through fig-08.jpg are other
+# people's photographs, reproduced with credit. Their names are sequential rather
+# than content-addressed and they are referenced with no hash and no query, so
+# replacing a plate reuses its filename. A year of `immutable` would mean a
+# correction, a re-credit or a takedown could not reach a returning visitor at all.
+# An hour is the price of being able to withdraw someone else's picture.
+#
+# This MUST stay BELOW /media/* (see ORDER MATTERS, above: the last matching block
+# wins). Moved above it, this rule is silently overridden and does nothing.
+[[headers]]
+  for = "/media/research/*"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"

@@ -11,6 +11,14 @@
 ## Global Constraints
 
 - **No npm dependencies.** `package-lock.json` has an empty `packages` map and stays that way. Tests use Node 22's built-in `node:test` and `node:assert`. No jsdom, no bundler, no build step for the site itself.
+- **NO EM DASHES (—) anywhere.** Author's instruction, 2026-08-05. Applies to all site
+  copy, generated content, comments and docs. Use a colon when the second half explains
+  the first, a semicolon when two clauses balance, parentheses for a true aside, or start
+  a new sentence. Restructuring usually beats substituting a mark. En dashes in numeric
+  ranges (6,000–9,000 km) are a different character and are fine. The one exception is
+  material transcribed verbatim from a third party, where the punctuation is theirs:
+  flag it rather than silently rewriting a quotation.
+- **Run the tests as `node --test`, with no path argument.** On Node 22.23 a directory argument (`node --test test/`) is resolved as a module path and dies with `Cannot find module`. Bare `node --test` discovers `test/**` correctly.
 - **Source spreadsheets stay outside the repo.** Generators take a path argument. The itinerary CSV lives at `~/Downloads/Pan India Trip  - Itinerary.csv` (note the **two spaces** before the hyphen).
 - **House JS style in `index.html` / `atlas.js` / `booklet.html`:** `var` not `let`/`const`, `function () {}` not arrow functions, no template literals, no optional chaining. The existing file is uniform in this and new code must not stand out. Node `.cjs` scripts use `const` and modern syntax, matching `build-route.cjs`.
 - **Live palette tokens** (defined in `index.html:29`): `--color-bg: #0f0f0f`, `--color-surface: #17171b`, `--color-raise: #1e1e24`, `--color-text: #ffffff`, `--color-muted: #bcbcbc`, `--color-dim: #8a8a90`, `--color-accent: #8b5cf6`, `--color-accent-2: #ec4899`, `--font-heading`/`--font-body` Space Grotesk, `--font-mono` IBM Plex Mono. The README's "modernist / #f3f2f2 paper / Archivo" description is **stale** — ignore it and fix it in Task 9.
@@ -131,7 +139,7 @@ test('sector distances re-sum to the total', function () {
 - [ ] **Step 2: Run the test and watch it fail**
 
 ```bash
-node --test test/
+node --test
 ```
 
 Expected: FAIL — `Cannot find module '../build-template.cjs'`.
@@ -399,7 +407,7 @@ module.exports = { parseCsv, buildTemplate };
 - [ ] **Step 4: Run the tests and watch them pass**
 
 ```bash
-node --test test/
+node --test
 ```
 
 Expected: PASS, 4/4.
@@ -548,7 +556,7 @@ test('a cluster keeps the index of its first stop, so travel order survives', fu
 - [ ] **Step 2: Run it and watch it fail**
 
 ```bash
-node --test test/
+node --test
 ```
 
 Expected: FAIL — `ENOENT: no such file or directory, open 'atlas.js'`.
@@ -809,7 +817,7 @@ Move the code out of `index.html` **verbatim where possible**. The projection ma
 - [ ] **Step 4: Run the tests and watch them pass**
 
 ```bash
-node --test test/
+node --test
 ```
 
 Expected: PASS, 7/7 (4 from Task 1, 3 here).
@@ -1294,7 +1302,7 @@ test('projecting the whole template costs more than the ride actually did', func
 - [ ] **Step 2: Run it and watch it fail**
 
 ```bash
-node --test test/
+node --test
 ```
 
 Expected: FAIL — `ENOENT ... costs.js`.
@@ -1360,7 +1368,7 @@ Expected: FAIL — `ENOENT ... costs.js`.
 - [ ] **Step 4: Run the tests and watch them pass**
 
 ```bash
-node --test test/
+node --test
 ```
 
 Expected: PASS, 11/11.
@@ -1848,7 +1856,9 @@ appears when one does, and sound stays off until asked for."
 
 **Files:**
 - Create: `booklet.html`
-- Modify: `netlify.toml` — cache headers for `template.json`, `template-notes.json`, `atlas.js`, `costs.js`.
+- Modify: `netlify.toml`
+
+**Note:** Task 9 extends this file with the xBhp field research (practical findings inline per sector, the report proper as a skippable appendix). Build `booklet.html` so a later section can be appended without restructuring — in particular, do not assume the sector spreads are the last content before the closing page. — cache headers for `template.json`, `template-notes.json`, `atlas.js`, `costs.js`.
 
 **Interfaces:**
 - Consumes: `atlas.js` (Task 2), `costs.js` (Task 4), `template.json` + `template-notes.json` (Task 1), `route.json`, `basemap.json`.
@@ -1995,7 +2005,7 @@ Add a `## The template` section covering: what `template.json` is and how it dif
 Add a `## Tests` section:
 
 ```
-node --test test/
+node --test
 ```
 
 Zero dependencies — Node's built-in runner. Covers the generator's parsing and sector
@@ -2014,6 +2024,359 @@ hasn't used in some time; the live tokens are dark. And 'no external
 requests' was always about the map data — the page does load Google Fonts
 and, with the real-map toggle on, OSM tiles."
 ```
+
+---
+
+## Task 9: The xBhp field research
+
+**Files:**
+- Create: `research.json` (structured transcription of the field report)
+- Create: `media/research/fig-01.jpg` … `fig-08.jpg` (already extracted; commit them)
+- Modify: `template-notes.json` — fill `sourcing` and the S3 permit note from the research
+- Modify: `booklet.html` — practical findings inline per sector, full research as a separate appendix
+
+**Interfaces:**
+- Consumes: `template-notes.json` (Task 1), `booklet.html` (Task 7).
+- Produces: `research.json`, read by `booklet.html` only.
+
+**SOURCE MATERIAL:** `.superpowers/sdd/2026-08-05-pan-india-route-template/field-report.txt`
+— the site author's own desk research, "All-India Motorcycle Rides — A Field Report from
+the xBhp Archive", compiled 5 Aug 2026 from a full crawl of the xBhp Tourer board (337
+index pages, 3,317 threads) plus close reading of 14 ride reports. Figure captions and
+credits are in `figures.json` beside it.
+
+**This is transcription and structuring, not authorship.** Do not add findings, round
+figures, or smooth over the report's own caveats. Two caveats in particular must survive
+into `research.json` and onto the page: that the corpus counts are keyword-derived from
+thread titles and are a picture of proportion rather than an exact census; and that the
+record table mixes private registries with Guinness and spans a 29-state/28-state
+boundary, so cross-year comparison does not hold.
+
+**Attribution is mandatory and was an explicit decision by the site author.** All eight
+photographs are other riders' work, reproduced with their watermarks intact. Every image
+must carry its credit line adjacent to it — `© Lokesh Shah ("dichkaun"), xBhp travelogue,
+2021` and `© "Nandy Photography" / "nb21", xBhp travelogue, 2018`. An image without its
+credit line beside it is a defect, not a layout choice. Do not crop or alter them.
+
+### What goes inline, per sector
+
+- **S3b (Bhutan & the Northeast)** gets the permit layer, which is the one genuinely
+  non-improvisable thing in the whole loop: Inner Line Permits for Arunachal Pradesh,
+  Nagaland, Mizoram and Manipur — around ₹100–200, typically 15 days, now available
+  online. Foreign nationals need a Protected Area Permit instead, a regime tightened for
+  Nagaland, Manipur and Mizoram by a December 2024 notification.
+- The cost pages get the archive's benchmark alongside the site's own observed rates:
+  roughly **₹2,000–2,200 per person per day** two-up in budget hotels, in 2018 money, and
+  the one fully itemised ride in the archive — ₹1,04,695 for two people over 26 days:
+  fuel ₹34,172, hotels ₹31,775 (16 hotels), food ₹19,352, taxi ₹6,800, misc ₹5,956,
+  service ₹4,240, guides ₹2,000, permits ₹200, bike wash ₹200. Preparation was a separate
+  ~₹50,000 (chain and sprockets ₹12,000, tyres ₹20,000, aux lights ₹9,000, brake pads
+  ₹9,000). State the year on every figure — these are 2018 rupees.
+- The planning pages get "plan the paperwork, not the route", and the consumables finding:
+  what fails on these rides is tyres, chain and sprockets, batteries and brake pads, not
+  displacement. The archive's pan-India rides were completed on everything from a
+  Hero Honda Splendor to a Versys 650.
+
+### What goes in the appendix
+
+The field report proper, clearly marked as a separate section the reader can skip or not
+print (`break-before: page`, and a `.noprint` toggle is acceptable): the corpus analysis
+and destination table, the four canonical routes (K2K, Golden Quadrilateral, the
+coastline, the North East loop), the three detailed rides, the endurance strand and record
+table, the Part V field notes, and the full reference list grouped as the report groups it.
+
+**Do not silently drop the report's closing observation**, which is directly about this
+project: the forum is a decaying archive, Photobucket and Picasa links in older threads
+are dead, and the threads that survive are the ones whose authors self-hosted their
+images. That is the argument for this booklet existing.
+
+### One gap the research does NOT fill
+
+The report does not give riding-season windows per region. Its finding is the opposite —
+"timing is set by leave, not by weather" — which is an observation about Indian riders,
+not a season calendar. **The `season` fields in `template-notes.json` therefore stay
+"TO WRITE" and keep rendering as visible gaps.** Do not fill them from this material, and
+do not infer a calendar from the ride dates in the case studies.
+
+- [ ] **Step 1: Commit the extracted images**
+
+They are already written to `media/research/`. Verify all eight are valid JPEGs and total
+about 1.4 MB, then stage them.
+
+- [ ] **Step 2: Build `research.json`**
+
+Transcribe `field-report.txt` into a structured file. Suggested shape — adjust if the
+material fits better another way, but keep figures, credits and references addressable:
+
+```jsonc
+{
+  "title": "All-India Motorcycle Rides — A Field Report from the xBhp Archive",
+  "compiled": "2026-08-05",
+  "corpus": { "indexPages": 337, "threads": 3317, "readInFull": 14 },
+  "caveats": { "counts": "…keyword-derived…", "records": "…private registries, 29 vs 28 states…" },
+  "practical": [ { "id": "permits", "heading": "…", "body": "…" } ],
+  "benchmarks": { "perPersonPerDay": { "low": 2000, "high": 2200, "year": 2018, "basis": "…" },
+                  "itemised": { "total": 104695, "people": 2, "days": 26, "year": 2018, "lines": [...] },
+                  "preparation": { "total": 50000, "lines": [...] } },
+  "appendix": [ { "part": "I", "heading": "…", "blocks": [...] } ],
+  "figures": [ { "file": "media/research/fig-01.jpg", "caption": "…", "credit": "…" } ],
+  "references": [ { "group": "Primary — xBhp forum threads", "items": ["…"] } ]
+}
+```
+
+- [ ] **Step 3: Fill the two answerable fields in `template-notes.json`**
+
+`sourcing` becomes a real sentence naming the xBhp Tourer board, the crawl scale and the
+date. The S3 sector note gains the ILP/PAP paragraph. `season` fields stay "TO WRITE".
+`plannedVsRidden` stays "TO WRITE" — the research corroborates that the Northeast is the
+hard part (the 2018 pair cut seven states to five after finding Tripura and Mizoram roads
+largely impassable) but it cannot say what THIS rider decided or why.
+
+- [ ] **Step 4: Wire it into `booklet.html`**
+
+Fetch `research.json` alongside the other data. Render the inline practical bits in their
+sectors and cost pages, and the appendix after the planning pages. Every figure renders
+with its credit line. Print rules from Task 7 apply — check the appendix paginates and
+that photographs are not clipped at page boundaries.
+
+- [ ] **Step 5: Verify**
+
+- `node --test` still passes.
+- All eight figures load and each shows its credit line adjacent.
+- The two caveats appear on the page, not just in the JSON.
+- `season` fields still render as "not written yet" gaps.
+- Print preview: appendix starts on a fresh page, no photograph is split across pages.
+
+- [ ] **Step 6: Commit**
+
+```bash
+git add research.json media/research template-notes.json booklet.html
+git commit -m "Fold the xBhp field research into the route book
+
+Twenty years of the Tourer board, crawled and read: the permit layer, the
+cost proportions, and what actually breaks on a pan-India ride. Practical
+findings sit with the sectors they bear on; the report proper is an
+appendix you can skip.
+
+Photographs are other riders' work, reproduced with watermarks and credit
+lines intact.
+
+The season fields stay unwritten. The archive's finding is that timing is
+set by leave rather than weather, which is a fact about riders, not a
+calendar -- inferring one from it would be inventing advice."
+```
+
+---
+
+## Task 10: K2K — the two-line classic
+
+**Files:**
+- Create: `build-k2k.cjs`, `k2k.json`, `.k2kcache.json` (gitignored)
+- Create: `test/k2k.test.cjs`
+- Modify: `index.html` (draw it, and a toggle), `booklet.html` (a K2K page), `.gitignore`
+
+**Interfaces:**
+- Consumes: `template.json` (Task 1) for coordinates and real road distances; `Atlas.drawRoute` (Task 2).
+- Produces: `k2k.json`, read by `index.html` and `booklet.html`.
+
+**WHY:** Kanyakumari to Kashmir is the prestige pan-India route and, per the author's
+own research, the single most-attempted. It is worth naming on this site because the
+template already touches both ends. The author asked for it as **two lines: up one side,
+down the other** — which is what fig-01 in the research shows.
+
+### The honesty problem, and how to avoid it
+
+There is no K2K itinerary spreadsheet in this repo. **Do not invent road distances, and
+do not invent waypoint coordinates.** Two sources are legitimate and both are already
+here:
+
+1. **The southbound line is already in `template.json`.** The template's west-coast
+   run — Delhi → Jaipur → Ajmer → Udaipur → Rajkot → Surat → Mumbai → Ratnagiri → Goa →
+   Hubballi → Chitradurga → Bengaluru → Coimbatore → Kochi → Trivandrum → Kanyakumari —
+   is a complete west-side line with REAL per-hop road distances already measured. Reuse
+   those hops and sum their actual `km`. Do not re-measure or estimate.
+2. **The northbound line is NH-44**, a documented public highway. `template.json`
+   already carries coordinates for Kanniyakumari, Bengaluru, Kurnool, Hyderabad,
+   Gwalior, Delhi, Kurukshetra, Jammu, Udhampur and Srinagar. The corridor cities it
+   lacks — Madurai, Salem, Nagpur, Jhansi, Agra, Ambala — must be geocoded, not guessed:
+   use Nominatim exactly as `tag-media.cjs` already does (descriptive UA, 1 req/sec,
+   results cached to `.k2kcache.json`, which is gitignored like the other caches).
+
+**For the northbound distance, cite; do not compute.** The research gives NH-44 as
+commonly 3,745 km across 11 states, and notes some sources quote 4,112 km. State the
+common figure, note the variance, and attribute it. A polyline through ten cities is a
+corridor sketch, not a measured route, and its pixel length must never be presented as a
+distance. Label it as the corridor it is.
+
+**Also carry the research's caveat** that because almost nobody lives at either end,
+riders add the run to the start and the run home, so a K2K routinely totals 6,000–11,000
+km rather than 3,745.
+
+### `k2k.json` shape
+
+```jsonc
+{
+  "generated": "…", "source": "NH-44 corridor + template.json west-coast hops",
+  "north": { "name": "Up the spine — NH-44",
+             "citedKm": 3745, "citedKmAlt": 4112, "states": 11,
+             "measured": false,
+             "note": "Corridor through the cities NH-44 runs by; the distance is the published highway length, not a sum of these points.",
+             "points": [ { "name": "Kanniyakumari", "lat": …, "lon": …, "source": "template" } ] },
+  "south": { "name": "Down the west coast",
+             "measuredKm": 0, "measured": true,
+             "note": "Summed from this ride's own measured hops.",
+             "points": [ … ] },
+  "realWorld": { "low": 6000, "high": 11000, "why": "riders add the run to the start line and the run home" }
+}
+```
+
+Every point carries `source: "template" | "nominatim"` so provenance survives into the data.
+
+- [ ] **Step 1: Write `test/k2k.test.cjs` first, and watch it fail**
+
+Assert: both lines exist; every point has finite coordinates; the south line's
+`measuredKm` equals the sum of the template hops it reuses (recompute independently from
+`template.json`); the north line has `measured: false` and does NOT carry a computed
+distance field; the north line's endpoints are Kanyakumari and Srinagar; the south line's
+endpoints are Delhi and Kanyakumari; and no point lacks a `source`.
+
+Run bare `node --test`, confirm it fails for the expected reason.
+
+- [ ] **Step 2: Write `build-k2k.cjs`**
+
+Declare the two waypoint lists at the top of the file as named constants, the way
+`build-route.cjs` declares `SKIP_NIGHTS` and `ORIGIN`. Resolve each name against
+`template.json` first; geocode only what is missing; cache. Assert the invariants above
+and fail loudly rather than writing a bad file.
+
+- [ ] **Step 3: Generate and verify**
+
+```bash
+node build-k2k.cjs
+```
+Confirm the six geocoded cities landed in plausible places (Madurai ~9.9N 78.1E, Salem
+~11.7N 78.2E, Nagpur ~21.1N 79.1E, Jhansi ~25.4N 78.6E, Agra ~27.2N 78.0E, Ambala
+~30.4N 76.8E). If any is wildly off, stop — a bad geocode puts a line through the sea.
+
+- [ ] **Step 4: Draw it on `index.html`**
+
+A third map toggle, independent of the existing outline/real-map and planned-route
+toggles, with its own `localStorage` key. Two lines, visually distinct from each other
+AND from both existing routes — the map already carries a solid ridden line and a dashed
+planned one, so a third and fourth must not muddy it. Consider drawing K2K only when its
+toggle is on and dimming the others while it is. Judge what stays legible.
+
+The K2K section names the route, gives the cited distance with its variance and
+attribution, the 6,000–11,000 km real-world figure, and says plainly that the template
+already contains most of it — a rider with three weeks can lift a K2K out of this loop.
+
+- [ ] **Step 5: A K2K page in `booklet.html`**
+
+One page, appended using the same additive pattern the research appendix used. Map with
+both lines, the two waypoint lists, the cited and measured distances clearly
+distinguished, and the real-world total. Print rules apply.
+
+- [ ] **Step 6: Verify and commit**
+
+Bare `node --test`. Confirm existing counts unchanged, cost/totals parity intact, and the
+15 rendered gaps still 15.
+
+---
+
+## Task 11: A section nav for the booklet's web view
+
+**Files:** Modify `booklet.html`, `test/booklet.test.cjs`
+
+**WHY:** The author has now read the booklet in a browser: *"looks great! it is a very
+long page — which is fine for pdf, but for web viewing we can make it into sections or
+tabs so that users don't have to scroll so much."* They chose a sticky section nav over
+tabs.
+
+**THE TRAP, and why the nav was chosen:** this page exists to be printed. Any screen-side
+scheme that hides panels with `display: none` must be completely reversed in
+`@media print`, or the PDF silently loses whole sections — a failure nobody notices until
+someone prints it. **A sticky nav hides nothing**, so print stays correct by
+construction. Keep it that way: do not introduce hidden panels as an "improvement".
+
+- [ ] **Step 1: Add the nav**
+
+A thin sticky bar under the top of the page listing: Cover · At a glance · The map ·
+Sectors · Costs · Seasons · Planning · The archive. Each entry jumps to its section.
+Give every target a stable `id` and `scroll-margin-top` clearing the sticky bar.
+
+Highlight the current section as the reader scrolls. Use `IntersectionObserver`, matching
+the pattern `index.html` already uses for its clip grid; fall back silently where it is
+unavailable. Keep it `var`/`function () {}` house style.
+
+The nav must be `.noprint`, and the existing `break-before: page` rules must be
+untouched. Deep links (`#bk-costs`) and in-page browser search must keep working —
+that is the main advantage over tabs and must not be lost.
+
+- [ ] **Step 2: Test it**
+
+Extend `test/booklet.test.cjs`: every nav entry resolves to an element that exists; the
+count of nav entries matches the count of top-level sections; the nav carries `noprint`.
+Mutation-check by pointing one entry at a missing id and confirming the test fails.
+
+- [ ] **Step 3: Verify and commit**
+
+Bare `node --test`. Section and page counts unchanged; the 15 gaps still 15; cost parity
+intact.
+
+---
+
+## Task 12: Remove every em dash
+
+**Files:** `index.html`, `booklet.html`, `template-notes.json`, `research.json`, `README.md`, and any `.cjs` comment that carries one.
+
+**WHY:** the author's instruction, given 2026-08-05. It is now a Global Constraint, so
+Tasks 8, 10 and 11 must comply as they are written. This task cleans up what already
+shipped.
+
+Current counts: `index.html` 42, `booklet.html` 52, `research.json` 80,
+`template-notes.json` 5, `README.md` 25.
+
+**DO NOT do this with a blanket find-and-replace.** An em dash does different jobs in
+different sentences, and a global swap to a hyphen or a comma produces prose that reads
+as though it was processed rather than written. Rewrite each one:
+
+- second half explains the first: use a colon
+- two balanced independent clauses: use a semicolon, or split the sentence
+- a genuine aside: parentheses, or commas
+- an interruption or a turn: usually a full stop and a new sentence
+
+Where the sentence resists all four, restructure it. The result must read as if it never
+contained an em dash.
+
+**`research.json` needs care.** Roughly 80 of these sit in prose transcribed from the
+author's own field report, and Task 9 was explicitly a transcription exercise whose
+fidelity the review verified line by line. The em dashes there are the report's
+typography, not a rider's words. Rewrite them the same way, BUT leave untouched any
+punctuation inside a directly quoted sentence attributed to a named third party (the
+pull quotes from `nb21` and Mehdia Fathima, and any quoted forum text). Altering a
+quotation to suit a house style is a different thing from restyling narration. List in
+your report every quotation you left alone and why.
+
+**En dashes are not em dashes.** Numeric ranges such as 6,000–11,000 km and ₹100–200
+use U+2013 and must survive. Only U+2014 is in scope. Check what you are matching.
+
+- [ ] **Step 1: Sweep and rewrite**
+
+Work file by file. After each, `grep -c '—'` to confirm zero.
+
+- [ ] **Step 2: Add a guard so they cannot come back**
+
+Extend `test/booklet.test.cjs` (or add `test/style.test.cjs`) with a test asserting that
+`index.html`, `booklet.html`, `template-notes.json` and `research.json` contain no U+2014,
+excluding any attributed-quotation fields you deliberately preserved. Mutation-check it by
+reintroducing one and confirming the test fails.
+
+- [ ] **Step 3: Verify nothing else moved**
+
+Bare `node --test`. The 15 rendered gaps still 15; cost and totals parity unchanged; all
+eight figure credits intact. Rewriting prose must not disturb any figure or assertion.
+
+- [ ] **Step 4: Commit**
 
 ---
 
