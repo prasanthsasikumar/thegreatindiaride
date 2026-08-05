@@ -338,6 +338,91 @@ button { font: inherit; color: inherit; }
 }
 .close a:hover { background: var(--color-accent-soft); border-color: var(--color-accent); color: var(--color-text); }
 
+/* ─── the template ─────────────────────────────────────────────────────── */
+.tpl { border-top: var(--rule); padding-top: var(--space-8); margin-top: var(--space-8); }
+.tpl[hidden] { display: none; }
+.tpl__eyebrow {
+  font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.12em;
+  color: var(--color-accent-2); margin: 0 0 var(--space-3);
+}
+.tpl__lede { font-size: 16px; line-height: 1.6; max-width: 62ch; color: var(--color-muted); }
+.tpl__source { font-size: 13px; color: var(--color-dim); max-width: 62ch; }
+.tpl__source[hidden] { display: none; }
+.tpl__h3 { margin: var(--space-8) 0 var(--space-2); }
+.tpl__note { font-size: 14px; color: var(--color-muted); max-width: 62ch; margin: 0 0 var(--space-4); }
+
+.tpl__glance {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  border: var(--rule); border-radius: var(--radius); margin: var(--space-6) 0;
+}
+.tpl__glance > div { padding: var(--space-4); }
+.tpl__glance > div + div { border-left: var(--rule); }
+.tpl__glance-n {
+  font-family: var(--font-heading); font-weight: var(--fw-bold); font-size: 24px;
+  font-variant-numeric: tabular-nums;
+}
+.tpl__glance-l { font-size: 11px; letter-spacing: 0.08em; color: var(--color-dim); margin-top: 2px; }
+
+.tpl__sector { border: var(--rule); border-radius: var(--radius); margin-bottom: var(--space-3); }
+.tpl__sector-bar {
+  display: flex; align-items: baseline; gap: var(--space-3); width: 100%;
+  padding: var(--space-4); background: none; border: 0; color: inherit;
+  font: inherit; text-align: left; cursor: pointer;
+}
+.tpl__sector-id {
+  font-family: var(--font-mono); font-size: 12px; color: var(--color-accent);
+  min-width: 30px;
+}
+.tpl__sector-title { font-family: var(--font-heading); font-weight: var(--fw-bold); flex: 1; }
+.tpl__sector-meta {
+  font-family: var(--font-mono); font-size: 12px; color: var(--color-dim);
+  font-variant-numeric: tabular-nums; text-align: right;
+}
+.tpl__sector-sign { font-weight: var(--fw-bold); width: 18px; text-align: center; color: var(--color-muted); }
+.tpl__sector[data-open="false"] .tpl__sector-body { display: none; }
+.tpl__sector-body { padding: 0 var(--space-4) var(--space-4); }
+.tpl__join {
+  display: inline-block; font-family: var(--font-mono); font-size: 11px;
+  letter-spacing: 0.08em; color: var(--color-accent-2);
+  border: 1px solid var(--color-accent-2); border-radius: var(--radius);
+  padding: 2px 8px; margin-bottom: var(--space-3);
+}
+.tpl__stage { margin-top: var(--space-4); }
+.tpl__stage-h {
+  font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.06em;
+  color: var(--color-muted); margin-bottom: var(--space-2);
+}
+.tpl__hops { width: 100%; border-collapse: collapse; font-size: 13px; }
+.tpl__hops td { padding: 4px 0; border-bottom: 1px solid var(--color-line); }
+.tpl__hops td:last-child, .tpl__hops td:nth-last-child(2) {
+  text-align: right; font-family: var(--font-mono); font-size: 12px;
+  color: var(--color-dim); font-variant-numeric: tabular-nums; white-space: nowrap;
+  padding-left: var(--space-3);
+}
+.tpl__poi { color: var(--color-accent); }
+.tpl__todo {
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.06em;
+  color: var(--color-faint); border: 1px dashed var(--color-line-strong);
+  border-radius: var(--radius); padding: 6px 10px; margin-top: var(--space-3);
+}
+
+.tpl__costs table { width: 100%; border-collapse: collapse; font-size: 14px; max-width: 62ch; }
+.tpl__costs td { padding: 6px 0; border-bottom: 1px solid var(--color-line); }
+.tpl__costs td + td {
+  text-align: right; font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums; white-space: nowrap;
+}
+.tpl__costs caption { text-align: left; font-size: 13px; color: var(--color-dim); padding-bottom: var(--space-3); }
+
+.tpl__acts { margin-top: var(--space-8); }
+.tpl__cta {
+  display: inline-block; font-family: var(--font-heading); font-weight: var(--fw-bold);
+  font-size: 13px; letter-spacing: 0.08em; text-decoration: none;
+  color: var(--color-text); border: 1px solid var(--color-accent);
+  border-radius: var(--radius); padding: 12px 20px;
+}
+.tpl__cta:hover { background: var(--color-accent); color: #fff; }
+
 .state-msg { font-size: 13px; color: var(--color-dim); }
 .state-msg[hidden] { display: none; }
 
@@ -606,6 +691,33 @@ button { font: inherit; color: inherit; }
       <a href="https://www.instagram.com/thegreatindiaride/" target="_blank" rel="noopener">THE RIDE ON INSTAGRAM ↗</a>
     </section>
 
+    <section class="tpl" id="template" hidden>
+      <p class="tpl__eyebrow">THE TEMPLATE</p>
+      <h2>A loop anyone can run</h2>
+      <p class="tpl__lede">
+        This ride was not improvised. It was drawn first — a loop with fixed waypoints
+        and two crossing points, Bangalore and Delhi, where a rider can join or leave.
+        What follows is that route book, not a diary of this one running of it.
+      </p>
+      <p class="tpl__source" id="tpl-source"></p>
+
+      <div class="tpl__glance" id="tpl-glance"></div>
+
+      <h3 class="tpl__h3">The five sectors</h3>
+      <p class="tpl__note">
+        The loop returns to Bangalore and Delhi. Those returns are the joins: ride the
+        whole thing, or take one sector and go home from where you started.
+      </p>
+      <div class="tpl__sectors" id="tpl-sectors"></div>
+
+      <h3 class="tpl__h3">What it cost</h3>
+      <div class="tpl__costs" id="tpl-costs"></div>
+
+      <div class="tpl__acts">
+        <a class="tpl__cta" href="booklet.html">DOWNLOAD THE ROUTE BOOK →</a>
+      </div>
+    </section>
+
     <footer class="pagefoot">
       <span>thegreatindiaride.prasanthsasikumar.com</span>
       <button type="button" class="totop" id="totop">BACK TO TOP ↑</button>
@@ -727,6 +839,11 @@ button { font: inherit; color: inherit; }
     lbNext: document.getElementById('lb-next'),
     lbClose: document.getElementById('lb-close'),
     live: document.getElementById('live'),
+    template: document.getElementById('template'),
+    tplSource: document.getElementById('tpl-source'),
+    tplGlance: document.getElementById('tpl-glance'),
+    tplSectors: document.getElementById('tpl-sectors'),
+    tplCosts: document.getElementById('tpl-costs'),
   };
 
   /* ─── helpers ───────────────────────────────────────────────────────── */
@@ -1487,15 +1604,152 @@ button { font: inherit; color: inherit; }
     if (btn) openLb(+btn.dataset.pos);
   });
 
+  /* ─── the template ──────────────────────────────────────────────────── */
+  var template = null, templateNotes = null;
+
+  function tplPoi(place) {
+    var p = templateNotes && templateNotes.pois && templateNotes.pois[place];
+    return p ? String(p) : '';
+  }
+
+  function renderTemplate() {
+    if (!template) return;
+    var t = template, notes = templateNotes || {};
+    el.template.hidden = false;
+
+    if (notes.sourcing && notes.sourcing.indexOf('TO WRITE') !== 0) {
+      el.tplSource.textContent = notes.sourcing;
+      el.tplSource.hidden = false;
+    }
+
+    var glance = [
+      [Math.round(t.totals.km).toLocaleString('en-IN'), 'km'],
+      [String(t.totals.hops), 'legs'],
+      [String(Math.round(t.totals.hours)), 'riding hours'],
+      [String(t.totals.countries), 'countries'],
+      [String(t.crossings.length), 'crossings'],
+    ];
+    el.tplGlance.replaceChildren();
+    glance.forEach(function (g) {
+      var d = document.createElement('div');
+      var n = document.createElement('div'); n.className = 'tpl__glance-n'; n.textContent = g[0];
+      var l = document.createElement('div'); l.className = 'tpl__glance-l'; l.textContent = g[1];
+      d.appendChild(n); d.appendChild(l);
+      el.tplGlance.appendChild(d);
+    });
+
+    el.tplSectors.replaceChildren();
+    t.sectors.forEach(function (s) { el.tplSectors.appendChild(sectorBlock(s)); });
+  }
+
+  function sectorBlock(s) {
+    var wrap = document.createElement('div');
+    wrap.className = 'tpl__sector';
+    wrap.dataset.open = 'false';
+    wrap.id = 'sector-' + s.id;
+
+    var bar = document.createElement('button');
+    bar.type = 'button';
+    bar.className = 'tpl__sector-bar';
+    bar.setAttribute('aria-expanded', 'false');
+
+    var id = document.createElement('span'); id.className = 'tpl__sector-id'; id.textContent = s.id;
+    var ti = document.createElement('span'); ti.className = 'tpl__sector-title';
+    ti.textContent = s.title + ' · ' + s.from + ' → ' + s.to;
+    var me = document.createElement('span'); me.className = 'tpl__sector-meta';
+    me.textContent = Math.round(s.km).toLocaleString('en-IN') + ' km · ' + Math.round(s.hours) + ' h';
+    var sg = document.createElement('span'); sg.className = 'tpl__sector-sign'; sg.textContent = '+';
+
+    bar.appendChild(id); bar.appendChild(ti); bar.appendChild(me); bar.appendChild(sg);
+    bar.addEventListener('click', function () {
+      var open = wrap.dataset.open === 'true';
+      wrap.dataset.open = open ? 'false' : 'true';
+      bar.setAttribute('aria-expanded', open ? 'false' : 'true');
+      sg.textContent = open ? '+' : '−';
+    });
+    wrap.appendChild(bar);
+
+    var body = document.createElement('div');
+    body.className = 'tpl__sector-body';
+
+    if (s.opensAt || s.closesAt) {
+      var join = document.createElement('span');
+      join.className = 'tpl__join';
+      join.textContent = s.opensAt && s.closesAt
+        ? 'JOIN AT ' + s.opensAt.toUpperCase() + ' · LEAVE AT ' + s.closesAt.toUpperCase()
+        : (s.opensAt ? 'JOIN AT ' + s.opensAt.toUpperCase() : 'LEAVE AT ' + s.closesAt.toUpperCase());
+      body.appendChild(join);
+    }
+
+    var notes = templateNotes || {};
+    var note = (notes.sectors || {})[s.id] || {};
+    if (note.season && note.season.indexOf('TO WRITE') === 0) {
+      var todo = document.createElement('p');
+      todo.className = 'tpl__todo';
+      todo.textContent = 'Season and permit notes for this sector are not written yet.';
+      body.appendChild(todo);
+    } else if (note.season) {
+      var p = document.createElement('p');
+      p.className = 'tpl__note';
+      p.textContent = note.permits ? note.season + ' ' + note.permits : note.season;
+      body.appendChild(p);
+    }
+
+    s.stages.forEach(function (st) {
+      var box = document.createElement('div');
+      box.className = 'tpl__stage';
+      if (s.stages.length > 1) {
+        var h = document.createElement('div');
+        h.className = 'tpl__stage-h';
+        h.textContent = st.id + ' · ' + st.title + ' · ' +
+          Math.round(st.km).toLocaleString('en-IN') + ' km';
+        box.appendChild(h);
+      }
+      var table = document.createElement('table');
+      table.className = 'tpl__hops';
+      var tbody = document.createElement('tbody');
+      for (var i = st.hopFrom; i <= st.hopTo; i++) {
+        var hop = template.hops[i];
+        var tr = document.createElement('tr');
+        var to = document.createElement('td');
+        to.textContent = hop.to;
+        var poi = tplPoi(hop.to);
+        if (poi) {
+          var sp = document.createElement('span');
+          sp.className = 'tpl__poi';
+          sp.textContent = ' — ' + poi;
+          to.appendChild(sp);
+        }
+        var km = document.createElement('td');
+        km.textContent = Math.round(hop.km) + ' km';
+        var hr = document.createElement('td');
+        hr.textContent = hop.hours.toFixed(1) + ' h';
+        tr.appendChild(to); tr.appendChild(km); tr.appendChild(hr);
+        tbody.appendChild(tr);
+      }
+      table.appendChild(tbody);
+      box.appendChild(table);
+      body.appendChild(box);
+    });
+    wrap.appendChild(body);
+
+    return wrap;
+  }
+
   /* ─── boot ──────────────────────────────────────────────────────────── */
   Promise.all([
     fetch('manifest.json', { cache: 'no-cache' }).then(function (r) {
       if (!r.ok) throw new Error('HTTP ' + r.status); return r.json();
     }),
     fetch('basemap.json').then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; }),
+    fetch('template.json').then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; }),
+    fetch('template-notes.json').then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; }),
   ]).then(function (res) {
     manifest = res[0];
     basemap = res[1];
+    template = res[2];
+    templateNotes = res[3] || {};
+    renderTemplate();
 
     var totals = build(manifest);
     el.statRegions.textContent = String(totals.totalRegions);
