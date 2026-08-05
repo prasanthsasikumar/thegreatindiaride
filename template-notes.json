@@ -1,13 +1,13 @@
 {
-  "_comment": "Hand-authored. POIs, seasons and permits are content, not data. Entries marked TO WRITE are shown on the site as an explicit gap, never as invented text.",
-  "sourcing": "The background reading behind this book is a full crawl of the xBhp “The Tourer” board (India's oldest motorcycling forum), made on 5 August 2026: 337 index pages, 3,317 travelogue threads, of which 14 pan-India ride reports were read end to end. It is transcribed in the field research appendix at the back.",
+  "_comment": "Hand-authored. POIs, seasons and permits are content, not data. Entries marked TO WRITE are shown on the site as an explicit gap, never as invented text. permitsShort is optional: where a permits note is long enough that printing it whole in the season table repeats the sector page word for word, permitsShort is what the table cell carries instead. It is a cross-reference, never a summary that could drift from the note it points at, and never a substitute for writing the note.",
+  "sourcing": "The background reading behind this book is a full crawl of the xBhp “The Tourer” board, India's oldest motorcycling forum, made on 5 August 2026. It is transcribed, with its counts, in the field research appendix at the back.",
   "plannedVsRidden": "TO WRITE: which sections closed, and what was decided instead.",
   "hoursPerDay": 6,
   "sectors": {
     "S0": { "season": "TO WRITE", "permits": "", "note": "" },
     "S1": { "season": "TO WRITE", "permits": "", "note": "" },
     "S2": { "season": "TO WRITE", "permits": "", "note": "" },
-    "S3": { "season": "TO WRITE", "permits": "The Northeast is the one leg of this loop with a bureaucratic layer, and the one thing on it that cannot be improvised on the day. Indian citizens need an Inner Line Permit for Arunachal Pradesh, Nagaland, Mizoram and Manipur: around ₹100–200, typically valid 15 days, and now issued online. Foreign nationals need a Protected Area Permit instead; that regime was tightened for Nagaland, Manipur and Mizoram by a notification of December 2024. This was the position in the sources read on 5 August 2026. Check the current rules before you ride.", "note": "" },
+    "S3": { "season": "TO WRITE", "permits": "The Northeast is the one leg of this loop with a bureaucratic layer, and the one thing on it that cannot be improvised on the day. Indian citizens need an Inner Line Permit for Arunachal Pradesh, Nagaland, Mizoram and Manipur: around ₹100–200, typically valid 15 days, and now issued online. Foreign nationals need a Protected Area Permit instead; that regime was tightened for Nagaland, Manipur and Mizoram by a notification of December 2024. This was the position in the sources read on 5 August 2026. Check the current rules before you ride.", "permitsShort": "Inner Line Permit, four states. Detail on Sector S3.", "note": "" },
     "S4": { "season": "TO WRITE", "permits": "", "note": "" }
   },
   "pois": {

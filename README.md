@@ -349,6 +349,14 @@ deliberate act with a visible diff.
 `hoursPerDay` lives here too, at 6, and is the only input to the cost projection that
 is not measured. It is shown to the reader beside the figure it produces.
 
+A sector may also carry **`permitsShort`**, and only the S3 note does. Its permit note
+is the longest written thing in the file and it printed twice in full, once on the
+sector spread and once in the season calendar's Permits column, a screen apart. Where
+`permitsShort` exists the calendar cell carries it instead: a cross-reference to the
+spread, never a summary that could drift from the note it points at, and never a
+substitute for writing the note. A missing `permitsShort` is not a gap and does not
+render as one; a missing `permits` still does.
+
 ## K2K
 
 Kanyakumari to Kashmir is the prestige pan-India route, and this loop already contains
@@ -380,9 +388,15 @@ is a fatal error, not a rounding problem.
 and back through Dholavira to Palanpur. No K2K rider makes that detour. It cannot be
 dropped either, because there is no measured direct Rajkot to Palanpur road in this
 repo and inventing one is the single thing this script exists not to do. So it stays
-in, is measured separately, and is disclosed on both the site and the book: without
-its own figure a reader comparing 4,449 against 3,745 reads a difference between two
+in, is measured separately, and is disclosed on the K2K page of the book: without its
+own figure a reader comparing 4,449 against 3,745 reads a difference between two
 figures that were never measuring the same road.
+
+The front page draws the two lines behind its **K2K** toggle and says nothing about
+them. It used to carry five paragraphs of the same argument, a screen away from the
+overlay they described and duplicating the book's page almost sentence for sentence.
+The overlay is what a reader on that page uses; the argument needs the tables that
+only the book has room for, so it lives there alone now.
 
 Every written point carries `source: "template"` or `source: "nominatim"`, so
 provenance survives into the data instead of living only in a comment. Six corridor
@@ -405,6 +419,30 @@ appendix, and a closing page listing the four files it is built from.
 It shares `atlas.js` and `costs.js` with `index.html` rather than reimplementing
 either. `netlify.toml` gives both a short cache life for that reason: a fix to one now
 has to reach two pages.
+
+**The screen is not the sheet.** Everything above the `@media screen` block in the
+stylesheet is sized for A4, where 9.6pt held at arm's length is a normal reading size
+and the constraint is fitting a sector spread on one sheet. Read on a monitor those
+same sizes were a narrow strip of small grey type down the middle of a dark field, so
+one screen-only block raises the scale by about a sixth, widens the shell to 1240px,
+and spends the width it buys deliberately: a running head in the left margin, maps
+beside the tables they belong to, the sector planner and the bike table side by side.
+Prose stays capped in `ch` throughout, because a 1,200px line is not more readable
+than a 700px one. `@media screen` never matches the printer, so none of it can move a
+millimetre of the printed book: page count before and after is 39 sheets to 37, and
+the two that went were prose, not layout.
+
+**Nothing is printed twice.** The book is assembled from four data files by one
+script, so the same string can reach the page from more than one direction without
+anybody typing it twice: that is how the Northeast permit note ended up printing four
+times and two whole field notes twice. Repetition was cut back to one canonical home
+per fact, with cross-references where a reader still needs pointing (the season
+calendar to Sector S3, the planning pages to Appendix Part V, Part II of the appendix
+to the K2K page). Three tests in `test/booklet.test.cjs` **count printings** rather
+than reading prose, so the duplication cannot quietly grow back. A cross-reference
+into the appendix carries `.bk__xref`, which the print rules drop alongside
+`.bk__research`: a pointer to Part V that survives into a print the reader chose to
+leave the appendix out of is worse than no pointer.
 
 **Print is a token inversion**, described under "The site" above. The one thing worth
 repeating here is what it does to the map: `.atlas .india` drops its fill for a
@@ -536,6 +574,12 @@ those too, so a separate test pins every distinct en-dash-joined token in
 `research.json` and `template-notes.json` and fails if any one of them is flattened.
 The list moves when the transcription legitimately does, which is deliberate: these
 are somebody else's words, so a range changing shape should cost a look.
+
+Three ranges have since left `research.json` (6,000–11,000 km, ₹100–200 and
+₹2,000–2,200), each of them a second printing of a figure whose canonical home is
+elsewhere. Losing that home would take the range off the page entirely and the pinned
+list can no longer catch it, so a second test asserts each one at the file it now
+lives in: `k2k.json`, `template-notes.json` and `research.json`'s benchmark block.
 
 ## Caching the research plates
 

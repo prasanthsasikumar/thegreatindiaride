@@ -230,20 +230,17 @@ test('the planned-route toggle is still explained somewhere a reader will look',
   assert.match(note, /actually ridden/);
 });
 
-test('K2K survives the cut it used to be nested inside', function () {
-  // #tpl-k2k was a child of the template section, so removing that section by hand
-  // would have taken K2K with it. It is a sibling now, and the boot calls its
-  // renderer directly because renderTemplate, which used to, is gone. Nothing else on
-  // the page would notice that call going missing: the section would simply never be
-  // shown and every other assertion in the suite would still pass.
-  assert.match(PAGE, /<section class="tpl" id="tpl-k2k" hidden>/);
+test('the K2K overlay outlived the essay that used to explain it', function () {
+  // #tpl-k2k was five paragraphs about the two lines on the map, and it is gone: the
+  // map draws them, the toggle names them, and the route book carries the argument
+  // at length. What must NOT have gone with the prose is the overlay itself, which is
+  // the part a reader uses. So: no section, no renderer, and still two lines and a
+  // button.
+  assert.ok(PAGE.indexOf('tpl-k2k') < 0, 'the K2K prose section is still in the markup');
+  assert.ok(PAGE.indexOf('function renderK2k(') < 0, 'its renderer is still here');
 
-  // ...and it is called AFTER renderMap, not before. The section is an explanation of
-  // an overlay on that map and a pointer at the button that turns it on, so it must
-  // not be shown until the map has drawn one. renderMap is what says so, by setting
-  // k2kDrawn; test/k2k.test.cjs drives the gate itself.
-  const boot = cut('renderRouteBook();', 'el.cardX.addEventListener');
-  assert.ok(boot.indexOf('renderK2k();') > 0, 'the boot no longer calls renderK2k at all');
-  assert.ok(boot.indexOf('renderK2k();') > boot.indexOf('renderMap();'),
-    'renderK2k runs before renderMap, so the section can appear with no map under it');
+  assert.match(PAGE, /id="k2k-toggle"/, 'the map lost its K2K toggle');
+  assert.match(PAGE, /drawRoute\(k2k\.north\.points/, 'the map lost the northbound line');
+  assert.match(PAGE, /drawRoute\(k2k\.south\.points/, 'the map lost the southbound line');
+  assert.ok(PAGE.indexOf("'k2k.json'") > 0, 'the page no longer fetches k2k.json');
 });

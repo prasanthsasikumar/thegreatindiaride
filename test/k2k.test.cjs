@@ -306,92 +306,26 @@ test('both pages read k2k.json rather than repeating its figures', function () {
   assert.ok(book.indexOf('3,745') < 0, 'booklet.html hard-codes the cited distance');
 });
 
-test('the page says which number is cited and which was measured', function () {
-  // The copy is where the distinction is actually made to a reader, so it is run
-  // rather than read: the real renderK2k, over the real k2k.json.
-  const src = cut('function hasK2k() {', '\n  }') + cut('function renderK2k() {', '\n  }');
-  const node = function (tag) {
-    return {
-      tagName: tag, className: '', textContent: '', hidden: true, children: [],
-      appendChild: function (c) { this.children.push(c); },
-      replaceChildren: function () { this.children = []; },
-    };
-  };
-  const body = node('div'), section = node('section');
-  const ctx = {
-    k2k: K2K, k2kDrawn: true, Math: Math, String: String, Number: Number,
-    document: {
-      createElement: node,
-      getElementById: function (id) {
-        if (id === 'tpl-k2k-body') return body;
-        if (id === 'tpl-k2k') return section;
-        return null;
-      },
-    },
-  };
-  ctx.globalThis = ctx;
-  vm.createContext(ctx);
-  vm.runInContext(src, ctx);
-  vm.runInContext('renderK2k()', ctx);
+test('the front page draws the lines and leaves the argument to the book', function () {
+  // Both pages used to carry the K2K prose. The front page's copy was five paragraphs
+  // explaining an overlay sitting a few hundred pixels away, and it is gone; the route
+  // book's K2K page, which has the room for the tables the argument needs, is now the
+  // only place the distinction between the cited highway and the measured half is
+  // made. test/booklet.test.cjs asserts that copy, over the same k2k.json.
+  //
+  // What the front page must still do is draw. Losing the essay must not cost a reader
+  // the two lines, the toggle, or the fetch that feeds them.
+  assert.ok(PAGE.indexOf('tpl-k2k') < 0, 'the front page still carries the K2K prose section');
+  assert.ok(PAGE.indexOf('function renderK2k(') < 0, 'and still carries its renderer');
 
-  assert.strictEqual(section.hidden, false, 'the section was shown');
-  const text = body.children.map(function (p) { return p.textContent; }).join(' ');
-  assert.match(text, /3,745 km across 11 states/);
-  assert.match(text, /some quote 4,112 km/);
-  assert.match(text, /published length of the highway/);
-  assert.match(text, /Nothing on this site measured it/);
-  assert.match(text, /corridor sketch/);
-  assert.match(text, /a drawing, not a distance/);
-  assert.match(text, /6,000–11,000 km/);
-  assert.match(text, /4,449 km/);
-  assert.match(text, /Roadory/);
-  // The spur has to be next to the total it inflates, not merely in the JSON.
-  assert.match(text, /884 km of it is the Kutch spur out to Narayan Sarovar/);
-  assert.match(text, /no measured Rajkot to Palanpur road/);
-  assert.match(text, /not going to guess one/);
-  // And the two lines must not be left reading as a circuit.
-  assert.match(text, /The two do not meet/);
-  assert.match(text, /ends at Srinagar/);
-  assert.match(text, /picks up at Delhi/);
-  // Neither figure may be given without saying which kind it is.
-  assert.ok(text.indexOf('Vajiram') > 0, 'the second source is named too');
-});
+  assert.match(PAGE, /id="k2k-toggle"/);
+  assert.match(PAGE, /drawRoute\(k2k\.north\.points, 'route--k2k route--k2k-n'\)/);
+  assert.match(PAGE, /drawRoute\(k2k\.south\.points, 'route--k2k route--k2k-s'\)/);
+  assert.match(PAGE, /k2kDrawn = true/);
 
-test('the K2K section stays hidden when the map never drew the overlay', function () {
-  // k2k.json is one of three things this section needs. basemap.json is a separate
-  // optional fetch and atlas.js is a separate script, and either can go missing while
-  // k2k.json loads perfectly. When that happens there is no map, no K2K toggle and no
-  // two lines, and this section used to appear regardless: several paragraphs about a
-  // drawing that is not on the page, telling the reader to turn it on with a control
-  // that is not on the page either. renderMap is what sets k2kDrawn, so this is what
-  // "the map did not draw" looks like from here.
-  const src = cut('function hasK2k() {', '\n  }') + cut('function renderK2k() {', '\n  }');
-  const node = function (tag) {
-    return {
-      tagName: tag, className: '', textContent: '', hidden: true, children: [],
-      appendChild: function (c) { this.children.push(c); },
-      replaceChildren: function () { this.children = []; },
-    };
-  };
-  const body = node('div'), section = node('section');
-  const ctx = {
-    k2k: K2K, k2kDrawn: false, Math: Math, String: String, Number: Number,
-    document: {
-      createElement: node,
-      getElementById: function (id) {
-        if (id === 'tpl-k2k-body') return body;
-        if (id === 'tpl-k2k') return section;
-        return null;
-      },
-    },
-  };
-  ctx.globalThis = ctx;
-  vm.createContext(ctx);
-  vm.runInContext(src, ctx);
-  vm.runInContext('renderK2k()', ctx);
-
-  assert.strictEqual(section.hidden, true, 'the section was shown with no map under it');
-  assert.strictEqual(body.children.length, 0, 'and nothing was written into it');
+  // And the toggle stays off the page until those lines are really in the SVG, which
+  // is the gate the deleted section used to share with it.
+  assert.match(PAGE, /if \(!k2kDrawn\) k2kOn = false/);
 });
 
 test('the cache this build writes is ignored, like the other geocode caches', function () {
@@ -435,7 +369,9 @@ test('nothing this task added uses an em dash: the K2K blocks inside the two pag
     ['index.html', 'function hasK2k() {'],
     ['index.html', 'function syncK2k() {'],
     ['index.html', 'function setK2k(on) {'],
-    ['index.html', 'function renderK2k() {'],
+    // index.html's renderK2k is not in this list because index.html no longer has
+    // one: the prose it built moved wholesale to the route book, which is where the
+    // booklet.html entries below cover it.
     ['booklet.html', 'function k2kMap(svg) {'],
     ['booklet.html', 'function southLegs() {'],
     ['booklet.html', 'function k2kPage() {'],

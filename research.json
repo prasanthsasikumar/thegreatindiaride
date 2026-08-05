@@ -29,30 +29,21 @@
     {
       "id": "permits",
       "target": "sector:S3",
-      "heading": "The permit layer, from the archive",
-      "body": "The North East loop is the only one of the archive's four canonical routes with a genuine bureaucratic layer, and the one thing on a ride this size that cannot be improvised on the day. It is also, in money, almost nothing: on the single fully itemised ride in the archive (two riders, 26 days, 10,000 km through Assam, Meghalaya, Manipur, Arunachal Pradesh and Nagaland in 2018) permits came to ₹200 of a ₹1,04,695 total. A rounding error, and the one line you have to get right in advance.",
+      "heading": "What the permits cost",
+      "body": "In money the permit layer is almost nothing: on the single fully itemised ride in the archive (two riders, 26 days, 10,000 km, 2018) permits came to ₹200 of a ₹1,04,695 total. A rounding error, and the one line you have to get right in advance.",
       "source": "xBhp archive, field report of 5 August 2026: nb21, North East 2018 [8]"
     },
     {
-      "id": "paperwork",
+      "id": "planning-xref",
       "target": "planning",
-      "heading": "Plan the paperwork, not the route",
-      "body": "Navigation is largely a solved problem: the reports are full of riders booking that night's hotel from a roadside bench. What cannot be improvised is the permit layer for the North East (ILP for Arunachal, Nagaland, Mizoram, Manipur), the mid-ride service slot, and, for the endurance category, the receipt discipline. One rider lost a fuel receipt at a station without computerised billing and had to ride on to the next one to keep his documentation intact.",
-      "source": "xBhp archive, field report of 5 August 2026, Part V"
-    },
-    {
-      "id": "consumables",
-      "target": "planning",
-      "heading": "The bike matters far less than expected",
-      "body": "The pan-India rides in this archive were completed on a Bajaj Avenger 220, a Bajaj Dominar 400, a Honda CBR 250R, a Kawasaki Versys 650, and, for the 18,612 km, 64-day, three-country expedition of 2010, a 2004 Honda Unicorn and a 2003 Hero Honda Splendor. A 100cc commuter and a 650cc adventure tourer have both gone round the country. What recurs in the failure reports is not insufficient displacement but consumables and electrics: tyres, chain and sprockets, batteries, brake pads.",
-      "source": "xBhp archive, field report of 5 August 2026, Part V"
+      "pointer": "Two findings bear on what you write below: the bike matters far less than expected, and the paperwork, not the route, is what cannot be improvised. Both are in Part V."
     },
     {
       "id": "proportions",
       "target": "costs",
       "heading": "Budget in the right proportions",
       "body": "From the one fully itemised ride: fuel and accommodation are about two-thirds of on-road cost, food a fifth, permits negligible. Preparation is a separate and substantial line: roughly ₹50,000 of parts before a 26-day ride. The 2012 SaddleSore, by contrast, cost ₹5,300 all-in.",
-      "source": "xBhp archive, field report of 5 August 2026, Part V. The full field note, with the per-day rule it ends on, is in the appendix."
+      "source": "xBhp archive, field report of 5 August 2026, Part V"
     }
   ],
 
@@ -103,7 +94,7 @@
       "heading": "The archive, and what it is actually made of",
       "blocks": [
         { "type": "p", "text": "xBhp was built in 2002 by Sundeep Gajjar as a single web page dedicated to his Bajaj Pulsar 180. It had registered its thousandth member by 2003, and grew into what is now India's largest motorcycling platform: a forum, a print magazine, and a series of sponsored expeditions. Its travelogue board, “The Tourer,” is the closest thing Indian motorcycling has to a public memory." },
-        { "type": "p", "text": "For this report I crawled that board in full: 337 index pages yielding 3,317 unique travelogue threads, plus 60 pages of the attached route-planning sub-forum. Then I read the significant pan-India ride reports end to end. The point of the crawl was to answer a question the individual threads can't: within all this riding, how much of it is actually all-India?" },
+        { "type": "p", "text": "For this report I crawled that board in full, at the scale counted above, plus 60 pages of the attached route-planning sub-forum, then read the significant pan-India ride reports end to end. The point of the crawl was to answer a question the individual threads can't: within all this riding, how much of it is actually all-India?" },
         { "type": "p", "text": "The answer is: strikingly little. Sorting thread titles by destination keyword gives a clear hierarchy, and it is not the one the phrase “all India ride” suggests." },
         {
           "type": "table",
@@ -133,7 +124,7 @@
       "blocks": [
         { "type": "p", "text": "“All India” is not one route. In the forum's usage it resolves into four recognised shapes, each with its own distance, season and difficulty. Nearly every large ride in the archive is one of these, a combination of two, or a deliberate departure from all of them." },
         { "type": "h3", "text": "1 · K2K: Kanyakumari to Kashmir", "meta": "≈ 3,700 km one way" },
-        { "type": "p", "text": "The length of the country, bottom to top. It follows NH-44, India's longest national highway, which runs from Srinagar to Kanyakumari through eleven states: 3,745 km by the common figure, though sources vary and some quote 4,112 km. Because almost nobody lives at either end, the real ride is longer: riders add the run to the start line and the run home, so a “K2K” routinely totals 6,000–11,000 km." },
+        { "type": "p", "text": "The length of the country, bottom to top. It follows NH-44, India's longest national highway, which runs from Srinagar to Kanyakumari through eleven states. Its published length, the rather larger distance a K2K actually comes to, and how much of one this loop already contains are all on the K2K page earlier in this book." },
         { "type": "p", "text": "K2K is the prestige route. It is also the one most often attempted against the clock, which has produced a parallel record-chasing culture covered in Part IV." },
         { "type": "figure", "file": "media/research/fig-01.jpg" },
         { "type": "h3", "text": "2 · The Golden Quadrilateral", "meta": "5,846 km" },
@@ -142,7 +133,7 @@
         { "type": "h3", "text": "3 · The coastline", "meta": "7,000–8,500 km" },
         { "type": "p", "text": "Around the peninsula on state highways and village roads rather than national highways: Bengal down the east coast, round Kanyakumari, up through Kerala, Karnataka, Goa, Maharashtra to Gujarat. It is the least standardised of the four and the one riders consistently describe as the most surprising, because it leaves the highway network almost entirely. It is also slower per kilometre and harder to plan." },
         { "type": "h3", "text": "4 · The North East loop", "meta": "6,000–10,000 km from South India" },
-        { "type": "p", "text": "Assam, Meghalaya, Arunachal Pradesh, Nagaland, Manipur, with Sikkim and Tripura sometimes added. This is the only canonical route with a genuine bureaucratic layer: Arunachal Pradesh, Nagaland, Mizoram and Manipur all require an Inner Line Permit for Indian citizens, at around ₹100–200, typically valid 15 days and now available online. Foreign nationals need a Protected Area Permit instead, and that regime was tightened again for Nagaland, Manipur and Mizoram in a December 2024 notification." },
+        { "type": "p", "text": "Assam, Meghalaya, Arunachal Pradesh, Nagaland, Manipur, with Sikkim and Tripura sometimes added. This is the only canonical route with a genuine bureaucratic layer: it needs permits, and they are the one thing on a ride of this size that cannot be arranged on the day. Which states, which permit and what it costs are set out on Sector S3." },
         { "type": "quote", "text": "Safely hidden under the bosom of Mother Nature, lies the unexplored and untouched land of NE India… one can find very less information and detailed description on the internet.", "cite": "nb21, opening a 26-day, 10,000 km North East ride report, 2018" },
         { "type": "figure", "file": "media/research/fig-02.jpg" },
         { "type": "figure", "file": "media/research/fig-03.jpg" },
@@ -177,7 +168,7 @@
         { "type": "h3", "text": "North East, 10,000 km", "meta": "26 days · 2018 · “nb21” and Atul" },
         { "type": "p", "text": "The single most useful thread in the archive for anyone costing a long ride, because the authors published a complete expense breakdown, something almost no other report does. Two riders, two-up on a Kawasaki Versys 650 they call Hulk, rode from Bangalore to the North East and back rather than shipping the bike, on the principle that “a car/bike trip should begin from home and end at home with the vehicle.”" },
         { "type": "p", "text": "The trip took two years of intermittent planning and two months of serious work. They cut their original seven-state plan to five (Assam, Meghalaya, Manipur, Arunachal Pradesh and Nagaland) after research showed roads in Tripura and Mizoram were largely impassable. The 26 days were assembled from 16 working days of leave plus eight weekend days and two public holidays: a real constraint that shapes most Indian long rides." },
-        { "type": "p", "text": "Their full expense breakdown (₹1,04,695 for two people over 26 days, in 2018 rupees) is printed on the costs page of this book, next to this ride's own observed rates, rather than repeated here. Note the shape of that budget: fuel and hotels are two-thirds of it, permits are a rounding error, and the mid-ride service is cheaper than two nights' accommodation. Note also what the total excludes: the pre-ride preparation was a separate ₹50,000. Preparing the motorcycle cost roughly half as much again as riding it for a month." },
+        { "type": "p", "text": "Their full expense breakdown, and the separate cost of preparing the bike, are itemised on the costs page of this book, next to this ride's own observed rates, rather than repeated here." },
         { "type": "p", "text": "Their packing list is equally instructive, and includes one item no Western equivalent would: a photocopy of their marriage certificate, “never know when a hotel guy would ask for this.”" },
         { "type": "h3", "text": "Golden Quadrilateral and coastline", "meta": "15,500 km across two rides · Mehdia Fathima" },
         { "type": "p", "text": "Interviewed by xBhp in June 2019, Mehdia Fathima is a working mother of two teenagers and an IBM Bangalore employee who relearned to ride a geared motorcycle in her forties, roughly twenty years after last riding one in engineering college. She bought a Bajaj Avenger 220 Cruise in April 2017, chosen for a low seat height because she is five feet tall, and was sent home from her first group ride for being too slow. She rode solo after that." },
@@ -236,7 +227,7 @@
         { "type": "h3", "text": "The bike matters far less than expected" },
         { "type": "p", "text": "The pan-India rides in this archive were completed on a Bajaj Avenger 220, a Bajaj Dominar 400, a Honda CBR 250R, a Kawasaki Versys 650, and, for the 18,612 km, 64-day, three-country expedition of 2010, a 2004 Honda Unicorn and a 2003 Hero Honda Splendor. A 100cc commuter and a 650cc adventure tourer have both gone round the country. What recurs in the failure reports is not insufficient displacement but consumables and electrics: tyres, chain and sprockets, batteries, brake pads." },
         { "type": "h3", "text": "Budget in the right proportions" },
-        { "type": "p", "text": "From the one fully itemised ride: fuel and accommodation are about two-thirds of on-road cost, food a fifth, permits negligible. Preparation is a separate and substantial line: roughly ₹50,000 of parts before a 26-day ride. The 2012 SaddleSore, by contrast, cost ₹5,300 all-in. As a planning rule the archive supports something like ₹2,000–2,200 per person per day for a two-up ride staying in budget hotels, in 2018 money." },
+        { "type": "p", "text": "Fuel and a bed dominate, food is a fifth, permits are negligible, and preparing the bike is a separate line again. The archive's figures for all of it, itemised, with the per-day planning rule they support, are on the costs page of this book." },
         { "type": "h3", "text": "Timing is set by leave, not by weather" },
         { "type": "p", "text": "Indian long rides are shaped by the working year. The North East pair assembled 26 days out of 16 leave days plus weekends and holidays; Mehdia Fathima rode the GQ in her children's April–May summer vacation, which put her in Rajasthan and Odisha in peak heat. That was the single hardest thing about the ride, by her account. Riders repeatedly report that the season they got was the season their employer allowed." },
         { "type": "note", "label": "Note for this route book, not part of the report", "text": "That is a finding about riders, not a calendar. It is the reason the season rows earlier in this book are still blank: nothing in this archive says which months a given sector is rideable, so nothing here was used to fill them in." },
@@ -357,5 +348,5 @@
     }
   ],
 
-  "colophon": "Compiled 5 August 2026 · Primary research by full crawl of the xBhp Tourer board (337 index pages, 3,317 threads) plus close reading of 14 ride reports · Aggregate counts are keyword-derived and approximate; all ride-level figures are quoted from the cited threads."
+  "colophon": "Compiled 5 August 2026 · Aggregate counts are keyword-derived and approximate; all ride-level figures are quoted from the cited threads."
 }

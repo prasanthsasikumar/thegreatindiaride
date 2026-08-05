@@ -141,7 +141,6 @@ test('every en dash in the transcribed files survives, character for character',
     '3–4',
     '5–28',
     '6,000–10,000',
-    '6,000–11,000',
     '6–8',
     '7,000–8,500',
     'April–May',
@@ -161,9 +160,33 @@ test('every en dash in the transcribed files survives, character for character',
     'November–16',
     'Sept–14',
     'xBhp–Sundeep',
-    '₹100–200',
-    '₹2,000–2,200',
   ]);
 
   assert.deepStrictEqual(enDashTokens(notes), ['₹100–200']);
+});
+
+/*
+ * Three ranges left research.json in the trim that cut the book's repetitions, and
+ * none of them left the book: each was a second or third printing of a figure whose
+ * canonical home is elsewhere. Losing one of those homes would take the range off
+ * the page entirely, and the list above can no longer catch it, so it is caught
+ * here instead.
+ */
+test('the ranges that moved out of research.json still print from their one home', function () {
+  const k2k = fs.readFileSync(path.join(ROOT, 'k2k.json'), 'utf8');
+  const notes = fs.readFileSync(path.join(ROOT, 'template-notes.json'), 'utf8');
+  const research = fs.readFileSync(path.join(ROOT, 'research.json'), 'utf8');
+
+  // 6,000–11,000 km: the real length of a K2K, on the K2K page, off k2k.json.
+  const rw = JSON.parse(k2k).realWorld;
+  assert.strictEqual(rw.low, 6000);
+  assert.strictEqual(rw.high, 11000);
+
+  // ₹100–200: the Inner Line Permit fee, on the Sector S3 spread.
+  assert.match(notes, /₹100–200/);
+
+  // ₹2,000–2,200 per person per day: the archive's planning rule, on the costs page.
+  const ppd = JSON.parse(research).benchmarks.perPersonPerDay;
+  assert.strictEqual(ppd.low, 2000);
+  assert.strictEqual(ppd.high, 2200);
 });

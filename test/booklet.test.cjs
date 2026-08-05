@@ -341,8 +341,15 @@ test('the season calendar leaves both columns blank for every sector', async fun
     } else {
       assert.strictEqual(r[2], note.season, id + ' season');
     }
-    if (!note.permits) assert.strictEqual(r[3], 'Not written yet', id + ' permits');
-    else assert.strictEqual(r[3], note.permits, id + ' permits');
+    // A written permit note reaches this cell either whole or, where the author has
+    // supplied permitsShort, as the cross-reference instead. What must never happen
+    // is a written note printing here as a gap, or a gap printing as anything but
+    // one: permitsShort is a pointer to a note, never a substitute for writing it.
+    if (!note.permits) {
+      assert.strictEqual(r[3], 'Not written yet', id + ' permits');
+    } else {
+      assert.strictEqual(r[3], note.permitsShort || note.permits, id + ' permits');
+    }
   });
 });
 
@@ -521,7 +528,9 @@ test('the K2K page keeps the cited highway apart from the measured half', async 
   assert.match(text, /no measured Rajkot to Palanpur road in this book/);
   assert.match(text, /no figure for it is offered here/);
   assert.match(text, /Cut the Kutch spur first/);
-  assert.match(text, /21-day clock/);
+  // The advice at the foot of the page tells a rider what to do about the spur. The
+  // reasoning behind it is the caveat above and is not restated here.
+  assert.match(text, /re-measure Rajkot to Palanpur yourself/);
 
   // Two lines that stop at Srinagar and start at Delhi are not a circuit.
   assert.match(text, /do not join up/);
@@ -571,13 +580,73 @@ test('the closing observation about the decaying archive survives onto the page'
 });
 
 test('the sourcing line names the board, the crawl and the date it was crawled', async function () {
-  const { byId } = await render();
+  // The counts themselves are printed once, in the appendix opener's stat block. This
+  // line names the source and the date and sends the reader there; it used to repeat
+  // all four numbers, which is the third of five places they appeared.
+  const { byId, main } = await render();
   const text = byId['bk-provenance'].textContent;
   assert.match(text, /The Tourer/);
-  assert.match(text, /337 index pages/);
-  assert.match(text, /3,317 travelogue threads/);
-  assert.match(text, /14 pan-India ride reports/);
+  assert.match(text, /full crawl/);
   assert.match(text, /5 August 2026/);
+  assert.match(text, /field research appendix/);
+
+  const opener = main.collect(function (n) { return n.id === 'bk-research'; })[0];
+  assert.ok(opener, 'the appendix opener was rendered');
+  assert.match(opener.textContent, /337/, 'and it is the one place the counts print');
+  assert.match(opener.textContent, /3,317/);
+});
+
+/*
+ * The book is assembled from four data files by one script, and the same string can
+ * therefore reach the page from more than one direction without anybody typing it
+ * twice. That is how it ended up printing the Northeast permit note four times and
+ * two whole field notes twice. These three tests count printings rather than read
+ * prose: they are the guard that keeps the trim from quietly growing back.
+ */
+test('the long permit note is printed once, and pointed at from the calendar', async function () {
+  const { main, byId } = await render();
+  const full = NOTES.sectors.S3.permits;
+  const hits = main.collect(function (n) { return n.children.length === 0; })
+    .filter(function (n) { return n.textContent.indexOf(full) >= 0; });
+  assert.strictEqual(hits.length, 1,
+    'the S3 permit note prints ' + hits.length + ' times; the sector spread is its one home');
+
+  const cell = rowsOf(byId['bk-season-table']).slice(1)
+    .filter(function (r) { return r[0].indexOf('S3') === 0; })[0];
+  assert.ok(cell, 'S3 has a row in the season calendar');
+  assert.ok(cell[3].length < 80, 'and its permit cell is a pointer, not the note again');
+  assert.match(cell[3], /S3/, 'which names where the note actually is');
+});
+
+test('the two field notes on the planning page are a pointer, not a second printing', async function () {
+  const { main, byId } = await render();
+  const partV = RESEARCH.appendix.filter(function (p) { return p.part === 'V'; })[0];
+  const bike = partV.blocks.filter(function (b) {
+    return b.type === 'p' && b.text.indexOf('Bajaj Avenger 220') >= 0;
+  })[0];
+  assert.ok(bike, 'Part V still carries the bike note');
+
+  const hits = main.collect(function (n) { return n.children.length === 0; })
+    .filter(function (n) { return n.textContent.indexOf(bike.text) >= 0; });
+  assert.strictEqual(hits.length, 1, 'the bike note prints twice again');
+
+  const xref = byId['bk-planning-research'].textContent;
+  assert.match(xref, /Part V/, 'the planning page points at where the notes are');
+  assert.ok(xref.length < 220, 'and points rather than reprints');
+});
+
+test('a cross-reference into the appendix goes with the appendix when it is dropped', async function () {
+  // The toolbar can leave the appendix out of the print. A pointer to Part V that
+  // survives that print sends a reader to pages they are not holding, so it carries
+  // the class the print rules hide alongside .bk__research.
+  const { byId } = await render();
+  const xref = byId['bk-planning-research'].children[0];
+  assert.ok(xref, 'the planning cross-reference was rendered');
+  assert.ok(hasClass(xref, 'bk__xref'), 'and it is marked as one');
+
+  const html = fs.readFileSync(path.join(ROOT, 'booklet.html'), 'utf8');
+  assert.match(html, /\.bk--no-appendix \.bk__research,\s*\n\s*\.bk--no-appendix \.bk__xref \{ display: none/,
+    'the print rule that drops the appendix does not drop the pointers into it');
 });
 
 test('the planning pages are blank to write on, not pre-filled with advice', async function () {

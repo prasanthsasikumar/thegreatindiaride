@@ -128,14 +128,13 @@ button { font: inherit; color: inherit; }
 }
 
 /* Every element the nav above can land on. The value has to clear both bars
-   in .bk__topbar at once, now that they stack as one sticky unit. It is an
-   estimate from box-model arithmetic (padding, line-height, border), not a
-   number taken from a rendered page: worked through by hand it lands near
-   109-110px for the two stacked bars, so 118px leaves on the order of 8px of
-   slack above that estimate, not the wide margin the word "generous" would
-   suggest. Whoever checks this in a browser should confirm the real number
-   and adjust it if the heading still sits under the bars. */
-.bk__navtarget { scroll-margin-top: 118px; }
+   in .bk__topbar at once, since they stack as one sticky unit.
+   Measured, not estimated: rendered at 1600px wide the two bars come to 116px
+   together, and the screen type scale further down is what put them there (it
+   raises the nav from 11px to 13px and the buttons with it). 132px leaves 16px
+   of clearance under the second bar. Anyone changing those sizes should
+   re-measure rather than assume this number still fits. */
+.bk__navtarget { scroll-margin-top: 132px; }
 
 /* Every top-level block of the book is a page. Print gives each one a fresh
    sheet; on screen they are just sections with a rule between them. Keeping the
@@ -263,6 +262,8 @@ td .bk__todo { margin-top: 0; }
   padding: 2px 8px; margin-top: var(--space-3);
 }
 .bk__stage { margin-top: var(--space-6); }
+/* Under the map key, not hard against it. */
+.bk__season { margin-top: var(--space-6); }
 .bk__stage-h {
   font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.06em;
   color: var(--color-muted); margin-bottom: var(--space-2);
@@ -401,6 +402,129 @@ td .bk__todo { margin-top: 0; }
 .bk__foot {
   margin-top: var(--space-8); padding-top: var(--space-4); border-top: var(--rule);
   font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.06em; color: var(--color-dim);
+}
+
+/* ─── on a screen ───────────────────────────────────────────────────────────
+ * Everything above this line is sized for A4, where the constraint is fitting a
+ * sector spread on one sheet and 9.6pt is a normal reading size held at arm's
+ * length. A screen is neither: it is a metre away, it is three times as wide as
+ * the text column that was fitted to paper, and at those sizes the book read as
+ * a narrow strip of small grey type down the middle of a dark field.
+ *
+ * So this block, and only this block, is the screen. @media screen never matches
+ * the printer, so nothing here can move a millimetre of the printed book: the
+ * page furniture below (A4, the palette flip, the break rules, every pt size)
+ * is untouched by all of it.
+ *
+ * Three things happen here. Type goes up by roughly a sixth across the board.
+ * The shell widens. And the width that buys is spent deliberately: on a running
+ * head in the left margin, on maps beside the tables they belong to, and on
+ * pairs of short tables side by side, rather than on making the lines longer.
+ * Prose stays capped in ch, because a 1,200px line is not more readable than a
+ * 700px one, it is less.
+ */
+@media screen {
+  body { font-size: 16.5px; line-height: 1.6; }
+
+  .bk { max-width: 1240px; }
+
+  .bk__back, .bk__print { font-size: 13px; }
+  .bk__nav a { font-size: 13px; padding: 5px 2px; }
+  .bk__skip { font-size: 12.5px; }
+
+  .bk__eyebrow { font-size: 13px; }
+  .bk__h2 { font-size: clamp(28px, 3.2vw, 40px); }
+  .bk__h3 { font-size: 21px; }
+  .bk__lede { font-size: 19px; max-width: 68ch; }
+  .bk__note { font-size: 16.5px; max-width: 70ch; }
+  .bk__fine { font-size: 15px; max-width: 70ch; }
+  .bk__mono { font-size: 13.5px; }
+  .bk__body { font-size: 16.5px; max-width: 70ch; }
+  .bk__caveat { font-size: 17px; max-width: 70ch; }
+  .bk__quote { font-size: 19px; max-width: 66ch; }
+  .bk__quote-cite, .bk__credit, .bk__archive-h, .bk__archive-src,
+  .bk__log-h, .bk__check h4, .bk__refs h3, .bk__foot, .bk__glance-l,
+  .bk__join { font-size: 12.5px; }
+  .bk__meta, .bk__sector-meta, .bk__stage-h { font-size: 14px; }
+  .bk__sector-id { font-size: 13px; }
+  .bk__legend { font-size: 13px; }
+  .bk__cover-sub { font-size: 16px; }
+  .bk__cover-title { font-size: clamp(38px, 7vw, 72px); }
+  /* Big enough to read across the band, small enough that the crawl date, which
+     is the one cell holding words rather than a number, stays on one line. */
+  .bk__glance-n { font-size: 30px; }
+  /* p carries no margin in this book, which was invisible while every run of
+     type sat in its own block. Side by side in a column they need telling apart. */
+  .bk__body + .bk__mono, .bk__mono + .bk__fine,
+  .bk__note + .bk__fine, .bk__lede + .bk__fine { margin-top: var(--space-3); }
+  .bk__fig figcaption, .bk__refs li, .bk__log-v, .state-msg { font-size: 15px; }
+  .bk__log-k { font-size: 13px; flex-basis: 124px; }
+  .bk__todo { font-size: 13px; padding: 8px 12px; }
+
+  .bk__table { font-size: 15px; }
+  .bk__table caption { font-size: 15px; max-width: 70ch; }
+  .bk__table th { font-size: 12.5px; padding-bottom: 6px; }
+  .bk__table td { padding: 7px var(--space-4) 7px 0; }
+  .bk__num, th.bk__num { font-size: 14px; }
+  /* Lines to write on, at a size somebody can write on. */
+  .bk__blank td, .bk__rule-lines div, .bk__check-lines div { height: 34px; }
+}
+
+/* On a phone the toolbar's three controls do not fit on one line, and the one
+   that fell off the end was the print button, which is the only thing on it a
+   reader came for. It wraps instead, the spacer becoming the line break.
+
+   The wide tables (the seven-column daily log, the five-column planner) are a
+   separate question and are deliberately NOT touched here. The obvious fix,
+   display: block with overflow-x on the table, was tried and reverted: it gives
+   the table its own scroll box at the cost of shrink-to-fitting every other
+   table on the page, so the cost table stopped filling its column at tablet
+   width. Doing it properly needs a wrapper element around each table, and
+   nothing measured so far says the page overflows: at the narrowest viewport
+   this was checked at, scrollWidth equals the viewport. */
+@media screen and (max-width: 760px) {
+  .bk__actions { flex-wrap: wrap; }
+  .bk__spacer { flex-basis: 100%; height: 0; }
+}
+
+/* The running head moves into the left margin, which is where the width goes.
+   Auto-placement puts every other child of the page in column two, so the
+   eyebrow and the h2 it introduces come out on the same line, and the content
+   column narrows to something a table fills rather than rattles around in. */
+@media screen and (min-width: 1080px) {
+  .bk__page {
+    display: grid; grid-template-columns: 168px minmax(0, 1fr); gap: 0 var(--space-8);
+  }
+  .bk__page > * { grid-column: 2; min-width: 0; }
+  .bk__page > .bk__eyebrow, .bk__page > .bk__sector-id {
+    grid-column: 1; grid-row: 1; margin: 6px 0 0; align-self: start;
+  }
+  /* Two things that size themselves to their own text. A grid item stretches to
+     its column by default, which would blow the join badge out to a 900px pill
+     and the dashed gap to a 900px box. */
+  .bk__page > .bk__join, .bk__page > .bk__todo { justify-self: start; }
+  /* The cover keeps the rail, so its title starts on the same vertical as every
+     heading under it, and takes a third column for the map: it is the one page
+     with a picture big enough to sit beside its own title. */
+  .bk__cover { grid-template-columns: 168px minmax(0, 1fr) 300px; }
+  .bk__cover > .bk__map--cover {
+    grid-column: 3; grid-row: 1 / span 6; align-self: start;
+    max-width: 300px; margin: 0;
+  }
+
+  .bk__spread { grid-template-columns: minmax(300px, 380px) minmax(0, 1fr); gap: var(--space-8); }
+  .bk__map { max-width: 380px; }
+  .bk__map--master { max-width: 560px; }
+  .bk__check { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+
+  /* Two short tables that were stacked with a screen and a half of ruled paper
+     between them. Plain block elements in source order, so on A4 and on a phone
+     they stay stacked, one under the other, exactly as before. */
+  .bk__two {
+    display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+    gap: var(--space-8); align-items: start; margin-top: var(--space-6);
+  }
+  .bk__two > * > .bk__h3:first-child { margin-top: 0; }
 }
 
 /* ─── print ────────────────────────────────────────────────────────────── */
@@ -547,8 +671,12 @@ td .bk__todo { margin-top: 0; }
   .bk__refs { break-inside: auto; }
   .bk__refs li { font-size: 8pt; }
   .bk__skip { display: none !important; }
-  /* Ticked off in the toolbar: leave the appendix out of the printed book. */
-  .bk--no-appendix .bk__research { display: none !important; }
+  /* Ticked off in the toolbar: leave the appendix out of the printed book. The
+     cross-references into it go with it, because a route page that sends a
+     reader to Part V of an appendix they have not printed is worse than one
+     that says nothing. */
+  .bk--no-appendix .bk__research,
+  .bk--no-appendix .bk__xref { display: none !important; }
 
   /* Without this the flipped tokens print as the browser's default black-on-white
      and the route line disappears. */
@@ -592,9 +720,8 @@ td .bk__todo { margin-top: 0; }
       the loop; every rupee comes out of what that ride actually cost.
     </p>
     <p class="bk__fine">
-      Where this book has nothing to tell you (riding seasons, permits) it says so in
-      a dashed box and stops. None of it is guessed. Print it, carry it, and fill the
-      blanks in yourself.
+      Where this book has nothing to tell you it says so, in a dashed box, and stops.
+      None of it is guessed. Print it, carry it, and fill the blanks in yourself.
     </p>
     <p class="state-msg" id="bk-loading" style="margin-top:24px">Loading the route…</p>
     <p class="state-msg" id="bk-error" hidden style="margin-top:24px">
@@ -679,10 +806,9 @@ td .bk__todo { margin-top: 0; }
     <table class="bk__table" id="bk-season-table"></table>
     <p class="bk__fine" style="margin-top:16px">
       A dashed box means this book has nothing to tell you about that sector. It does
-      not mean the sector is open, and it is not a shrug. Dates and permits are the
-      part of a route book a rider acts on, so a gap is shown as a gap rather than
-      filled with something plausible. Find that information elsewhere, from a source
-      that is current, before you commit to dates.
+      not mean the sector is open. Dates and permits are the part of a route book a
+      rider acts on, so a gap is shown as a gap. Find that information elsewhere, from
+      a source that is current, before you commit to dates.
     </p>
   </section>
 
@@ -697,18 +823,26 @@ td .bk__todo { margin-top: 0; }
          boxes, so they belong above them rather than in the appendix. -->
     <div id="bk-planning-research"></div>
 
-    <h3 class="bk__h3">Sector planner</h3>
-    <p class="bk__fine" style="margin-bottom:12px">
-      Riding days are the projection from the costs page: riding time only, no rest
-      days. Add your own.
-    </p>
-    <table class="bk__table" id="bk-planner"></table>
+    <!-- Two short tables, paired on a wide screen and stacked everywhere else,
+         including on paper. The wrappers carry no styling of their own: .bk__two
+         is a screen-only grid, so in print this is the same sequence of blocks
+         it has always been. -->
+    <div class="bk__two">
+      <div>
+        <h3 class="bk__h3">Sector planner</h3>
+        <p class="bk__fine" style="margin-bottom:12px">
+          Riding days only, from the costs page. Add your own rest days.
+        </p>
+        <table class="bk__table" id="bk-planner"></table>
+      </div>
+      <div>
+        <h3 class="bk__h3">The bike</h3>
+        <table class="bk__table" id="bk-bike"></table>
+      </div>
+    </div>
 
     <h3 class="bk__h3">Daily log</h3>
     <table class="bk__table bk__blank" id="bk-log"></table>
-
-    <h3 class="bk__h3">The bike</h3>
-    <table class="bk__table" id="bk-bike"></table>
 
     <h3 class="bk__h3">Checklist</h3>
     <p class="bk__fine" style="margin-bottom:12px">
@@ -1036,11 +1170,12 @@ td .bk__todo { margin-top: 0; }
   function seasonBlock(s) {
     var box = document.createElement('div');
     var note = (notes && notes.sectors && notes.sectors[s.id]) || {};
+    box.className = 'bk__season';
     box.appendChild(elem('div', 'bk__stage-h', 'SEASON & PERMITS'));
     if (written(note.season)) {
       box.appendChild(elem('p', 'bk__note', note.season));
     } else {
-      box.appendChild(todo('Not written yet: season window for this sector.'));
+      box.appendChild(todo('Not written yet: season window.'));
     }
     // The permits note stands on its own. It used to be printed only as a tail on a
     // written season, which meant a researched permit (the one genuinely
@@ -1270,12 +1405,10 @@ td .bk__todo { margin-top: 0; }
     sec.appendChild(elem('h2', 'bk__h2', 'Kanyakumari to Kashmir'));
     sec.appendChild(elem('p', 'bk__lede',
       'The length of the country, bottom to top, up NH-44: the prestige pan-India ' +
-      'route and the one most often attempted. It is ridden as two lines, up one ' +
-      'side and down the other, and this loop already contains the second of them. ' +
-      'The two drawn here do not join up: the northbound one ends at ' +
-      n.points[n.points.length - 1].name + ' and the southbound one starts at ' +
-      s.points[0].name + ', because ' + s.points[0].name + ' is where this loop’s ' +
-      'measured west side begins.'));
+      'route, ridden as two lines, up one side and down the other. This loop already ' +
+      'contains the second of them. The two drawn here do not join up: the northbound ' +
+      'one ends at ' + n.points[n.points.length - 1].name + ' and the southbound one ' +
+      'starts at ' + s.points[0].name + ', where this loop’s measured west side begins.'));
 
     var spread = elem('div', 'bk__spread');
 
@@ -1323,17 +1456,16 @@ td .bk__todo { margin-top: 0; }
       s.hops + ' legs of this loop, ' + s.points[0].name + ' down to ' +
       s.points[s.points.length - 1].name + ', at ' + num(s.measuredKm) +
       ' km. These are the itinerary’s own road distances, added up and not ' +
-      're-measured.'));
+      're-measured, which is why the table below is the loop’s own west-side legs ' +
+      'in reverse and not a second survey of the same road.'));
     col.appendChild(elem('p', 'bk__caveat',
       'Do not read that ' + num(s.measuredKm) + ' against the ' + num(n.citedKm) +
       ' above without this: ' + num(s.spurKm) + ' km of it is ' + s.spurName + ', ' +
-      'which is not on any K2K. It is inside the total because it is inside the line, and it is ' +
-      'inside the line because there is no measured ' + s.spurFrom + ' to ' + s.spurTo +
-      ' road in this book to put in its place: a route book may not draw one road and ' +
-      'charge for another, and it may not invent a third. Skipping the spur makes ' +
-      'the west-coast run shorter. By how much is not something this book can tell ' +
-      'you, because the direct road was never measured for it, and no figure for it ' +
-      'is offered here.'));
+      'which is not on any K2K. It is inside the total because it is inside the ' +
+      'line, and it is inside the line because there is no measured ' + s.spurFrom +
+      ' to ' + s.spurTo + ' road in this book to put in its place. Skipping the spur ' +
+      'makes the west-coast run shorter. By how much is not something this book can ' +
+      'tell you, and no figure for it is offered here.'));
 
     var legs = southLegs();
     if (legs) {
@@ -1371,10 +1503,8 @@ td .bk__todo { margin-top: 0; }
       'The practical point of this page: a rider with three weeks does not have to ' +
       'plan a K2K from nothing. The west-coast half is already drawn, already ' +
       'measured and already broken into legs above. Take it, ride NH-44 the other ' +
-      'way, and the rest of this book still applies. Cut the Kutch spur first, ' +
-      'though: ' + num(s.spurKm) + ' km out to the border and back is a real bite ' +
-      'out of a 21-day clock, and re-measure the ' + s.spurFrom + ' to ' + s.spurTo +
-      ' road yourself, because this book cannot hand you that leg.'));
+      'way, and the rest of this book still applies. Cut the Kutch spur first, and ' +
+      're-measure ' + s.spurFrom + ' to ' + s.spurTo + ' yourself.'));
     if (n.cite) sec.appendChild(elem('p', 'bk__fine', n.cite));
 
     if (basemap) k2kMap(svg);
@@ -1419,13 +1549,9 @@ td .bk__todo { margin-top: 0; }
       'public forum archive, and they are separated from the book proper so you can ' +
       'skip them, or leave them out of the print. Nothing in the route pages depends ' +
       'on them; the practical findings that do bear on a plan have already been ' +
-      'printed beside the sector or the cost table they belong to.'));
-    sec.appendChild(elem('p', 'bk__fine',
-      'What this research does not contain is a riding calendar. Its finding on ' +
-      'timing is that Indian long rides are shaped by the working year rather than ' +
-      'by the weather, which is a fact about riders and not a season window. So the ' +
-      'season rows earlier in this book are still blank, and none of them was filled ' +
-      'in from anything here.'));
+      'printed beside the sector or the cost table they belong to. What is not here ' +
+      'is a riding calendar, which is why the season rows earlier in the book are ' +
+      'still blank: see Part V.'));
 
     var toc = elem('table', 'bk__table');
     head(toc, [{ label: 'Part', width: '12%' }, { label: 'What is in it' }]);
@@ -1491,14 +1617,20 @@ td .bk__todo { margin-top: 0; }
     });
   }
 
-  // Inline, on the planning pages: the two findings that change what a planner
-  // writes in the boxes below them.
+  // Inline, on the planning pages. The two findings that bear on what a planner
+  // writes here used to be reprinted in full above the boxes, word for word the
+  // same two field notes as Part V of the appendix. What stands here now is the
+  // cross-reference, and it is emitted with a class that goes with the appendix
+  // when the appendix is left out of the print: a pointer to pages that are not
+  // in the reader's hand is worse than no pointer.
   function renderPlanningResearch() {
     var items = researchFor('planning');
     if (!items.length) return;
     el.planningResearch.replaceChildren();
     items.forEach(function (item) {
-      el.planningResearch.appendChild(archiveBlock(item));
+      el.planningResearch.appendChild(item.pointer
+        ? elem('p', 'bk__fine bk__xref', item.pointer)
+        : archiveBlock(item));
     });
   }
 
@@ -1568,10 +1700,9 @@ td .bk__todo { margin-top: 0; }
     });
 
     box.appendChild(elem('p', 'bk__caveat',
-      'These are ' + b.year + ' rupees and other people’s rides. They are printed here ' +
-      'as a check on the shape of a budget (how much of it is fuel, how much is a bed, ' +
-      'how little is paperwork), not as prices to plan against, and they are not ' +
-      'comparable with the rates above without adjusting for the years between them.'));
+      'These are ' + b.year + ' rupees and other people’s rides: a check on the shape ' +
+      'of a budget, not prices to plan against, and not comparable with the rates ' +
+      'above without adjusting for the years between them.'));
 
     el.costsArchive.replaceChildren(box);
   }
@@ -1653,9 +1784,18 @@ td .bk__todo { margin-top: 0; }
       else season.appendChild(todo('Not written yet'));
       tr.appendChild(season);
 
+      // permitsShort, where there is one. The S3 permit note is the longest
+      // written thing in template-notes.json and it printed twice, in full, once
+      // on the sector page and once in this cell: the same four states, the same
+      // fee, the same notification, a screen apart. The sector page is where a
+      // rider reads it, so this cell points there. A missing permitsShort is not
+      // a gap, only a note short enough to print whole.
       var permits = document.createElement('td');
-      if (written(note.permits)) permits.textContent = note.permits;
-      else permits.appendChild(todo('Not written yet'));
+      if (written(note.permits)) {
+        permits.textContent = written(note.permitsShort) ? note.permitsShort : note.permits;
+      } else {
+        permits.appendChild(todo('Not written yet'));
+      }
       tr.appendChild(permits);
 
       tb.appendChild(tr);
@@ -1668,12 +1808,14 @@ td .bk__todo { margin-top: 0; }
   function renderPlanner() {
     var t = el.planner;
     t.replaceChildren();
+    // Widths, because the two mono column heads are wider than the numbers under
+    // them and would otherwise squeeze the sector names into three lines each.
     head(t, [
-      { label: 'Sector' },
-      { label: 'Riding days', num: true },
-      { label: 'Rest days', num: true },
-      { label: 'Start' },
-      { label: 'Finish' }
+      { label: 'Sector', width: '44%' },
+      { label: 'Riding days', num: true, width: '13%' },
+      { label: 'Rest days', num: true, width: '13%' },
+      { label: 'Start', width: '15%' },
+      { label: 'Finish', width: '15%' }
     ]);
     var tb = document.createElement('tbody');
     tpl.sectors.forEach(function (s) {
@@ -1728,7 +1870,7 @@ td .bk__todo { margin-top: 0; }
   function renderBike() {
     var t = el.bike;
     t.replaceChildren();
-    head(t, [{ label: 'What', width: '45%' }, { label: 'Yours' }]);
+    head(t, [{ label: 'What', width: '58%' }, { label: 'Yours' }]);
     var tb = document.createElement('tbody');
     BIKE.forEach(function (label) {
       var tr = document.createElement('tr');
@@ -1772,8 +1914,8 @@ td .bk__todo { margin-top: 0; }
     ['template-notes.json', 'The hand-written part: seasons, permits, points of interest. What is missing here is what prints as a dashed box.'],
     ['route.json', 'The ride that was actually run: stops, nights and spend. The cost projection is derived from this.'],
     ['basemap.json', 'Country outlines, for the maps.'],
-    ['k2k.json', 'Kanyakumari to Kashmir as two lines. The northbound one is a corridor of cities NH-44 runs by, with the highway’s published length quoted beside it; the southbound one is this loop’s own measured west-side hops. Every point says where its coordinate came from.'],
-    ['research.json', 'The xBhp archive field research, transcribed: the corpus counts, the canonical routes, the itemised rides, the records and the reference list. The photographs it cites are under /media/research and belong to the riders credited beside them.']
+    ['k2k.json', 'Kanyakumari to Kashmir as two lines, one cited and one measured. Every point says where its coordinate came from.'],
+    ['research.json', 'The xBhp archive field research, transcribed. The photographs it cites are under /media/research and belong to the riders credited beside them.']
   ];
 
   function renderFiles() {
@@ -1869,7 +2011,7 @@ td .bk__todo { margin-top: 0; }
       entries.forEach(function (e) {
         if (e.isIntersecting) setCurrent(e.target.dataset.navGroup);
       });
-    }, { rootMargin: '-118px 0px -70% 0px', threshold: 0 });
+    }, { rootMargin: '-132px 0px -70% 0px', threshold: 0 });
 
     NAV.forEach(function (item) {
       var el2 = document.getElementById(item.id);
