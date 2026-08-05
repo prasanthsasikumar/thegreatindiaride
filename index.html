@@ -584,7 +584,7 @@ button { font: inherit; color: inherit; }
   //
   // A story is posted the same day, so its timestamp is close enough to trust for
   // ordering. Reels are edited and posted later — every one carries an upload time.
-  function isDatable(c) { return c.category === 'story' || c.timeSource === 'exif'; }
+  function isDatable(c) { return c.timeSource === 'manual' || c.timeSource === 'exif' || c.category === 'story'; }
 
   // The date a block is sorted and labelled by: its first trustworthy clip, or its
   // first clip of any kind when the region has nothing but reels.

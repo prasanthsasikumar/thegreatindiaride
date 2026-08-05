@@ -1,5 +1,5 @@
 {
-  "generated": "2026-08-04T23:46:23.081Z",
+  "generated": "2026-08-05T00:02:11.357Z",
   "baseUrl": "https://thegreatindiaride.prasanthsasikumar.com",
   "stories": [
     {
@@ -3376,8 +3376,8 @@
         "Andhra Pradesh",
         "Tamil Nadu",
         "Karnataka",
-        "Odisha",
-        "Bangladesh"
+        "Kerala",
+        "Odisha"
       ]
     },
     {
@@ -3416,8 +3416,8 @@
         "Tamil Nadu",
         "Karnataka",
         "Andhra Pradesh",
-        "Odisha",
-        "Bangladesh"
+        "Kerala",
+        "Odisha"
       ]
     },
     {
@@ -3674,8 +3674,8 @@
       "size": 3694827,
       "modified": "2026-08-03T20:17:56.679Z",
       "type": "video",
-      "captured": "2025-04-21T17:02:20.000Z",
-      "timeSource": "upload",
+      "captured": "2025-04-19T12:00:00.000Z",
+      "timeSource": "manual",
       "state": "Kerala",
       "country": "India",
       "stateSource": "gps",

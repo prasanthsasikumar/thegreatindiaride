@@ -141,10 +141,24 @@ const reels = (readJson(reelsFile).ig_reels_media || [])
   .flatMap(g => g.media || [])
   .map(i => ({ ...i, category: 'reels' }));
 
+// Date corrections, read early so they steer ordering and interpolation rather than
+// being pasted on afterwards. An entry may be a bare region string (the common case)
+// or an object carrying `state`, `date`, or both.
+const overridesEarly = fs.existsSync(OVERRIDES_FILE) ? readJson(OVERRIDES_FILE) : {};
+const dateFix = uri => {
+  const f = overridesEarly[uri];
+  if (!f || typeof f === 'string') return null;
+  const d = f.date || f.captured;
+  if (!d) return null;
+  const ms = Date.parse(d.length <= 10 ? d + 'T12:00:00Z' : d);
+  return isFinite(ms) ? Math.floor(ms / 1000) : null;
+};
+
 const items = [...stories, ...reels]
   .filter(i => i.uri)
   .map(i => {
-    const t = capturedAtOf(i);
+    const fixed = dateFix(i.uri);
+    const t = fixed ? { at: fixed, source: 'manual' } : capturedAtOf(i);
     return {
       uri: i.uri,
       category: i.category,
@@ -162,7 +176,8 @@ const exifTimes = present.filter(i => i.timeSource === 'exif').length;
 
 console.log(`Export: ${stories.length} stories + ${reels.length} reels = ${items.length} items`);
 console.log(`Matched against media/: ${present.length}`);
-console.log(`Capture times: ${exifTimes} from EXIF, ${present.length - exifTimes} fall back to upload time`);
+const manualTimes = present.filter(i => i.timeSource === 'manual').length;
+console.log(`Capture times: ${exifTimes} from EXIF, ${manualTimes} corrected by hand, ${present.length - exifTimes - manualTimes} fall back to upload time`);
 
 /* ---------- 2. reverse-geocode the unique points ---------- */
 
