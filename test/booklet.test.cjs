@@ -7,7 +7,7 @@ const vm = require('node:vm');
 const ROOT = path.join(__dirname, '..');
 
 // booklet.html is a static page with no build step, so there is nothing to import.
-// What follows is a DOM stub — enough of one for atlas.js, costs.js and the page's
+// What follows is a DOM stub, enough of one for atlas.js, costs.js and the page's
 // own inline script to run headless against the real data files, so the figures a
 // reader would print can be asserted on rather than eyeballed.
 //
@@ -95,7 +95,7 @@ function render() {
   const main = new Node('main');
   const byId = {};
   // Every id the markup declares gets a node, in document order, all parented to
-  // one root — that is all the structure the page's inserts need (sector spreads go
+  // one root, which is all the structure the page's inserts need (sector spreads go
   // in before #bk-sectors-anchor, the sourcing gap after #bk-provenance).
   const ids = html.match(/\sid="([a-z0-9-]+)"/g) || [];
   ids.forEach(function (m) {
@@ -210,8 +210,8 @@ test('the glance figures are template.json\'s totals, not copies of them', async
 
 test('every sector map draws the whole loop first and the sector on top of it', async function () {
   // Draw order is paint order in SVG. Reversed, the dimmed loop would be laid over
-  // the sector it is supposed to sit behind, and the point of the spread — this bit
-  // solid, the rest dimmed — is lost on paper where there is no colour to fall back on.
+  // the sector it is supposed to sit behind, and the point of the spread (this bit
+  // solid, the rest dimmed) is lost on paper where there is no colour to fall back on.
   const { main } = await render();
   const sectors = main.collect(function (n) { return hasClass(n, 'bk__sector'); });
   assert.strictEqual(sectors.length, TEMPLATE.sectors.length);
@@ -271,8 +271,8 @@ test('every unwritten note renders as a visible gap, never as prose', async func
 });
 
 test('the season windows are still unwritten, and nothing was invented for them', async function () {
-  // The field research gives no riding calendar — its finding is that timing is set
-  // by leave rather than weather — so every season row must still be a gap. This is
+  // The field research gives no riding calendar. Its finding is that timing is set
+  // by leave rather than weather, so every season row must still be a gap. This is
   // the assertion that would catch a calendar being back-filled out of the ride
   // dates in the archive's case studies.
   const { byId } = await render();
@@ -294,7 +294,7 @@ test('the researched permit note reaches the sector page, not only the calendar'
   assert.ok(s3, 'the S3 spread was rendered');
   assert.match(s3.textContent, /Inner Line Permit/);
   assert.match(s3.textContent, /Protected Area Permit/);
-  assert.match(s3.textContent, /Not written yet — season window/,
+  assert.match(s3.textContent, /Not written yet: season window/,
     'and the unwritten season for that same sector is still shown as a gap');
 });
 
@@ -357,7 +357,7 @@ test('every research photograph carries its credit line, in the same figure', as
 });
 
 test('no optional field renders as the string "undefined"', async function () {
-  // Every one of these records is optional somewhere — a caption, a note, a source.
+  // Every one of these records is optional somewhere: a caption, a note, a source.
   // A missing one has to render as nothing, not as the word "undefined" printed
   // under a photograph or in the middle of a cost sentence.
   const { main } = await render();
@@ -385,7 +385,7 @@ test('both of the report\'s caveats on its own numbers are printed, not just sto
 
 test('the archive money is printed with its year and kept apart from this ride\'s rates', async function () {
   // 2018 rupees and somebody else's ride. Every figure has to carry the year, and the
-  // page has to say the two sets of numbers are not comparable — otherwise the
+  // page has to say the two sets of numbers are not comparable, because otherwise the
   // benchmark reads as a quote for the loop in this book.
   const { byId } = await render();
   const text = byId['bk-costs-archive'].textContent;
@@ -452,7 +452,7 @@ test('the K2K page keeps the cited highway apart from the measured half', async 
   // swatches may be an em dash.
   const key = page.collect(function (n) { return hasClass(n, 'bk__legend'); })[0];
   assert.ok(key, 'the page carries a key, since aria-labels do not print');
-  assert.ok(key.textContent.indexOf('—') < 0, 'the key uses rules, not em dashes');
+  assert.ok(key.textContent.indexOf('\u2014') < 0, 'the key uses rules, not em dashes');
   assert.match(key.textContent, /up the spine, the NH-44 corridor/);
   assert.match(key.textContent, /down the west coast, measured/);
 
@@ -512,7 +512,7 @@ test('the planning pages are blank to write on, not pre-filled with advice', asy
   const boxes = byId['bk-check'].children;
   assert.ok(boxes.length >= 8);
   boxes.forEach(function (b) {
-    // A heading and ruled space under it — a heading with items listed under it would
+    // A heading and ruled space under it. A heading with items listed under it would
     // be this book telling a rider what to carry, which it is in no position to do.
     assert.strictEqual(b.children[0].tagName, 'h4');
     assert.ok(b.children[0].textContent.length > 0);

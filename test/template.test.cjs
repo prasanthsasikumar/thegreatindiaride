@@ -52,7 +52,7 @@ test('sector labels are renamed even though hops keep the sheet spelling', funct
   assert.strictEqual(t.sectors[0].from, 'Trivandrum');
   // If the rename is missing here, the sector key becomes
   // 'Thiruvananthapuram→Bengaluru', TITLES has no match for it, and title falls
-  // back to the generated 'Thiruvananthapuram to Bengaluru' — a plausible-looking
+  // back to the generated 'Thiruvananthapuram to Bengaluru', a plausible-looking
   // string that hides the bug. Assert the real title, not just its presence.
   assert.strictEqual(t.sectors[0].title, 'Southern opener');
 });

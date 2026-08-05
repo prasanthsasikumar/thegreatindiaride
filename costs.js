@@ -1,16 +1,16 @@
 /*
- * costs.js — projects the template's cost from what the ride actually cost.
+ * costs.js: projects the template's cost from what the ride actually cost.
  *
  * There are no invented rates here. Every figure is derived from route.json's
  * already-published aggregates: 93 nights, what was paid for beds, and what was paid
  * for everything else. Those observed per-night rates are applied to the template's
  * shape.
  *
- * The template is a route, not a schedule — it has no nights of its own. Days are
+ * The template is a route, not a schedule, so it has no nights of its own. Days are
  * estimated from riding hours at an hours-per-day figure that comes from
  * template-notes.json and is SHOWN TO THE READER. Do not bury it.
  *
- * Loaded by both index.html and booklet.html, same as atlas.js — kept in the same
+ * Loaded by both index.html and booklet.html, same as atlas.js, and kept in the same
  * ES5-flavoured style and free of any DOM dependency, so it also runs headless
  * under node:vm in tests.
  */

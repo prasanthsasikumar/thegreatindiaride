@@ -1,11 +1,11 @@
 /*
- * build-template.cjs — turns the itinerary sheet into template.json.
+ * build-template.cjs: turns the itinerary sheet into template.json.
  *
  *   node build-template.cjs "/path/to/Pan India Trip  - Itinerary.csv"
  *
  * This sheet is the PLANNED loop, not the ridden one. route.json is what actually
- * happened; this is the template it was drawn from, and the two differ on purpose —
- * the Northeast sections closed and the weather windows don't overlap.
+ * happened; this is the template it was drawn from, and the two differ on purpose,
+ * because the Northeast sections closed and the weather windows don't overlap.
  *
  * Sector boundaries are DERIVED, not hardcoded: the loop passes through Bengaluru and
  * Delhi more than once, and those recurrences are exactly where a rider can join or
@@ -13,7 +13,7 @@
  * single unit (Delhi -> Bengaluru, 51 hops) is subdivided at SUBDIVIDE below.
  *
  * PRIVACY: unlike build-route.cjs this sheet carries no accommodation and no spend.
- * Keep it that way — cost figures on the site come from route.json's already-published
+ * Keep it that way. Cost figures on the site come from route.json's already-published
  * aggregates, never from here.
  */
 

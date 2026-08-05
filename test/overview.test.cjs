@@ -7,7 +7,7 @@ const vm = require('node:vm');
 const PAGE = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8');
 
 // index.html is one page-sized IIFE behind a fetch, so there is nothing to require.
-// Cut the two pieces this task added straight out of the file and run THOSE — a
+// Cut the two pieces this task added straight out of the file and run THOSE. A
 // transcription would only prove the transcription right.
 function cut(from, to) {
   const a = PAGE.indexOf(from);
@@ -26,7 +26,7 @@ const PLANNED_SRC = cut('function syncPlannedLine() {', '\n  }') +
 
 /* ── the scroll handler ─────────────────────────────────────────────────── */
 // The page re-derives the active block from element positions on every scroll. The
-// overview drives the page by calling jump(), which scrolls — so without a guard the
+// overview drives the page by calling jump(), which scrolls, so without a guard the
 // handler would overwrite the block the player had just chosen, mid-transition.
 function runScrollHandler(opts) {
   const calls = { syncMap: 0, syncStrip: 0 };
@@ -76,7 +76,7 @@ test('the overview guard stops the scroll handler overwriting the player', funct
   assert.strictEqual(r.calls.syncMap, 0, 'the map was not re-lit from the scroll');
   assert.strictEqual(r.calls.syncStrip, 0);
   // The guard sits AFTER raf is cleared, so scrolling is not wedged once it ends.
-  assert.strictEqual(r.raf, null, 'the frame token was left set — scrolling would stall');
+  assert.strictEqual(r.raf, null, 'the frame token was left set, so scrolling would stall');
 });
 
 /* ── the player ─────────────────────────────────────────────────────────── */
@@ -209,7 +209,7 @@ test('starting the overview frames the first region and says where you are', fun
   h.clk.flush(0);                          // the caption swap, immediate under reduced motion
   assert.strictEqual(h.el.ovLeg.textContent, 'LEG 01 · OUT OF TRIVANDRUM');
   assert.strictEqual(h.el.ovWhere.textContent, 'Kerala');
-  assert.strictEqual(h.el.ovText.textContent, '12 clips · 2 Jan — the southern launch');
+  assert.strictEqual(h.el.ovText.textContent, '12 clips · 2 Jan · the southern launch');
 
   // One chapter dot per leg, the one being played lit.
   assert.strictEqual(h.el.ovDots.children.length, 2);

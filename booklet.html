@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>The route book — the pan-India loop</title>
+<title>The route book for the pan-India loop</title>
 <meta name="description" content="A printable route book for the pan-India loop: 18,181 km, 97 legs, five sectors. Sector maps, waypoint tables, what it costs, and blank pages to plan on.">
 <meta name="color-scheme" content="dark">
 <link rel="icon" type="image/png" href="favicon.png">
@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-/* booklet.html — the route book.
+/* booklet.html: the route book.
  *
  * Same tokens, same fonts, same atlas as index.html. The one thing that is not
  * shared is the palette under print: the site is #0f0f0f and A4 is not, so the
@@ -140,7 +140,7 @@ button { font: inherit; color: inherit; }
 /* Every top-level block of the book is a page. Print gives each one a fresh
    sheet; on screen they are just sections with a rule between them. Keeping the
    rule on the class rather than on named sections is what lets a later section
-   — the field research appendix — be appended without touching any of this. */
+   (the field research appendix) be appended without touching any of this. */
 .bk__page { border-top: var(--rule); padding-top: var(--space-8); margin-top: var(--space-8); }
 .bk__page:first-child { border-top: 0; padding-top: 0; margin-top: var(--space-6); }
 
@@ -277,7 +277,7 @@ td .bk__todo { margin-top: 0; }
 }
 
 /* The sentence that stops a reader concluding the longer loop is cheaper. It sits
-   against the table it explains, at body weight — not as a footnote under it. */
+   against the table it explains, at body weight, not as a footnote under it. */
 .bk__caveat {
   font-size: 15px; line-height: 1.55; color: var(--color-text); max-width: 66ch;
   border-left: 3px solid var(--color-accent);
@@ -307,7 +307,7 @@ td .bk__todo { margin-top: 0; }
  * with the sector or the cost table they bear on, and the appendix proper,
  * which is ordinary book pages built out of the same tokens as everything else.
  * Nothing here introduces a colour, a font or a radius the book did not already
- * have — the print block below flips it all with the rest.
+ * have, and the print block below flips it all with the rest.
  */
 .bk__archive {
   border: var(--rule); border-radius: var(--radius);
@@ -329,7 +329,7 @@ td .bk__todo { margin-top: 0; }
 .bk__fig { margin: var(--space-6) 0; }
 /* Capped on height as well as width, and never stretched past its own pixels:
    the two portrait plates are 665×1100 and 733×1100, and at width:100% in this
-   column they would be upscaled to roughly 1,390px tall — a soft image and a
+   column they would be upscaled to roughly 1,390px tall: a soft image and a
    figure taller than the screen. Print caps the same way, in millimetres. */
 .bk__fig img {
   display: block; width: auto; max-width: 100%; height: auto; max-height: 620px;
@@ -409,7 +409,7 @@ td .bk__todo { margin-top: 0; }
 
 @media print {
   /* The site is dark. Paper is not. Flip the tokens rather than restyling every
-     rule — everything downstream reads from these. */
+     rule. Everything downstream reads from these. */
   :root {
     --color-bg: #ffffff;
     --color-surface: #ffffff;
@@ -435,8 +435,8 @@ td .bk__todo { margin-top: 0; }
   .noprint, .bk__actions { display: none !important; }
 
   .bk { max-width: none; margin: 0; padding: 0; }
-  /* Nothing here is painted with a background: with "background graphics" off —
-     the default in some browsers — backgrounds simply are not printed, and a
+  /* Nothing here is painted with a background: with "background graphics" off
+     (the default in some browsers) backgrounds simply are not printed, and a
      layout that needed one would come out as text on nothing. Rules, borders,
      strokes and ink are what carry this document. */
   .bk__page {
@@ -457,7 +457,7 @@ td .bk__todo { margin-top: 0; }
   .bk__table caption { font-size: 8.6pt; }
   .bk__table th { font-size: 7pt; }
   .bk__num, .bk__table td.bk__num { font-size: 8pt; }
-  /* The gaps are the most consequential content in the book — they are where a
+  /* The gaps are the most consequential content in the book. They are where a
      rider has to go and do their own homework. They must read as deliberate
      absences, not as fine print, so they print darker and larger than the
      surrounding table rather than fainter. */
@@ -500,7 +500,7 @@ td .bk__todo { margin-top: 0; }
      break: the long east is 51 legs, and a table told to avoid a break is pushed
      whole to the next sheet and overflows it anyway.
      This exemption only works if NOTHING BETWEEN THE TABLE AND THE PAGE says
-     avoid — an ancestor's break-inside: avoid suppresses breaking anywhere inside
+     avoid, because an ancestor's break-inside: avoid suppresses breaking inside
      it, descendants included. So .bk__stage, the div wrapping each hop table, must
      NOT carry avoid; keeping the stage together is done the other way round, by
      asking its heading and column heads not to be left behind by the rows they
@@ -517,7 +517,7 @@ td .bk__todo { margin-top: 0; }
 
   /* ── field research in print ──────────────────────────────────────────
      A photograph cut in half by a page boundary is worse than no photograph,
-     and a credit line stranded on the following sheet is a defect — the figure
+     and a credit line stranded on the following sheet is a defect. The figure
      is therefore one indivisible block, image and credit together, and the
      image is capped in millimetres so it cannot be taller than the space a
      figure has on an A4 sheet. Portrait plates are the binding case: fig-01 and
@@ -578,7 +578,7 @@ td .bk__todo { margin-top: 0; }
   <section class="bk__page bk__cover bk__navtarget" id="bk-cover">
     <p class="bk__eyebrow">ROUTE BOOK</p>
     <h1 class="bk__cover-title">The pan-India loop</h1>
-    <p class="bk__cover-sub" id="bk-cover-sub">—</p>
+    <p class="bk__cover-sub" id="bk-cover-sub"></p>
     <div class="bk__map bk__map--cover"><svg class="atlas" id="bk-map-cover" role="img" aria-label="The loop, drawn across India, Nepal and Bhutan"></svg></div>
     <p class="bk__lede">
       A loop from Trivandrum down to Kanyakumari, up the west coast into Kutch, over
@@ -593,7 +593,7 @@ td .bk__todo { margin-top: 0; }
       the loop; every rupee comes out of what that ride actually cost.
     </p>
     <p class="bk__fine">
-      Where this book has nothing to tell you — riding seasons, permits — it says so in
+      Where this book has nothing to tell you (riding seasons, permits) it says so in
       a dashed box and stops. None of it is guessed. Print it, carry it, and fill the
       blanks in yourself.
     </p>
@@ -623,11 +623,11 @@ td .bk__todo { margin-top: 0; }
     <h2 class="bk__h2">Master map</h2>
     <div class="bk__map bk__map--master"><svg class="atlas" id="bk-map-master" role="img" aria-label="The planned loop across India, Nepal and Bhutan"></svg></div>
     <div class="bk__legend">
-      <span><i>——</i> the loop</span>
+      <span><i>──</i> the loop</span>
       <span><i class="dim">○</i> sector ends and crossings</span>
     </div>
     <p class="bk__fine" style="margin-top:12px">
-      Straight lines between waypoints, not the road itself — the road is longer and
+      Straight lines between waypoints, not the road itself. The road is longer and
       bendier than anything drawn at this scale can show. Distances and hours in the
       tables are road figures, not the lengths of these lines.
     </p>
@@ -673,14 +673,14 @@ td .bk__todo { margin-top: 0; }
     <h2 class="bk__h2">Season calendar</h2>
     <p class="bk__note">
       A loop this long has no single riding season. It crosses several, and they do not
-      agree with each other — which months work for which sector is a question of
+      agree with each other. Which months work for which sector is a question of
       research rather than of arithmetic, and nothing in the plan file answers it. The
       rows below are filled in only where that research has been done and written down.
     </p>
     <table class="bk__table" id="bk-season-table"></table>
     <p class="bk__fine" style="margin-top:16px">
       A dashed box means this book has nothing to tell you about that sector. It does
-      not mean the sector is open, and it is not a shrug — dates and permits are the
+      not mean the sector is open, and it is not a shrug. Dates and permits are the
       part of a route book a rider acts on, so a gap is shown as a gap rather than
       filled with something plausible. Find that information elsewhere, from a source
       that is current, before you commit to dates.
@@ -700,7 +700,7 @@ td .bk__todo { margin-top: 0; }
 
     <h3 class="bk__h3">Sector planner</h3>
     <p class="bk__fine" style="margin-bottom:12px">
-      Riding days are the projection from the costs page — riding time only, no rest
+      Riding days are the projection from the costs page: riding time only, no rest
       days. Add your own.
     </p>
     <table class="bk__table" id="bk-planner"></table>
@@ -822,7 +822,7 @@ td .bk__todo { margin-top: 0; }
 
   // The two-line map key. On screen the difference between the dashed grey loop and
   // the solid sector is obvious enough; on paper, with no colour to lean on, the
-  // reader needs telling — and the SVG's aria-label does not print.
+  // reader needs telling, and the SVG's aria-label does not print.
   function legend(items) {
     var wrap = elem('div', 'bk__legend');
     items.forEach(function (it) {
@@ -930,7 +930,7 @@ td .bk__todo { margin-top: 0; }
     var d = notes && notes.plannedVsRidden;
     el.diff.replaceChildren(written(d)
       ? elem('p', 'bk__note', d)
-      : todo('Not written yet — which sections closed, and what was ridden instead.'));
+      : todo('Not written yet: which sections closed, and what was ridden instead.'));
   }
 
   function renderSectorTable() {
@@ -949,7 +949,7 @@ td .bk__todo { margin-top: 0; }
       tr.appendChild(elem('td', 'bk__num', String(s.hopTo - s.hopFrom + 1)));
       tr.appendChild(elem('td', 'bk__num', num(s.km)));
       tr.appendChild(elem('td', 'bk__num', num(s.hours)));
-      tr.appendChild(elem('td', 'bk__num', costs ? String(daysFor(s.id)) : '—'));
+      tr.appendChild(elem('td', 'bk__num', costs ? String(daysFor(s.id)) : 'n/a'));
       tb.appendChild(tr);
     });
     var tot = document.createElement('tr');
@@ -960,7 +960,7 @@ td .bk__todo { margin-top: 0; }
     tot.appendChild(elem('td', 'bk__num', String(tpl.totals.hops)));
     tot.appendChild(elem('td', 'bk__num', num(tpl.totals.km)));
     tot.appendChild(elem('td', 'bk__num', num(tpl.totals.hours)));
-    tot.appendChild(elem('td', 'bk__num', costs ? String(costs.days) : '—'));
+    tot.appendChild(elem('td', 'bk__num', costs ? String(costs.days) : 'n/a'));
     tb.appendChild(tot);
     t.appendChild(tb);
   }
@@ -1006,7 +1006,7 @@ td .bk__todo { margin-top: 0; }
     mapBox.appendChild(svg);
     mapCol.appendChild(mapBox);
     mapCol.appendChild(legend([
-      { mark: '——', label: 'sector ' + s.id + ', ' + s.from + ' → ' + s.to },
+      { mark: '──', label: 'sector ' + s.id + ', ' + s.from + ' → ' + s.to },
       { mark: '– – –', label: 'the rest of the loop', dim: true }
     ]));
     mapCol.appendChild(seasonBlock(s));
@@ -1020,15 +1020,15 @@ td .bk__todo { margin-top: 0; }
 
     sec.appendChild(spread);
 
-    // Anything in the field research that bears on this sector specifically — for
-    // S3, the permit layer, which is the one thing on this loop that has to be
-    // arranged before you leave.
+    // Anything in the field research that bears on this sector specifically. For
+    // S3 that is the permit layer, which is the one thing on this loop that has to
+    // be arranged before you leave.
     researchFor('sector:' + s.id).forEach(function (item) {
       sec.appendChild(archiveBlock(item));
     });
 
     // Atlas draws from the basemap and the viewBox, never from layout, so the SVG
-    // does not have to be in the document yet — and drawing now rather than on a
+    // does not have to be in the document yet, and drawing now rather than on a
     // timeout means a ⌘P a moment after load cannot catch an empty map.
     if (basemap) sectorMap(svg, s);
     return sec;
@@ -1041,17 +1041,17 @@ td .bk__todo { margin-top: 0; }
     if (written(note.season)) {
       box.appendChild(elem('p', 'bk__note', note.season));
     } else {
-      box.appendChild(todo('Not written yet — season window for this sector.'));
+      box.appendChild(todo('Not written yet: season window for this sector.'));
     }
     // The permits note stands on its own. It used to be printed only as a tail on a
-    // written season, which meant a researched permit — the one genuinely
-    // non-improvisable thing on this loop — stayed invisible on the sector page for
+    // written season, which meant a researched permit (the one genuinely
+    // non-improvisable thing on this loop) stayed invisible on the sector page for
     // want of a season nobody has written yet. The gap for a missing permit note is
     // still shown on the season calendar, for every sector, either way.
     if (written(note.permits)) {
       box.appendChild(elem('p', 'bk__note', note.permits));
     } else if (written(note.season)) {
-      box.appendChild(todo('Not written yet — permits for this sector.'));
+      box.appendChild(todo('Not written yet: permits for this sector.'));
     }
     if (written(note.note)) box.appendChild(elem('p', 'bk__fine', note.note));
     return box;
@@ -1081,7 +1081,7 @@ td .bk__todo { margin-top: 0; }
 
       var to = elem('td', null, hop.to);
       var poi = poiFor(hop.to);
-      if (poi) to.appendChild(elem('span', 'bk__poi', ' — ' + poi));
+      if (poi) to.appendChild(elem('span', 'bk__poi', ' · ' + poi));
       tr.appendChild(to);
 
       tr.appendChild(elem('td', 'bk__num', num(hop.km)));
@@ -1111,8 +1111,8 @@ td .bk__todo { margin-top: 0; }
    *
    * Two: it does not answer the season question, and nothing here pretends it
    * does. The archive's finding is that Indian riders' timing is set by leave
-   * rather than by weather — a fact about riders, not a calendar — so the season
-   * rows stay empty and keep printing as gaps.
+   * rather than by weather. That is a fact about riders, not a calendar, so the
+   * season rows stay empty and keep printing as gaps.
    */
 
   function researchFor(target) {
@@ -1132,7 +1132,7 @@ td .bk__todo { margin-top: 0; }
 
   // Every one of these photographs is another rider's work, reproduced with the
   // watermark intact. The credit is emitted with the image or the image is not
-  // emitted at all — an uncredited plate is a defect, not a layout choice, so it
+  // emitted at all. An uncredited plate is a defect, not a layout choice, so it
   // is not left to the caller to remember.
   function figureBlock(file) {
     var found = null;
@@ -1148,7 +1148,7 @@ td .bk__todo { margin-top: 0; }
     fig.appendChild(img);
 
     // Caption as an explicit text node rather than via textContent, so appending the
-    // credit after it cannot displace it — and only when there is one, or a record
+    // credit after it cannot displace it, and only when there is one, or a record
     // without a caption would print the string "undefined" under the photograph.
     var cap = elem('figcaption');
     if (found.caption) cap.appendChild(document.createTextNode(found.caption));
@@ -1212,7 +1212,7 @@ td .bk__todo { margin-top: 0; }
       if (c) parent.appendChild(elem('p', 'bk__caveat', c));
     } else if (b.type === 'note') {
       var n = elem('p', 'bk__caveat');
-      if (b.label) n.appendChild(elem('strong', null, b.label + ' — '));
+      if (b.label) n.appendChild(elem('strong', null, b.label + ': '));
       n.appendChild(document.createTextNode(b.text));
       parent.appendChild(n);
     } else if (b.type === 'closing') {
@@ -1425,7 +1425,7 @@ td .bk__todo { margin-top: 0; }
     sec.appendChild(elem('p', 'bk__fine',
       'What this research does not contain is a riding calendar. Its finding on ' +
       'timing is that Indian long rides are shaped by the working year rather than ' +
-      'by the weather, which is a fact about riders and not a season window — so the ' +
+      'by the weather, which is a fact about riders and not a season window. So the ' +
       'season rows earlier in this book are still blank, and none of them was filled ' +
       'in from anything here.'));
 
@@ -1505,7 +1505,7 @@ td .bk__todo { margin-top: 0; }
   }
 
   // Inline, on the cost page: the archive's own benchmark, next to this ride's
-  // observed rates. Different riders, different years, different currency — which
+  // observed rates. Different riders, different years, different currency, which
   // is why the year is printed on the heading, on the captions and in the caveat,
   // and why the two are never added together.
   function renderCostsArchive() {
@@ -1546,7 +1546,7 @@ td .bk__todo { margin-top: 0; }
     var pr = b.preparation;
     var t2 = elem('table', 'bk__table');
     t2.appendChild(elem('caption', null,
-      'Preparation, excluded from that total — about ' + rupee(pr.total) +
+      'Preparation, excluded from that total: about ' + rupee(pr.total) +
       ' of parts before the ride, ' + pr.year + '. ' + pr.note));
     head(t2, [{ label: 'What' }, { label: pr.year + ' rupees', num: true }]);
     var tb2 = document.createElement('tbody');
@@ -1571,8 +1571,8 @@ td .bk__todo { margin-top: 0; }
 
     box.appendChild(elem('p', 'bk__caveat',
       'These are ' + b.year + ' rupees and other people’s rides. They are printed here ' +
-      'as a check on the shape of a budget — how much of it is fuel, how much is a bed, ' +
-      'how little is paperwork — not as prices to plan against, and they are not ' +
+      'as a check on the shape of a budget (how much of it is fuel, how much is a bed, ' +
+      'how little is paperwork), not as prices to plan against, and they are not ' +
       'comparable with the rates above without adjusting for the years between them.'));
 
     el.costsArchive.replaceChildren(box);
@@ -1581,14 +1581,14 @@ td .bk__todo { margin-top: 0; }
   /* ─── costs ───────────────────────────────────────────────────────────── */
 
   // Every figure comes from Costs.project(), which derives per-night rates from
-  // route.json's published totals — this ride, not the template, which has no
+  // route.json's published totals: this ride, not the template, which has no
   // nights of its own. The hours-per-day assumption behind the day counts is
   // printed in the caption, not used silently.
   function renderCosts() {
     var table = elem('table', 'bk__table');
     var cap = elem('caption', null,
-      'What one rider paid, early 2025 — ' + rupee(costs.observed.total) + ' across ' +
-      costs.nights + ' nights — applied to the template’s shape.');
+      'What one rider paid, early 2025: ' + rupee(costs.observed.total) + ' across ' +
+      costs.nights + ' nights, applied to the template’s shape.');
     table.appendChild(cap);
 
     head(table, [{ label: 'What' }, { label: 'Rupees', num: true }]);
@@ -1617,8 +1617,8 @@ td .bk__todo { margin-top: 0; }
     el.costsTable.replaceChildren(table);
 
     // The loop is longer than the ride and comes out cheaper. That has to be said in
-    // the same weight of type as the numbers themselves, right against the table —
-    // as a footnote it would be read last or not at all, and the book would leave a
+    // the same weight of type as the numbers themselves, right against the table.
+    // As a footnote it would be read last or not at all, and the book would leave a
     // reader believing the longer loop is the cheaper one.
     el.costsCaveat.replaceChildren(
       elem('strong', null, 'Those last two totals are not comparable. '),
@@ -1626,7 +1626,7 @@ td .bk__todo { margin-top: 0; }
         'The ' + costs.days + '-day, ' + rupee(costs.total) + ' projection is riding ' +
         'time only: days are estimated at ' + costs.hoursPerDay + ' hours a day with no ' +
         'rest days built in. That is why the longer loop comes out below the ' +
-        rupee(costs.observed.total) + ' actually spent over ' + costs.nights + ' nights — ' +
+        rupee(costs.observed.total) + ' actually spent over ' + costs.nights + ' nights: ' +
         'that ride included rest, weather and sightseeing days, and this figure has ' +
         'none. Treat it as a floor, not a forecast. These are rates that were paid, not ' +
         'a quote, and they carry no bike, no shipping, no flights and no repairs.'));
@@ -1742,7 +1742,7 @@ td .bk__todo { margin-top: 0; }
   }
 
   // Headings and ruled space, nothing more. What belongs under each of these is a
-  // function of the bike, the season and the border you are crossing — none of which
+  // function of the bike, the season and the border you are crossing, none of which
   // this book knows, and all of which it would be guessing at if it listed them.
   var CHECKLIST = [
     'Documents to carry', 'Spares', 'Tools', 'Tyre repair & inflation',
@@ -1808,7 +1808,7 @@ td .bk__todo { margin-top: 0; }
 
     if (!written(notes && notes.sourcing)) {
       el.provenance.parentNode.insertBefore(
-        todo('Not written yet — how this loop was distilled, and from what.'),
+        todo('Not written yet: how this loop was distilled, and from what.'),
         el.provenance.nextSibling);
     }
   }

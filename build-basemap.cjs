@@ -1,5 +1,5 @@
 /*
- * build-basemap.cjs — turns Natural Earth country boundaries into basemap.json.
+ * build-basemap.cjs: turns Natural Earth country boundaries into basemap.json.
  *
  *   node build-basemap.cjs ne_10m_admin_0_countries_ind.geojson
  *
@@ -8,15 +8,15 @@
  *
  * USE THE `_ind` POINT-OF-VIEW FILE. Natural Earth's default country set draws
  * India along the Line of Control, which clips Aksai Chin and Pakistan-administered
- * Kashmir — India stops at lat 35.5 instead of 37.05, and the northern tip of the
+ * Kashmir. India stops at lat 35.5 instead of 37.05, and the northern tip of the
  * map is visibly cut away. Natural Earth publishes per-country POV variants for
  * exactly this; `_ind` is India's own depiction, which is the correct outline for
  * a map of an Indian ride. It only exists at 10m, hence the larger input file;
  * simplification below brings the output back down.
  *
  * The journey map needs real coastlines, not a scatter of stops. Rather than pull in a
- * tile provider — an external request on every page view, for a map that never pans or
- * zooms — this bakes the outlines the route actually crosses into a small JSON file
+ * tile provider (an external request on every page view, for a map that never pans or
+ * zooms), this bakes the outlines the route actually crosses into a small JSON file
  * the page projects itself. Self-contained, no network, no attribution overlay.
  *
  * Rings are clipped to the route's neighbourhood and simplified with Douglas–Peucker,
@@ -41,10 +41,10 @@ const COUNTRIES = {
 };
 
 const BBOX = { minLon: 66, maxLon: 98, minLat: 5, maxLat: 37 };
-const TOLERANCE = 0.015;  // degrees ~1.6km — fine enough at render size
+const TOLERANCE = 0.015;  // degrees ~1.6km, fine enough at render size
 const PRECISION = 3;      // decimals kept, ~110m
 const MIN_RING = 6;       // points, after simplifying
-const MIN_SPAN = 0.6;     // degrees — drops specks and small islands
+const MIN_SPAN = 0.6;     // degrees; drops specks and small islands
 
 if (!SRC || !fs.existsSync(SRC)) {
   console.error('Usage: node build-basemap.cjs <ne_50m_admin_0_countries.geojson>');

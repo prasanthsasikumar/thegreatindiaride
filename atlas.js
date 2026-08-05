@@ -1,5 +1,5 @@
 /*
- * atlas.js — the shared map renderer.
+ * atlas.js: the shared map renderer.
  *
  * Lifted out of index.html so booklet.html can draw the same map. It knows about
  * geography and nothing else: no legs, no clips, no costs, no narration. Everything
@@ -14,7 +14,7 @@
   var NS = 'http://www.w3.org/2000/svg';
 
   // Markers cluster at this many viewBox pixels. India is 420px wide here, so a pixel
-  // is roughly 8km — the four Varanasi hotels, both Guwahati ones and Mussoorie/
+  // is roughly 8km, so the four Varanasi hotels, both Guwahati ones and Mussoorie/
   // Dehradun all land on the same dot. Stacking them would leave every stop but the
   // topmost unreachable, so co-located stops merge and the caller's card lists what is
   // underneath.
@@ -122,7 +122,7 @@
         c.dot = dot;
 
         // The visible dot is under 3px; a finger is not. This circle exists for the
-        // hover tooltip — the click itself is resolved by distance, below.
+        // hover tooltip only; the click itself is resolved by distance, below.
         var hit = document.createElementNS(NS, 'circle');
         hit.setAttribute('class', 'hit');
         hit.setAttribute('cx', c.x); hit.setAttribute('cy', c.y); hit.setAttribute('r', 8);
@@ -138,7 +138,7 @@
       // Resolve a click to the *nearest* stop rather than to whatever circle caught the
       // event. Through Himachal and the Northeast the stops sit closer together than a
       // finger-sized target, so the hit circles overlap and the last one drawn swallows
-      // its neighbours — several stops were simply unclickable. Nearest-point gives
+      // its neighbours, so several stops were simply unclickable. Nearest-point gives
       // every stop its own catchment, and a click on open sea closes the card.
       if (o.onSelect) svg.addEventListener('click', function (e) {
         var box = svg.getBoundingClientRect();
@@ -161,7 +161,7 @@
     api.clusters = function () { return clusters; };
 
     // The map already draws in Mercator, and Web Mercator is the same projection up to
-    // a linear transform — so tiles land exactly on the drawn coastline, no
+    // a linear transform, so tiles land exactly on the drawn coastline with no
     // reprojection:
     //   x = worldPx · nx + Bx     where nx = (mx + π) / 2π
     //   y = worldPx · ny + By     where ny = (π − my) / 2π
@@ -254,7 +254,7 @@
   global.Atlas = {
     create: create,
     CLUSTER_PX: CLUSTER_PX,
-    // Exposed for tests only — pure maths, no DOM.
+    // Exposed for tests only: pure maths, no DOM.
     _merc: merc,
     _cluster: cluster
   };

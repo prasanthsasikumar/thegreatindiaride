@@ -17,7 +17,7 @@
 
 # ORDER MATTERS. When several [[headers]] blocks match the same request, Netlify
 # applies them in file order and the LAST one wins for any header they both set.
-# The catch-all therefore has to come FIRST — when it sat at the bottom it silently
+# The catch-all therefore has to come FIRST. When it sat at the bottom it silently
 # overrode every rule below, so /media/* was being served at max-age=3600 instead of
 # the intended immutable year, and manifest.json at 3600 instead of 300.
 

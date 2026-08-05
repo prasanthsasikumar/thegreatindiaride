@@ -1,8 +1,8 @@
 {
-  "_comment": "Transcription, not authorship. This is the site author's own desk research — 'All-India Motorcycle Rides — A Field Report from the xBhp Archive', compiled 5 August 2026 — restructured so booklet.html can render it. Nothing here was inferred, rounded or smoothed: the report's own caveats are carried as first-class fields and are rendered on the page, not just stored here. Note what this file does NOT contain: riding-season windows. The report's finding is that timing is set by leave rather than weather, which is a fact about riders and not a calendar, so the season fields in template-notes.json stay unwritten and keep printing as gaps.",
+  "_comment": "Transcription, not authorship. This is the site author's own desk research, 'All-India Motorcycle Rides: A Field Report from the xBhp Archive', compiled 5 August 2026 and restructured so booklet.html can render it. Nothing here was inferred, rounded or smoothed: the report's own caveats are carried as first-class fields and are rendered on the page, not just stored here. Note what this file does NOT contain: riding-season windows. The report's finding is that timing is set by leave rather than weather, which is a fact about riders and not a calendar, so the season fields in template-notes.json stay unwritten and keep printing as gaps.",
 
-  "title": "All-India Motorcycle Rides — A Field Report from the xBhp Archive",
-  "standfirst": "What twenty years of travelogues on xBhp — India's oldest motorcycling forum — actually record about pan-India rides: the canonical routes, what they cost, how long they take, and why far fewer people finish one than talk about it.",
+  "title": "All-India Motorcycle Rides: A Field Report from the xBhp Archive",
+  "standfirst": "What twenty years of travelogues on xBhp (India's oldest motorcycling forum) actually record about pan-India rides: the canonical routes, what they cost, how long they take, and why far fewer people finish one than talk about it.",
   "compiled": "2026-08-05",
   "compiledLabel": "5 August 2026",
 
@@ -17,12 +17,12 @@
 
   "caveats": {
     "counts": "Method, and its limits. These counts come from keyword matching on URL slugs, which are derived from thread titles. A ride to Ladakh whose title is a pun won't be counted; a title naming two regions counts in both. Treat the figures as a reliable picture of proportion, not an exact census. Everything in Parts II–IV, by contrast, was read directly from the threads and is cited to them.",
-    "records": "Two caveats belong with that table. First, several of these are certified by private record registries rather than Guinness, and the categories are narrow enough to be gameable — “fastest by duo riders planting seed balls” is a real listed record. Second, the older entries reference 29 states; India has had 28 states and 8 union territories since 2019, so like-for-like comparison across years is not possible."
+    "records": "Two caveats belong with that table. First, several of these are certified by private record registries rather than Guinness, and the categories are narrow enough to be gameable: “fastest by duo riders planting seed balls” is a real listed record. Second, the older entries reference 29 states; India has had 28 states and 8 union territories since 2019, so like-for-like comparison across years is not possible."
   },
 
   "closingNote": {
     "heading": "A closing note on the source itself",
-    "body": "The forum is now a partially decaying archive. Photobucket and Picasa links in the older threads are dead; the 2009 sticky Destination Unknown, once the board's flagship open-ended ride log, now ends in link spam. Threads that survive intact are generally those whose authors self-hosted their images — the 2021 K2K report reads perfectly today because its photographs sit on the rider's own WordPress. If there is a lesson in the archive for anyone building a ride-media site, that is probably it."
+    "body": "The forum is now a partially decaying archive. Photobucket and Picasa links in the older threads are dead; the 2009 sticky Destination Unknown, once the board's flagship open-ended ride log, now ends in link spam. Threads that survive intact are generally those whose authors self-hosted their images: the 2021 K2K report reads perfectly today because its photographs sit on the rider's own WordPress. If there is a lesson in the archive for anyone building a ride-media site, that is probably it."
   },
 
   "practical": [
@@ -30,29 +30,29 @@
       "id": "permits",
       "target": "sector:S3",
       "heading": "The permit layer, from the archive",
-      "body": "The North East loop is the only one of the archive's four canonical routes with a genuine bureaucratic layer, and the one thing on a ride this size that cannot be improvised on the day. It is also, in money, almost nothing: on the single fully itemised ride in the archive — two riders, 26 days, 10,000 km through Assam, Meghalaya, Manipur, Arunachal Pradesh and Nagaland in 2018 — permits came to ₹200 of a ₹1,04,695 total. A rounding error, and the one line you have to get right in advance.",
-      "source": "xBhp archive, field report of 5 August 2026 — nb21, North East 2018 [8]"
+      "body": "The North East loop is the only one of the archive's four canonical routes with a genuine bureaucratic layer, and the one thing on a ride this size that cannot be improvised on the day. It is also, in money, almost nothing: on the single fully itemised ride in the archive (two riders, 26 days, 10,000 km through Assam, Meghalaya, Manipur, Arunachal Pradesh and Nagaland in 2018) permits came to ₹200 of a ₹1,04,695 total. A rounding error, and the one line you have to get right in advance.",
+      "source": "xBhp archive, field report of 5 August 2026: nb21, North East 2018 [8]"
     },
     {
       "id": "paperwork",
       "target": "planning",
       "heading": "Plan the paperwork, not the route",
-      "body": "Navigation is largely a solved problem — the reports are full of riders booking that night's hotel from a roadside bench. What cannot be improvised is the permit layer for the North East (ILP for Arunachal, Nagaland, Mizoram, Manipur), the mid-ride service slot, and, for the endurance category, the receipt discipline. One rider lost a fuel receipt at a station without computerised billing and had to ride on to the next one to keep his documentation intact.",
-      "source": "xBhp archive, field report of 5 August 2026 — Part V"
+      "body": "Navigation is largely a solved problem: the reports are full of riders booking that night's hotel from a roadside bench. What cannot be improvised is the permit layer for the North East (ILP for Arunachal, Nagaland, Mizoram, Manipur), the mid-ride service slot, and, for the endurance category, the receipt discipline. One rider lost a fuel receipt at a station without computerised billing and had to ride on to the next one to keep his documentation intact.",
+      "source": "xBhp archive, field report of 5 August 2026, Part V"
     },
     {
       "id": "consumables",
       "target": "planning",
       "heading": "The bike matters far less than expected",
-      "body": "The pan-India rides in this archive were completed on a Bajaj Avenger 220, a Bajaj Dominar 400, a Honda CBR 250R, a Kawasaki Versys 650, and — for the 18,612 km, 64-day, three-country expedition of 2010 — a 2004 Honda Unicorn and a 2003 Hero Honda Splendor. A 100cc commuter and a 650cc adventure tourer have both gone round the country. What recurs in the failure reports is not insufficient displacement but consumables and electrics: tyres, chain and sprockets, batteries, brake pads.",
-      "source": "xBhp archive, field report of 5 August 2026 — Part V"
+      "body": "The pan-India rides in this archive were completed on a Bajaj Avenger 220, a Bajaj Dominar 400, a Honda CBR 250R, a Kawasaki Versys 650, and, for the 18,612 km, 64-day, three-country expedition of 2010, a 2004 Honda Unicorn and a 2003 Hero Honda Splendor. A 100cc commuter and a 650cc adventure tourer have both gone round the country. What recurs in the failure reports is not insufficient displacement but consumables and electrics: tyres, chain and sprockets, batteries, brake pads.",
+      "source": "xBhp archive, field report of 5 August 2026, Part V"
     },
     {
       "id": "proportions",
       "target": "costs",
       "heading": "Budget in the right proportions",
-      "body": "From the one fully itemised ride: fuel and accommodation are about two-thirds of on-road cost, food a fifth, permits negligible. Preparation is a separate and substantial line — roughly ₹50,000 of parts before a 26-day ride. The 2012 SaddleSore, by contrast, cost ₹5,300 all-in.",
-      "source": "xBhp archive, field report of 5 August 2026 — Part V. The full field note, with the per-day rule it ends on, is in the appendix."
+      "body": "From the one fully itemised ride: fuel and accommodation are about two-thirds of on-road cost, food a fifth, permits negligible. Preparation is a separate and substantial line: roughly ₹50,000 of parts before a 26-day ride. The 2012 SaddleSore, by contrast, cost ₹5,300 all-in.",
+      "source": "xBhp archive, field report of 5 August 2026, Part V. The full field note, with the per-day rule it ends on, is in the appendix."
     }
   ],
 
@@ -65,7 +65,7 @@
       "basis": "two-up, staying in budget hotels"
     },
     "itemised": {
-      "ride": "North East, 2018 — “nb21” and Atul, Bangalore and back, two-up on a Kawasaki Versys 650",
+      "ride": "North East, 2018: “nb21” and Atul, Bangalore and back, two-up on a Kawasaki Versys 650",
       "total": 104695,
       "people": 2,
       "days": 26,
@@ -102,7 +102,7 @@
       "part": "I",
       "heading": "The archive, and what it is actually made of",
       "blocks": [
-        { "type": "p", "text": "xBhp was built in 2002 by Sundeep Gajjar as a single web page dedicated to his Bajaj Pulsar 180. It had registered its thousandth member by 2003, and grew into what is now India's largest motorcycling platform — a forum, a print magazine, and a series of sponsored expeditions. Its travelogue board, “The Tourer,” is the closest thing Indian motorcycling has to a public memory." },
+        { "type": "p", "text": "xBhp was built in 2002 by Sundeep Gajjar as a single web page dedicated to his Bajaj Pulsar 180. It had registered its thousandth member by 2003, and grew into what is now India's largest motorcycling platform: a forum, a print magazine, and a series of sponsored expeditions. Its travelogue board, “The Tourer,” is the closest thing Indian motorcycling has to a public memory." },
         { "type": "p", "text": "For this report I crawled that board in full: 337 index pages yielding 3,317 unique travelogue threads, plus 60 pages of the attached route-planning sub-forum. Then I read the significant pan-India ride reports end to end. The point of the crawl was to answer a question the individual threads can't: within all this riding, how much of it is actually all-India?" },
         { "type": "p", "text": "The answer is: strikingly little. Sorting thread titles by destination keyword gives a clear hierarchy, and it is not the one the phrase “all India ride” suggests." },
         {
@@ -122,8 +122,8 @@
             ["Golden Quadrilateral", "7"]
           ]
         },
-        { "type": "p", "text": "Ladakh outnumbers the Golden Quadrilateral roughly 29 to 1. The Indian riding imagination is overwhelmingly vertical and Himalayan — a pilgrimage to Khardung La — rather than national. The pan-India ride is the rarer, less glamorous, and considerably harder thing: it is mostly hot plains, industrial towns and highway monotony, punctuated by the scenery everyone else flies or trains to." },
-        { "type": "p", "text": "Two more numbers from the corpus. Of the 3,317 titles, 250 contain the word “solo” — long-distance riding here is not predominantly a club activity. And 240 titles quote a distance figure; the median is 1,500 km, which is a long weekend, while the maximum is 18,612 km, a 64-day, three-country expedition from 2010." },
+        { "type": "p", "text": "Ladakh outnumbers the Golden Quadrilateral roughly 29 to 1. The Indian riding imagination is overwhelmingly vertical and Himalayan, a pilgrimage to Khardung La, rather than national. The pan-India ride is the rarer, less glamorous, and considerably harder thing: it is mostly hot plains, industrial towns and highway monotony, punctuated by the scenery everyone else flies or trains to." },
+        { "type": "p", "text": "Two more numbers from the corpus. Of the 3,317 titles, 250 contain the word “solo”: long-distance riding here is not predominantly a club activity. And 240 titles quote a distance figure; the median is 1,500 km, which is a long weekend, while the maximum is 18,612 km, a 64-day, three-country expedition from 2010." },
         { "type": "caveat", "ref": "counts" }
       ]
     },
@@ -132,17 +132,17 @@
       "heading": "The four canonical routes",
       "blocks": [
         { "type": "p", "text": "“All India” is not one route. In the forum's usage it resolves into four recognised shapes, each with its own distance, season and difficulty. Nearly every large ride in the archive is one of these, a combination of two, or a deliberate departure from all of them." },
-        { "type": "h3", "text": "1 · K2K — Kanyakumari to Kashmir", "meta": "≈ 3,700 km one way" },
-        { "type": "p", "text": "The length of the country, bottom to top. It follows NH-44, India's longest national highway, which runs from Srinagar to Kanyakumari through eleven states — 3,745 km by the common figure, though sources vary and some quote 4,112 km. Because almost nobody lives at either end, the real ride is longer: riders add the run to the start line and the run home, so a “K2K” routinely totals 6,000–11,000 km." },
+        { "type": "h3", "text": "1 · K2K: Kanyakumari to Kashmir", "meta": "≈ 3,700 km one way" },
+        { "type": "p", "text": "The length of the country, bottom to top. It follows NH-44, India's longest national highway, which runs from Srinagar to Kanyakumari through eleven states: 3,745 km by the common figure, though sources vary and some quote 4,112 km. Because almost nobody lives at either end, the real ride is longer: riders add the run to the start line and the run home, so a “K2K” routinely totals 6,000–11,000 km." },
         { "type": "p", "text": "K2K is the prestige route. It is also the one most often attempted against the clock, which has produced a parallel record-chasing culture covered in Part IV." },
         { "type": "figure", "file": "media/research/fig-01.jpg" },
         { "type": "h3", "text": "2 · The Golden Quadrilateral", "meta": "5,846 km" },
-        { "type": "p", "text": "The highway ring connecting Delhi, Kolkata, Chennai and Mumbai: 5,846 km total, made of four legs — Delhi–Kolkata 1,453 km, Kolkata–Chennai 1,684 km, Chennai–Mumbai 1,290 km, and Delhi–Mumbai. Planned in 1999, begun in 2001, completed in 2012. It is the closest thing to a purpose-built circuit of the country, touching sixteen states and all five metros." },
-        { "type": "p", "text": "Its appeal is legibility: the route needs almost no navigation, fuel and food are continuous, and it can be ridden in three weeks of annual leave. Its drawback is that it is a highway ride — one rider in the archive describes the Andhra stretch flatly as “a damn boring one.” Only seven threads name it, making it by far the least-documented major route relative to how often it is recommended." },
+        { "type": "p", "text": "The highway ring connecting Delhi, Kolkata, Chennai and Mumbai: 5,846 km total, made of four legs (Delhi–Kolkata 1,453 km, Kolkata–Chennai 1,684 km, Chennai–Mumbai 1,290 km, and Delhi–Mumbai). Planned in 1999, begun in 2001, completed in 2012. It is the closest thing to a purpose-built circuit of the country, touching sixteen states and all five metros." },
+        { "type": "p", "text": "Its appeal is legibility: the route needs almost no navigation, fuel and food are continuous, and it can be ridden in three weeks of annual leave. Its drawback is that it is a highway ride. One rider in the archive describes the Andhra stretch flatly as “a damn boring one.” Only seven threads name it, making it by far the least-documented major route relative to how often it is recommended." },
         { "type": "h3", "text": "3 · The coastline", "meta": "7,000–8,500 km" },
-        { "type": "p", "text": "Around the peninsula on state highways and village roads rather than national highways — Bengal down the east coast, round Kanyakumari, up through Kerala, Karnataka, Goa, Maharashtra to Gujarat. It is the least standardised of the four and the one riders consistently describe as the most surprising, because it leaves the highway network almost entirely. It is also slower per kilometre and harder to plan." },
+        { "type": "p", "text": "Around the peninsula on state highways and village roads rather than national highways: Bengal down the east coast, round Kanyakumari, up through Kerala, Karnataka, Goa, Maharashtra to Gujarat. It is the least standardised of the four and the one riders consistently describe as the most surprising, because it leaves the highway network almost entirely. It is also slower per kilometre and harder to plan." },
         { "type": "h3", "text": "4 · The North East loop", "meta": "6,000–10,000 km from South India" },
-        { "type": "p", "text": "Assam, Meghalaya, Arunachal Pradesh, Nagaland, Manipur, with Sikkim and Tripura sometimes added. This is the only canonical route with a genuine bureaucratic layer: Arunachal Pradesh, Nagaland, Mizoram and Manipur all require an Inner Line Permit for Indian citizens — around ₹100–200, typically valid 15 days and now available online. Foreign nationals need a Protected Area Permit instead, and that regime was tightened again for Nagaland, Manipur and Mizoram in a December 2024 notification." },
+        { "type": "p", "text": "Assam, Meghalaya, Arunachal Pradesh, Nagaland, Manipur, with Sikkim and Tripura sometimes added. This is the only canonical route with a genuine bureaucratic layer: Arunachal Pradesh, Nagaland, Mizoram and Manipur all require an Inner Line Permit for Indian citizens, at around ₹100–200, typically valid 15 days and now available online. Foreign nationals need a Protected Area Permit instead, and that regime was tightened again for Nagaland, Manipur and Mizoram in a December 2024 notification." },
         { "type": "quote", "text": "Safely hidden under the bosom of Mother Nature, lies the unexplored and untouched land of NE India… one can find very less information and detailed description on the internet.", "cite": "nb21, opening a 26-day, 10,000 km North East ride report, 2018" },
         { "type": "figure", "file": "media/research/fig-02.jpg" },
         { "type": "figure", "file": "media/research/fig-03.jpg" },
@@ -153,12 +153,12 @@
       "part": "III",
       "heading": "Three rides, in full detail",
       "blocks": [
-        { "type": "p", "text": "Aggregate numbers say what people ride. Only the individual reports say what it takes. These three were chosen because each is documented well enough to be checked — day distances, costs, failures and all." },
+        { "type": "p", "text": "Aggregate numbers say what people ride. Only the individual reports say what it takes. These three were chosen because each is documented well enough to be checked: day distances, costs, failures and all." },
         { "type": "h3", "text": "K2K Solo", "meta": "9,000 km · October 2021 · rider “dichkaun”" },
-        { "type": "p", "text": "The most complete pan-India ride report in the recent archive. The rider — posting as dichkaun, watermarking photographs as Lokesh Shah — set out from Bangalore on 1 October 2021 to ride to the bottom of India and then to the top, and turned the whole thing into a captioned, day-by-day photo essay across two forum pages." },
-        { "type": "p", "text": "He opens by admitting he had previously mocked the idea: “or dis a rider for attempting a Kanyakumari to Kashmir bike ride.” The first three days are brutal and purely functional — 707 km to reach Kanyakumari, 714 km back up to his own house in Bangalore, then 780 km to Nizamabad. That is 2,200 km in three days before the ride has properly begun, and it costs him a night: “My arms ached like anything and I could not sleep for a long time.” Day 3 he cuts to 518 km deliberately." },
+        { "type": "p", "text": "The most complete pan-India ride report in the recent archive. The rider (posting as dichkaun, watermarking photographs as Lokesh Shah) set out from Bangalore on 1 October 2021 to ride to the bottom of India and then to the top, and turned the whole thing into a captioned, day-by-day photo essay across two forum pages." },
+        { "type": "p", "text": "He opens by admitting he had previously mocked the idea: “or dis a rider for attempting a Kanyakumari to Kashmir bike ride.” The first three days are brutal and purely functional: 707 km to reach Kanyakumari, 714 km back up to his own house in Bangalore, then 780 km to Nizamabad. That is 2,200 km in three days before the ride has properly begun, and it costs him a night: “My arms ached like anything and I could not sleep for a long time.” Day 3 he cuts to 518 km deliberately." },
         { "type": "figure", "file": "media/research/fig-04.jpg" },
-        { "type": "p", "text": "What makes the report valuable is that it is honest about the texture of a national ride, which is mostly not scenery. He sleeps on a grassy knoll beside a service road near Dindigul and on a bus-stop bench near Anantapur. He notes that new Indian highways have lost the tree canopies of the old undivided ones. He is stopped by a truck of overturned oranges near Kamareddy, and by police enforcing COVID crowd rules at Kanyakumari beach. Two road workers, seeing a loaded bike, ask him what his YouTube channel is; told he doesn't have one, they reply — toa gari kyu chala rahe ho?, then why are you riding?" },
+        { "type": "p", "text": "What makes the report valuable is that it is honest about the texture of a national ride, which is mostly not scenery. He sleeps on a grassy knoll beside a service road near Dindigul and on a bus-stop bench near Anantapur. He notes that new Indian highways have lost the tree canopies of the old undivided ones. He is stopped by a truck of overturned oranges near Kamareddy, and by police enforcing COVID crowd rules at Kanyakumari beach. Two road workers, seeing a loaded bike, ask him what his YouTube channel is; told he doesn't have one, they reply: toa gari kyu chala rahe ho?, then why are you riding?" },
         { "type": "p", "text": "And on day 3, at the Maharashtra border checkpost, he resigns from his job by phone. “Never thought I would notify my boss from the road.”" },
         {
           "type": "logbook",
@@ -166,7 +166,7 @@
           "lines": [
             { "label": "Total", "value": "≈ 9,000 km, Bangalore → Kanyakumari → Srinagar / Kargil / Khardung La → Bangalore" },
             { "label": "Dates", "value": "1 October 2021 onward" },
-            { "label": "Day 0–2", "value": "707 km · 714 km · 780 km — 2,200 km in three days" },
+            { "label": "Day 0–2", "value": "707 km · 714 km · 780 km, for 2,200 km in three days" },
             { "label": "Day 3–4", "value": "518 km · 610 km (deliberately reduced after arm pain)" },
             { "label": "Booking", "value": "Almost entirely on the day, by phone or MakeMyTrip from the roadside" },
             { "label": "Notable", "value": "Cleared a job interview, received an offer and resigned mid-ride" }
@@ -175,15 +175,15 @@
         { "type": "figure", "file": "media/research/fig-05.jpg" },
         { "type": "figure", "file": "media/research/fig-06.jpg" },
         { "type": "h3", "text": "North East, 10,000 km", "meta": "26 days · 2018 · “nb21” and Atul" },
-        { "type": "p", "text": "The single most useful thread in the archive for anyone costing a long ride, because the authors published a complete expense breakdown — something almost no other report does. Two riders, two-up on a Kawasaki Versys 650 they call Hulk, rode from Bangalore to the North East and back rather than shipping the bike, on the principle that “a car/bike trip should begin from home and end at home with the vehicle.”" },
-        { "type": "p", "text": "The trip took two years of intermittent planning and two months of serious work. They cut their original seven-state plan to five — Assam, Meghalaya, Manipur, Arunachal Pradesh and Nagaland — after research showed roads in Tripura and Mizoram were largely impassable. The 26 days were assembled from 16 working days of leave plus eight weekend days and two public holidays: a real constraint that shapes most Indian long rides." },
-        { "type": "p", "text": "Their full expense breakdown — ₹1,04,695 for two people over 26 days, in 2018 rupees — is printed on the costs page of this book, next to this ride's own observed rates, rather than repeated here. Note the shape of that budget: fuel and hotels are two-thirds of it, permits are a rounding error, and the mid-ride service is cheaper than two nights' accommodation. Note also what the total excludes — the pre-ride preparation was a separate ₹50,000. Preparing the motorcycle cost roughly half as much again as riding it for a month." },
+        { "type": "p", "text": "The single most useful thread in the archive for anyone costing a long ride, because the authors published a complete expense breakdown, something almost no other report does. Two riders, two-up on a Kawasaki Versys 650 they call Hulk, rode from Bangalore to the North East and back rather than shipping the bike, on the principle that “a car/bike trip should begin from home and end at home with the vehicle.”" },
+        { "type": "p", "text": "The trip took two years of intermittent planning and two months of serious work. They cut their original seven-state plan to five (Assam, Meghalaya, Manipur, Arunachal Pradesh and Nagaland) after research showed roads in Tripura and Mizoram were largely impassable. The 26 days were assembled from 16 working days of leave plus eight weekend days and two public holidays: a real constraint that shapes most Indian long rides." },
+        { "type": "p", "text": "Their full expense breakdown (₹1,04,695 for two people over 26 days, in 2018 rupees) is printed on the costs page of this book, next to this ride's own observed rates, rather than repeated here. Note the shape of that budget: fuel and hotels are two-thirds of it, permits are a rounding error, and the mid-ride service is cheaper than two nights' accommodation. Note also what the total excludes: the pre-ride preparation was a separate ₹50,000. Preparing the motorcycle cost roughly half as much again as riding it for a month." },
         { "type": "p", "text": "Their packing list is equally instructive, and includes one item no Western equivalent would: a photocopy of their marriage certificate, “never know when a hotel guy would ask for this.”" },
         { "type": "h3", "text": "Golden Quadrilateral and coastline", "meta": "15,500 km across two rides · Mehdia Fathima" },
-        { "type": "p", "text": "Interviewed by xBhp in June 2019, Mehdia Fathima is a working mother of two teenagers and an IBM Bangalore employee who relearned to ride a geared motorcycle in her forties, roughly twenty years after last riding one in engineering college. She bought a Bajaj Avenger 220 Cruise in April 2017 — chosen for a low seat height, because she is five feet tall — and was sent home from her first group ride for being too slow. She rode solo after that." },
+        { "type": "p", "text": "Interviewed by xBhp in June 2019, Mehdia Fathima is a working mother of two teenagers and an IBM Bangalore employee who relearned to ride a geared motorcycle in her forties, roughly twenty years after last riding one in engineering college. She bought a Bajaj Avenger 220 Cruise in April 2017, chosen for a low seat height because she is five feet tall, and was sent home from her first group ride for being too slow. She rode solo after that." },
         { "type": "p", "text": "Her first long ride was 1,200 km to Nellore and back. Her second was the entire Golden Quadrilateral: 7,000 km in 22 days, 15 April to 6 May, sixteen states and all five metros, with rest and service days built in at Vijayawada, Bhubaneswar, Kolkata and Delhi. Her third was the coastline: 8,500 km in 29 days, Bengal to Dwarka." },
-        { "type": "p", "text": "The mechanical record is worth quoting because it is so undramatic: on the GQ, “no performance issues at all, not even a tire burst despite peak summer”; on the coastal ride, a failing battery that meant push-starting the bike for three days — “in hindsight, I should have gone with a new battery.” Two of the longest rides in the archive, on a 220cc commuter cruiser, with one avoidable fault between them." },
-        { "type": "p", "text": "Her difficulties were elsewhere: heat in full riding gear, crosswinds in Rajasthan that nearly put her off the highway, a hotel in Digha that would not give a room to a solo woman traveller, and — she says plainly — people close to her asking what she was trying to prove at her age. She also notes she could not find riding gear that fit her, and still can't." },
+        { "type": "p", "text": "The mechanical record is worth quoting because it is so undramatic: on the GQ, “no performance issues at all, not even a tire burst despite peak summer”; on the coastal ride, a failing battery that meant push-starting the bike for three days: “in hindsight, I should have gone with a new battery.” Two of the longest rides in the archive, on a 220cc commuter cruiser, with one avoidable fault between them." },
+        { "type": "p", "text": "Her difficulties were elsewhere: heat in full riding gear, crosswinds in Rajasthan that nearly put her off the highway, a hotel in Digha that would not give a room to a solo woman traveller, and, she says plainly, people close to her asking what she was trying to prove at her age. She also notes she could not find riding gear that fit her, and still can't." },
         { "type": "quote", "text": "I do things to complete, never to compete.", "cite": "Mehdia Fathima, xBhp interview, 2019" }
       ]
     },
@@ -192,8 +192,8 @@
       "heading": "The endurance strand",
       "blocks": [
         { "type": "p", "text": "Running alongside the touring threads is a second, quite different culture: riding the same geography against a clock, with fuel receipts as evidence. It has its own vocabulary, its own certifying bodies, and a markedly higher risk profile." },
-        { "type": "p", "text": "Its entry qualification is the Iron Butt Association SaddleSore — 1,600 km inside 24 hours of wall-clock time, documented with time-stamped fuel receipts and a witnessed log, then mailed to the IBA for certification. It is the minimum requirement for IBA membership and, in India, the standard proof that a rider can sustain distance." },
-        { "type": "p", "text": "The archive's best account of one is from May 2012, by a rider posting as experimentalhead, who rode Nelamangala to Wakad near Pune and back on a Bajaj Avenger 220 — the same model Mehdia Fathima used for the Golden Quadrilateral. He attempted it three days into recovery from food poisoning." },
+        { "type": "p", "text": "Its entry qualification is the Iron Butt Association SaddleSore: 1,600 km inside 24 hours of wall-clock time, documented with time-stamped fuel receipts and a witnessed log, then mailed to the IBA for certification. It is the minimum requirement for IBA membership and, in India, the standard proof that a rider can sustain distance." },
+        { "type": "p", "text": "The archive's best account of one is from May 2012, by a rider posting as experimentalhead, who rode Nelamangala to Wakad near Pune and back on a Bajaj Avenger 220, the same model Mehdia Fathima used for the Golden Quadrilateral. He attempted it three days into recovery from food poisoning." },
         {
           "type": "logbook",
           "heading": "Logbook · SaddleSore, first attempt, May 2012",
@@ -209,8 +209,8 @@
             { "label": "Total cost", "value": "₹5,300, including everything bought for the ride" }
           ]
         },
-        { "type": "p", "text": "The write-up is unusually candid about how such a ride is actually won and lost — not on top speed but on road surface. Roadworks and diversions around Tumkur cost him an hour in the first sixty kilometres; he hit an unmarked speed hump at speed, went briefly airborne and rode the remaining 1,500 km with an injured left shoulder. His verdict is that the Kolhapur–Belgaum, Belgaum–Dharwad and Hubli–Davangere stretches are where the attempt is decided. In the last dark hours, blinded by oncoming high beams, he tucked in forty metres behind a Tata Safari and followed its tail lights." },
-        { "type": "p", "text": "From there the discipline escalates. In October 2016 Balaji, riding a Honda CBR 250R with last-minute backing from Honda Two Wheelers India, rode Leh to Kanyakumari in 61 hours, submitted to the Limca and India Book of Records — the first such attempt in India. The splits are extraordinary: 1,166 km from Leh to Mathura in 23 h 30 min, 2,700 km inside 48 hours, finishing at Kanyakumari at 20:05 on 8 October. He had previously ridden the Golden Quadrilateral in 89 hours. His preparation included deliberately sleeping 32 hours over the two days before the start." },
+        { "type": "p", "text": "The write-up is unusually candid about how such a ride is actually won and lost: not on top speed but on road surface. Roadworks and diversions around Tumkur cost him an hour in the first sixty kilometres; he hit an unmarked speed hump at speed, went briefly airborne and rode the remaining 1,500 km with an injured left shoulder. His verdict is that the Kolhapur–Belgaum, Belgaum–Dharwad and Hubli–Davangere stretches are where the attempt is decided. In the last dark hours, blinded by oncoming high beams, he tucked in forty metres behind a Tata Safari and followed its tail lights." },
+        { "type": "p", "text": "From there the discipline escalates. In October 2016 Balaji, riding a Honda CBR 250R with last-minute backing from Honda Two Wheelers India, rode Leh to Kanyakumari in 61 hours, submitted to the Limca and India Book of Records, the first such attempt in India. The splits are extraordinary: 1,166 km from Leh to Mathura in 23 h 30 min, 2,700 km inside 48 hours, finishing at Kanyakumari at 20:05 on 8 October. He had previously ridden the Golden Quadrilateral in 89 hours. His preparation included deliberately sleeping 32 hours over the two days before the start." },
         { "type": "p", "text": "Outside the forum, the same routes carry formal records:" },
         {
           "type": "table",
@@ -225,7 +225,7 @@
           ]
         },
         { "type": "caveat", "ref": "records" },
-        { "type": "p", "text": "It is also worth naming the obvious: a 61-hour ride and a 59-hour ride are performed on public roads shared with everyone else, and the forum's own touring threads — full of unmarked humps, night diversions and oncoming high beams — are the best available argument for why the record culture and the touring culture stay largely separate." }
+        { "type": "p", "text": "It is also worth naming the obvious: a 61-hour ride and a 59-hour ride are performed on public roads shared with everyone else, and the forum's own touring threads (full of unmarked humps, night diversions and oncoming high beams) are the best available argument for why the record culture and the touring culture stay largely separate." }
       ]
     },
     {
@@ -234,18 +234,18 @@
       "blocks": [
         { "type": "p", "text": "Read across twenty years, the threads converge on a fairly consistent body of practical knowledge. Most of it contradicts what a first-time planner assumes." },
         { "type": "h3", "text": "The bike matters far less than expected" },
-        { "type": "p", "text": "The pan-India rides in this archive were completed on a Bajaj Avenger 220, a Bajaj Dominar 400, a Honda CBR 250R, a Kawasaki Versys 650, and — for the 18,612 km, 64-day, three-country expedition of 2010 — a 2004 Honda Unicorn and a 2003 Hero Honda Splendor. A 100cc commuter and a 650cc adventure tourer have both gone round the country. What recurs in the failure reports is not insufficient displacement but consumables and electrics: tyres, chain and sprockets, batteries, brake pads." },
+        { "type": "p", "text": "The pan-India rides in this archive were completed on a Bajaj Avenger 220, a Bajaj Dominar 400, a Honda CBR 250R, a Kawasaki Versys 650, and, for the 18,612 km, 64-day, three-country expedition of 2010, a 2004 Honda Unicorn and a 2003 Hero Honda Splendor. A 100cc commuter and a 650cc adventure tourer have both gone round the country. What recurs in the failure reports is not insufficient displacement but consumables and electrics: tyres, chain and sprockets, batteries, brake pads." },
         { "type": "h3", "text": "Budget in the right proportions" },
-        { "type": "p", "text": "From the one fully itemised ride: fuel and accommodation are about two-thirds of on-road cost, food a fifth, permits negligible. Preparation is a separate and substantial line — roughly ₹50,000 of parts before a 26-day ride. The 2012 SaddleSore, by contrast, cost ₹5,300 all-in. As a planning rule the archive supports something like ₹2,000–2,200 per person per day for a two-up ride staying in budget hotels, in 2018 money." },
+        { "type": "p", "text": "From the one fully itemised ride: fuel and accommodation are about two-thirds of on-road cost, food a fifth, permits negligible. Preparation is a separate and substantial line: roughly ₹50,000 of parts before a 26-day ride. The 2012 SaddleSore, by contrast, cost ₹5,300 all-in. As a planning rule the archive supports something like ₹2,000–2,200 per person per day for a two-up ride staying in budget hotels, in 2018 money." },
         { "type": "h3", "text": "Timing is set by leave, not by weather" },
-        { "type": "p", "text": "Indian long rides are shaped by the working year. The North East pair assembled 26 days out of 16 leave days plus weekends and holidays; Mehdia Fathima rode the GQ in her children's April–May summer vacation, which put her in Rajasthan and Odisha in peak heat — the single hardest thing about the ride, by her account. Riders repeatedly report that the season they got was the season their employer allowed." },
+        { "type": "p", "text": "Indian long rides are shaped by the working year. The North East pair assembled 26 days out of 16 leave days plus weekends and holidays; Mehdia Fathima rode the GQ in her children's April–May summer vacation, which put her in Rajasthan and Odisha in peak heat. That was the single hardest thing about the ride, by her account. Riders repeatedly report that the season they got was the season their employer allowed." },
         { "type": "note", "label": "Note for this route book, not part of the report", "text": "That is a finding about riders, not a calendar. It is the reason the season rows earlier in this book are still blank: nothing in this archive says which months a given sector is rideable, so nothing here was used to fill them in." },
         { "type": "h3", "text": "Plan the paperwork, not the route" },
-        { "type": "p", "text": "Navigation is largely a solved problem — the reports are full of riders booking that night's hotel from a roadside bench. What cannot be improvised is the permit layer for the North East (ILP for Arunachal, Nagaland, Mizoram, Manipur), the mid-ride service slot, and, for the endurance category, the receipt discipline. One rider lost a fuel receipt at a station without computerised billing and had to ride on to the next one to keep his documentation intact." },
+        { "type": "p", "text": "Navigation is largely a solved problem: the reports are full of riders booking that night's hotel from a roadside bench. What cannot be improvised is the permit layer for the North East (ILP for Arunachal, Nagaland, Mizoram, Manipur), the mid-ride service slot, and, for the endurance category, the receipt discipline. One rider lost a fuel receipt at a station without computerised billing and had to ride on to the next one to keep his documentation intact." },
         { "type": "h3", "text": "The strangers are the content" },
         { "type": "p", "text": "This is the most consistent finding across two decades of threads, and the least expected. The memorable passages are almost never about roads. They are Haneef the sandalwood carver from Mysore, working in Kanyakumari because his factory's supply dried up; Ganesh selling flowers before school to supplement family income; road workers who assume anyone on a loaded bike must have a YouTube channel; a hotel bellboy who waits until his manager is out of earshot to recommend the good biryani place instead of the in-house restaurant." },
         { "type": "h3", "text": "Announcing is easier than finishing" },
-        { "type": "p", "text": "In December 2017 a rider announced Project Solo Wheels: 32,000 km, 150 days, three countries, departing 10 February 2018 on a CBR 250R, with 800+ locations crowdsourced through a Google Form. The thread runs to several pages. Almost all of it is other members wishing him luck; the ride itself is never reported. It is not an isolated case — the gap between planning threads and completion threads is one of the clearest patterns in the archive, and it is the honest counterweight to every figure in this report." },
+        { "type": "p", "text": "In December 2017 a rider announced Project Solo Wheels: 32,000 km, 150 days, three countries, departing 10 February 2018 on a CBR 250R, with 800+ locations crowdsourced through a Google Form. The thread runs to several pages. Almost all of it is other members wishing him luck; the ride itself is never reported. It is not an isolated case: the gap between planning threads and completion threads is one of the clearest patterns in the archive, and it is the honest counterweight to every figure in this report." },
         { "type": "figure", "file": "media/research/fig-07.jpg" },
         { "type": "figure", "file": "media/research/fig-08.jpg" },
         { "type": "closing", "ref": "closingNote" }
@@ -269,7 +269,7 @@
     {
       "file": "media/research/fig-03.jpg",
       "alt": "A tall painted gateway arching over a narrow hill road, topped with yellow dragons and a dharma wheel and strung with prayer flags. The board across it reads WELCOME TO BOMDILA. Tin-roofed houses on the slope behind.",
-      "caption": "The gate at Bomdila, Arunachal Pradesh — one permit checkpost and several thousand kilometres from home.",
+      "caption": "The gate at Bomdila, Arunachal Pradesh: one permit checkpost and several thousand kilometres from home.",
       "credit": "© “Nandy Photography” / “nb21”, xBhp travelogue, 2018 [8]"
     },
     {
@@ -287,7 +287,7 @@
     {
       "file": "media/research/fig-06.jpg",
       "alt": "A camel and its rider silhouetted on a dune ridge against a low sun sitting just on the horizon. Rippled sand across the foreground, an empty orange-to-blue sky above.",
-      "caption": "Rajasthan on the way home — captioned by the rider, drily, “Desert cliche.”",
+      "caption": "Rajasthan on the way home. Captioned by the rider, drily, “Desert cliche.”",
       "credit": "© Lokesh Shah (“dichkaun”), xBhp travelogue, 2021 [9]"
     },
     {
@@ -299,7 +299,7 @@
     {
       "file": "media/research/fig-08.jpg",
       "alt": "A sheet of water falling over a carved stone terrace into a pool in a formal garden. Chinar branches hang into the top of the frame with their leaves turning yellow and orange; two heavy chinar trunks and a clipped shrub stand behind.",
-      "caption": "Shalimar Bagh, Srinagar — the turnaround point, in early autumn.",
+      "caption": "Shalimar Bagh, Srinagar: the turnaround point, in early autumn.",
       "credit": "© Lokesh Shah (“dichkaun”), xBhp travelogue, 2021 [9]"
     }
   ],
@@ -308,10 +308,10 @@
 
   "references": [
     {
-      "group": "Primary — xBhp forum threads",
+      "group": "Primary sources: xBhp forum threads",
       "items": [
         "xBhp, “Talkies” forum index and The Tourer board. Corpus for this report: 337 index pages of xbhp.com/talkies/tourer, 3,317 unique threads, crawled 5 August 2026.",
-        "Sundeep Gajjar / xBhp founding history — YourStory, “xBhp – Sundeep Gajjar” (2009); masthead “Since '02” on xbhp.com.",
+        "Sundeep Gajjar / xBhp founding history, from YourStory, “xBhp – Sundeep Gajjar” (2009); masthead “Since '02” on xbhp.com.",
         "niriskoda, “Tour log — 2 guys, 2 bikes, 3 countries, 18,612 kms, 64 days”, posted 29 Sept 2010. Ride: 23 Jan – 27 Mar 2010, Honda Unicorn 2004 and Hero Honda Splendor 2003, part-sponsored by the Government of Karnataka sports department.",
         "kilometer_couple, “Golden Quadrilateral ride on Dominar 400”, posted 18 May 2019. Ride began 22 Dec 2018, Mumbai–Chennai–Kolkata–Delhi–Mumbai; day one covered 1,052 km in 21 hours.",
         "nb21, “Amazingly magnificent & enchantingly awesome North East India — A 10,000 km Ride!”, posted 4 Nov 2018. Source of the ₹1,04,695 expense breakdown, the preparation costs and the packing list. Photographs watermarked “Nandy Photography”.",
@@ -320,33 +320,33 @@
         "experimentalhead, “1624.6 kms in 23 hrs 35 mins — Saddle Sore cracked successfully in first attempt”, posted 8 May 2012.",
         "balajiadv, “Leh to Kanyakumari in 61 hours”, posted 9 Nov 2016. Ride 6–8 Oct 2016 on a Honda CBR 250R.",
         "Nabeel Ahmed, “Project: Solo Wheels — 32,000 Kms | 150 Days | 3 Countries | 1 Rider”, posted 27 Dec 2017.",
-        "rahuldevnath, “Kanyakumari to Kashmir, 11,148 Km, 45 Days”, posted 4 Oct 2008 — the archive's foundational K2K thread, Bangalore–Kanyakumari–Khardung La–Pangong–Bangalore.",
+        "rahuldevnath, “Kanyakumari to Kashmir, 11,148 Km, 45 Days”, posted 4 Oct 2008. The archive's foundational K2K thread, Bangalore–Kanyakumari–Khardung La–Pangong–Bangalore.",
         "Raman Balyan, “Trip Of A Lifetime — My All India Motorcycle Tour”, posted 11 Sept 2014. A 44-day all-India tour; the write-up itself lives off-forum on Medium.",
-        "xBhp / Indian Motorcycle India, “6000kms #K2Kride with Indian Motorcycle … #WheelsOfChange” (2017) and “The Golden Quadrilateral Ride 2018” (26 Sept – 14 Oct 2018) — the sponsored cause-ride model.",
-        "praveenkm, “Destination Unknown…”, opened 23 Mar 2009 — 66 pages, 979 posts, open-ended solo ride; images now largely dead links."
+        "xBhp / Indian Motorcycle India, “6000kms #K2Kride with Indian Motorcycle … #WheelsOfChange” (2017) and “The Golden Quadrilateral Ride 2018” (26 Sept – 14 Oct 2018): the sponsored cause-ride model.",
+        "praveenkm, “Destination Unknown…”, opened 23 Mar 2009: 66 pages, 979 posts, open-ended solo ride; images now largely dead links."
       ]
     },
     {
       "group": "Routes, permits and infrastructure",
       "items": [
-        "National Highway 44 — Roadory, NH-44 route guide; length commonly given as 3,745 km across 11 states, with some sources quoting 4,112 km. See also Vajiram & Ravi, “Longest Highway in India”.",
-        "Golden Quadrilateral — Wikipedia, “Golden Quadrilateral”: 5,846 km total; Delhi–Kolkata 1,453 km, Kolkata–Chennai 1,684 km, Chennai–Mumbai 1,290 km; planned 1999, begun 2001, completed 2012.",
-        "Inner Line Permit — Government of Arunachal Pradesh eILP portal; IndiaFilings, “Inner Line Permit”; “Inner Line Permits & Protected Area Permits for Northeast India” for the December 2024 PAP notification affecting foreign nationals."
+        "National Highway 44: Roadory, NH-44 route guide; length commonly given as 3,745 km across 11 states, with some sources quoting 4,112 km. See also Vajiram & Ravi, “Longest Highway in India”.",
+        "Golden Quadrilateral, from Wikipedia, “Golden Quadrilateral”: 5,846 km total; Delhi–Kolkata 1,453 km, Kolkata–Chennai 1,684 km, Chennai–Mumbai 1,290 km; planned 1999, begun 2001, completed 2012.",
+        "Inner Line Permit: Government of Arunachal Pradesh eILP portal; IndiaFilings, “Inner Line Permit”; “Inner Line Permits & Protected Area Permits for Northeast India” for the December 2024 PAP notification affecting foreign nationals."
       ]
     },
     {
       "group": "Endurance certification and records",
       "items": [
-        "Iron Butt Association, “SaddleSore 1600K and 2000K Guidelines” and ride applications and rules — 1,600 km in 24 hours of wall-clock time, documented by time-stamped receipts and a witnessed log.",
-        "Manigandan, Guinness World Record for riding 29 states and 5 union territories — Autocar India: 38,239 km, 9 Nov 2014 – 15 Feb 2015, Royal Enfield Classic 500.",
-        "Sohail Khan, fastest solo ride across all states and union territories — Rushlane: 16,143 km, 5–28 March 2017, KTM RC390.",
-        "Melvin Anto, fastest Kanyakumari–Kashmir motorcycle journey — DriveSpark: 3,613 km in 59 h 33 min, 13–15 April 2024. Bonny Elangbam's 110cc gearless K2K (3,761 km, 4 d 11 h 36 m, May 2024) — bonnybam.com. Category caveats drawn from World Records India."
+        "Iron Butt Association, “SaddleSore 1600K and 2000K Guidelines” and ride applications and rules: 1,600 km in 24 hours of wall-clock time, documented by time-stamped receipts and a witnessed log.",
+        "Manigandan, Guinness World Record for riding 29 states and 5 union territories. Autocar India: 38,239 km, 9 Nov 2014 – 15 Feb 2015, Royal Enfield Classic 500.",
+        "Sohail Khan, fastest solo ride across all states and union territories. Rushlane: 16,143 km, 5–28 March 2017, KTM RC390.",
+        "Melvin Anto, fastest Kanyakumari–Kashmir motorcycle journey. DriveSpark: 3,613 km in 59 h 33 min, 13–15 April 2024. Bonny Elangbam's 110cc gearless K2K (3,761 km, 4 d 11 h 36 m, May 2024) is at bonnybam.com. Category caveats drawn from World Records India."
       ]
     },
     {
       "group": "Organised pan-India rides",
       "items": [
-        "xBhp #roadTripUnited — pan-India roadtrips of 10,000 km+ run since 2006; the 2022 edition was the tenth, running 6 November – 16 December 2022."
+        "xBhp #roadTripUnited: pan-India roadtrips of 10,000 km+ run since 2006; the 2022 edition was the tenth, running 6 November – 16 December 2022."
       ]
     },
     {

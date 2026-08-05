@@ -83,7 +83,7 @@ test('a cluster keeps the index of its first stop, so travel order survives', fu
 });
 
 // focus() is what the overview drives the map with. These run it against the real
-// basemap and real stops, unanimated — the eased path is the same numbers over time.
+// basemap and real stops, unanimated: the eased path is the same numbers over time.
 test('focus(null) shows the whole map', function () {
   const m = makeAtlas();
   m.api.focus({ minLat: 8, maxLat: 10, minLon: 76, maxLon: 77 }, false);

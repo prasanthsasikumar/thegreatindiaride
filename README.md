@@ -49,12 +49,12 @@ Each file records how its region was decided, in `stateSource`:
 | value | meaning | trust |
 |---|---|---|
 | `gps` | the file's own EXIF coordinates | good, but phones cache stale fixes |
-| `time` | nearest-in-time neighbour, no GPS of its own | **low** — shown with a `~` prefix |
+| `time` | nearest-in-time neighbour, no GPS of its own | **low**, shown with a `~` prefix |
 | `manual` | corrected by hand via `overrides.json` | authoritative |
 
 ### Why the automatic guesses drift
 
-204 of 222 files are `source_type: "library"` — uploaded from the camera roll rather
+204 of 222 files are `source_type: "library"`, uploaded from the camera roll rather
 than shot in-app. For those, Instagram's `creation_timestamp` is the **upload** time.
 Against the 59 files that also kept EXIF `date_time_original`, the median capture→upload
 gap is 5.2 hours, p90 is 33 hours, and the max is 125 hours. On a road trip that is
@@ -63,13 +63,13 @@ placeholder.
 
 `captured` uses EXIF `date_time_original` where it survived and falls back to upload
 time otherwise; `timeSource` records which. (`modified` is just the checkout date and
-is meaningless — the browser UI sorts by `captured` to get ride order.)
+is meaningless, and the browser UI sorts by `captured` to get ride order.)
 
 ### Correcting regions by hand
 
 Open any tile in the browser UI. The **Region** field is a dropdown whose first group,
-*Nearest*, is ranked by distance from that file's own coordinates — the right answer is
-usually in the top few. Pick it.
+*Nearest*, is ranked by distance from that file's own coordinates, so the right answer
+is usually in the top few. Pick it.
 
 Corrections accumulate in `localStorage`, and a bar appears at the bottom of the page.
 Click **Save overrides.json**, drop the file in the repo root, then:
@@ -79,7 +79,7 @@ node tag-media.cjs /path/to/instagram-export   # overrides win over GPS and timi
 node generate-manifest.cjs
 ```
 
-`overrides.json` is a flat `{ "media/...": "State" }` map — hand-editable if you'd
+`overrides.json` is a flat `{ "media/...": "State" }` map, hand-editable if you'd
 rather bulk-fix in a text editor.
 
 **Privacy:** `tags.json` deliberately carries only state and country, never raw
@@ -92,21 +92,21 @@ expires after 4 days.
 
 ## The site
 
-`index.html` is the whole site — it tells the ride as a story. It implements two designs from the
+`index.html` is the whole site, and it tells the ride as a story. It implements two designs from the
 "Great India Ride redesign" project (Claude Design `1e0800a2`), on one DOM:
 
-- **≥1080px — Desktop A, Atlas Split.** A 460px sticky pane holds the brand, title,
+- **≥1080px, Desktop A, Atlas Split.** A 460px sticky pane holds the brand, title,
   stats and the route map; the right column runs the legs, every region expanded.
-- **<1080px — Journey.** Single column, a sticky strip of region chips, and regions
+- **<1080px, Journey.** Single column, a sticky strip of region chips, and regions
   as accordions.
 
 The breakpoint is 1080px, not 900: the pane is a fixed 460px, so below that the legs
-column drops to three columns — narrower than the mobile layout manages in its 600px
+column drops to three columns, narrower than the mobile layout manages in its 600px
 measure. Keep the CSS media queries and the `DESKTOP` matchMedia in `index.html` in
 lockstep; the JS decides what collapses and the CSS decides how it looks.
 
 Clip grids are `auto-fill` rather than a fixed column count, so tile size stays
-constant and the count follows the width — 4 up on a phone, 8 on a wide desktop.
+constant and the count follows the width: 4 up on a phone, 8 on a wide desktop.
 
 On pointer devices a tile plays muted on hover, one at a time. Sound preference in the
 lightbox persists in localStorage.
@@ -121,7 +121,7 @@ inside each leg.
 ### Why reels are attached by region, not by date
 
 The design's data layer groups everything by timestamp. That works for stories, which
-are posted the same day — but **all 41 reels carry an upload time**, and they lag
+are posted the same day. But **all 41 reels carry an upload time**, and they lag
 capture by hours to weeks. Grouping them by their own date scattered Punjab and
 Chandigarh into "Across the Northeast".
 
@@ -130,26 +130,26 @@ block for its own region. Only four regions appear in two legs; those pick the n
 block by date. Three regions have reels but no stories (Goa, Daman, Puducherry) and get
 their own block. All 222 clips appear, none of them in the wrong leg.
 
-For the same reason, leg and region **date labels** are computed from stories only —
-letting reel dates set the range made "Into the Himalaya" read 1 Feb – 15 Mar when the
+For the same reason, leg and region **date labels** are computed from stories only.
+Letting reel dates set the range made "Into the Himalaya" read 1 Feb – 15 Mar when the
 leg ends on 1 Mar.
 
 ### The map
 
 The design fetched d3, topojson-client and a world-atlas TopoJSON from CDNs at runtime.
-This reuses `basemap.json` instead — Natural Earth outlines baked in at ~32KB by
+This reuses `basemap.json` instead: Natural Earth outlines baked in at ~32KB by
 `build-basemap.cjs`, with a hand-rolled Mercator fit to India. Same drawing, no
 external requests, works offline.
 
 The map has an **outline / real map toggle**. Outline is the default and fetches
 nothing; the toggle lays OpenStreetMap tiles underneath, with attribution, and the
-choice persists. Alignment is free — the map already draws in Mercator, and Web
+choice persists. Alignment is free, because the map already draws in Mercator, and Web
 Mercator is the same projection up to a linear transform, so tiles land on the drawn
 coastline with no reprojection.
 
 **Build it from the `_ind` point-of-view file.** Natural Earth's default country set
 draws India along the Line of Control, which clips Aksai Chin and Pakistan-administered
-Kashmir — India stops at lat 35.5 instead of 37.05 and the northern tip is visibly cut
+Kashmir. India stops at lat 35.5 instead of 37.05 and the northern tip is visibly cut
 away. Natural Earth publishes per-country POV variants; `_ind` is India's own
 depiction. It exists only at 10m:
 
@@ -169,8 +169,8 @@ polyline through one hardcoded centroid per state, which put "Nepal" in the far 
 the country and cut Rajasthan→Delhi straight through the middle of Haryana. It now walks
 `route.stops` in travel order.
 
-Markers cluster at 3.5px. India is 420px wide here, so a pixel is roughly 8km — the four
-Varanasi hotels, both Guwahati ones, and Mussoorie/Dehradun all land on the same dot.
+Markers cluster at 3.5px. India is 420px wide here, so a pixel is roughly 8km, and the
+four Varanasi hotels, both Guwahati ones, and Mussoorie/Dehradun all land on the same dot.
 Stacking them would leave every stop but the topmost unreachable, so co-located stops
 merge into one marker and the card lists what's underneath.
 
@@ -188,12 +188,12 @@ node build-route.cjs "/path/to/Pan India Trip  - Trip expenses.csv"
 node generate-manifest.cjs
 ```
 
-`build-route.cjs` treats each row as one night in travel order — the only exact record
+`build-route.cjs` treats each row as one night in travel order: the only exact record
 of the route, since GPS drifts and upload times lag. Two adjustments live at the top of
 that script:
 
 - `SKIP_NIGHTS` drops rows that aren't on the motorcycle route. Row 71 (TVM) is the
-  flight home mid-trip — out of Guwahati, on to Singapore, back to Guwahati.
+  flight home mid-trip, out of Guwahati, on to Singapore, back to Guwahati.
 - `ORIGIN` prepends home (Trivandrum) to the drawn path, since the ride started and
   finished at the same front door but the sheet only records paid nights.
 
@@ -205,8 +205,8 @@ Nights with no link in the sheet fall back to a `name:<Stop>` key in the same fi
 
 | entry | treatment |
 |---|---|
-| `name:Coimbatore` | Decostel Backpackers Hostel — a real stay that never got a link; sited exactly |
-| `name:Banglore`, `name:Allapuzha`, `name:Trivandrum` | `"private": true` — a friend's place and two family homes |
+| `name:Coimbatore` | Decostel Backpackers Hostel: a real stay that never got a link; sited exactly |
+| `name:Banglore`, `name:Allapuzha`, `name:Trivandrum` | `"private": true`, a friend's place and two family homes |
 
 A `private` stay keeps its **name** but takes the town centre from `.stopcache.json`
 rather than a real address, and is never given a Maps link. Those are other people's
@@ -217,21 +217,21 @@ Hyderabad and Kurnool are still unaccounted for and `build-route.cjs` warns abou
 by name on every run.
 
 Regions still come from the **stop name**, never from the hotel. A few stays sit just
-over a border — Zirakpur for Chandigarh, Noida for Delhi, Phuentsholing for Jaigaon — and
+over a border (Zirakpur for Chandigarh, Noida for Delhi, Phuentsholing for Jaigaon), and
 re-deriving the region from their coordinates would silently delete chapters from the
 narrative.
 
-**Privacy — read before regenerating.** `route.json` is published, and it now carries a
+**Privacy: read before regenerating.** `route.json` is published, and it now carries a
 `stops` list: every place slept, the hotel's name, its Google Maps link, and what was
 paid there. That is a public, night-by-night record of where the rider was for three
 months. It is published deliberately, because the map is meant to be browsable.
 
-The `Misc_label` column is still excluded and should stay that way — it holds medical,
+The `Misc_label` column is still excluded and should stay that way: it holds medical,
 fines, scam and theft, and nothing in the UI needs it. Keep the CSV outside the repo.
 
 ## Correcting region tags
 
-There is no longer a browser UI for this — the media-library page that carried the
+There is no longer a browser UI for this. The media-library page that carried the
 region dropdown was replaced by the journey layouts. Edit `overrides.json` by hand
 (a flat `{ "media/...": "State" }` map), then re-run:
 
