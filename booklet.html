@@ -81,8 +81,12 @@ button { font: inherit; color: inherit; }
   max-width: 900px; margin: 0 auto; padding: var(--space-8) var(--pad-x) 96px;
 }
 
+/* One sticky wrapper holding both bars, so their heights stack without either
+   having to know the other's height in advance: only .bk__topbar needs
+   position: sticky, and .bk__navtarget below only has to clear the wrapper as
+   a whole rather than the two bars separately. */
+.bk__topbar { position: sticky; top: 0; z-index: 5; background: var(--color-bg); }
 .bk__actions {
-  position: sticky; top: 0; z-index: 5;
   display: flex; align-items: center; gap: var(--space-3);
   padding: var(--space-3) var(--pad-x);
   background: var(--color-bg); border-bottom: var(--rule);
@@ -100,6 +104,35 @@ button { font: inherit; color: inherit; }
   padding: 10px 16px; cursor: pointer;
 }
 .bk__print:hover { background: var(--color-accent); color: #fff; }
+
+/* The section nav. A row of plain #anchor links: the jump itself needs no
+   JavaScript at all, so it keeps working wherever IntersectionObserver, or JS
+   generally, does not run. The current-section highlight below is layered on
+   top of that and is never load-bearing for the jump itself. Nothing here is
+   ever hidden with display: none on screen; the print rule for .noprint,
+   further down, is what keeps this bar off the page. */
+.bk__nav {
+  display: flex; align-items: center; gap: var(--space-4);
+  padding: var(--space-2) var(--pad-x);
+  border-bottom: var(--rule);
+  overflow-x: auto;
+}
+.bk__nav a {
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.06em;
+  white-space: nowrap; text-decoration: none; color: var(--color-dim);
+  padding: 4px 2px; border-bottom: 2px solid transparent;
+}
+.bk__nav a:hover { color: var(--color-text); }
+.bk__nav a[aria-current="true"] {
+  color: var(--color-text); border-bottom-color: var(--color-accent);
+}
+
+/* Every element the nav above can land on. The value has to clear both bars
+   in .bk__topbar at once, now that they stack as one sticky unit; it is set
+   generously above their measured screen height rather than to the pixel,
+   because a little extra blank space above a heading costs nothing and a
+   target still hidden under the bar is a real defect. */
+.bk__navtarget { scroll-margin-top: 118px; }
 
 /* Every top-level block of the book is a page. Print gives each one a fresh
    sheet; on screen they are just sections with a rule between them. Keeping the
@@ -523,18 +556,23 @@ td .bk__todo { margin-top: 0; }
 </head>
 <body>
 
-<div class="bk__actions">
-  <a class="bk__back" href="/">← THE RIDE</a>
-  <span class="bk__spacer"></span>
-  <label class="bk__skip noprint" id="bk-skip" hidden>
-    <input type="checkbox" id="bk-skip-appendix"> LEAVE THE APPENDIX OUT OF THE PRINT
-  </label>
-  <button type="button" class="bk__print noprint" id="bk-print">PRINT / SAVE AS PDF</button>
+<div class="bk__topbar noprint">
+  <div class="bk__actions">
+    <a class="bk__back" href="/">← THE RIDE</a>
+    <span class="bk__spacer"></span>
+    <label class="bk__skip noprint" id="bk-skip" hidden>
+      <input type="checkbox" id="bk-skip-appendix"> LEAVE THE APPENDIX OUT OF THE PRINT
+    </label>
+    <button type="button" class="bk__print noprint" id="bk-print">PRINT / SAVE AS PDF</button>
+  </div>
+  <!-- Populated at boot by renderNav(); it does not wait on the route data, so
+       it is there even while "Loading the route…" still shows. -->
+  <nav class="bk__nav noprint" id="bk-nav" aria-label="Book sections"></nav>
 </div>
 
 <main class="bk" id="bk">
 
-  <section class="bk__page bk__cover">
+  <section class="bk__page bk__cover bk__navtarget" id="bk-cover">
     <p class="bk__eyebrow">ROUTE BOOK</p>
     <h1 class="bk__cover-title">The pan-India loop</h1>
     <p class="bk__cover-sub" id="bk-cover-sub">—</p>
@@ -563,7 +601,7 @@ td .bk__todo { margin-top: 0; }
     </p>
   </section>
 
-  <section class="bk__page" id="bk-at-a-glance">
+  <section class="bk__page bk__navtarget" id="bk-at-a-glance">
     <p class="bk__eyebrow">AT A GLANCE</p>
     <h2 class="bk__h2">The shape of it</h2>
     <div class="bk__glance" id="bk-glance"></div>
@@ -577,7 +615,7 @@ td .bk__todo { margin-top: 0; }
     <table class="bk__table" id="bk-sector-table"></table>
   </section>
 
-  <section class="bk__page" id="bk-master">
+  <section class="bk__page bk__navtarget" id="bk-master">
     <p class="bk__eyebrow">THE WHOLE LOOP</p>
     <h2 class="bk__h2">Master map</h2>
     <div class="bk__map bk__map--master"><svg class="atlas" id="bk-map-master" role="img" aria-label="The planned loop across India, Nepal and Bhutan"></svg></div>
@@ -600,12 +638,18 @@ td .bk__todo { margin-top: 0; }
     <div id="bk-diff"></div>
   </section>
 
+  <!-- A fixed jump target for the nav's "Sectors" entry. The five sector spreads
+       that follow are generated at runtime and none of their ids is knowable until
+       then, so this stands in for all five: empty by design, it exists only to be
+       scrolled to, not to be read. -->
+  <div class="bk__navtarget" id="bk-sectors" aria-hidden="true"></div>
+
   <!-- Sector spreads are inserted here at runtime, immediately before this anchor,
        so they stay siblings of every other page and the print rules can key off
        .bk__page rather than off any particular section being first or last. -->
   <div id="bk-sectors-anchor" hidden></div>
 
-  <section class="bk__page" id="bk-costs">
+  <section class="bk__page bk__navtarget" id="bk-costs">
     <p class="bk__eyebrow">MONEY</p>
     <h2 class="bk__h2">What it costs</h2>
     <p class="bk__note">
@@ -621,7 +665,7 @@ td .bk__todo { margin-top: 0; }
     <div id="bk-costs-archive"></div>
   </section>
 
-  <section class="bk__page" id="bk-season">
+  <section class="bk__page bk__navtarget" id="bk-season">
     <p class="bk__eyebrow">WHEN TO RIDE</p>
     <h2 class="bk__h2">Season calendar</h2>
     <p class="bk__note">
@@ -640,7 +684,7 @@ td .bk__todo { margin-top: 0; }
     </p>
   </section>
 
-  <section class="bk__page" id="bk-planning">
+  <section class="bk__page bk__navtarget" id="bk-planning">
     <p class="bk__eyebrow">PLANNING</p>
     <h2 class="bk__h2">Pages to write on</h2>
     <p class="bk__note">
@@ -749,7 +793,8 @@ td .bk__todo { margin-top: 0; }
     provenance: document.getElementById('bk-provenance'),
     print: document.getElementById('bk-print'),
     skip: document.getElementById('bk-skip'),
-    skipToggle: document.getElementById('bk-skip-appendix')
+    skipToggle: document.getElementById('bk-skip-appendix'),
+    nav: document.getElementById('bk-nav')
   };
 
   var num = function (n) { return Math.round(n).toLocaleString('en-IN'); };
@@ -1216,7 +1261,7 @@ td .bk__todo { margin-top: 0; }
 
   function k2kPage() {
     var n = k2k.north, s = k2k.south, rw = k2k.realWorld || {};
-    var sec = elem('section', 'bk__page bk__k2k');
+    var sec = elem('section', 'bk__page bk__k2k bk__navtarget');
     sec.id = 'bk-k2k';
 
     sec.appendChild(elem('p', 'bk__eyebrow', 'THE CLASSIC, AND HOW MUCH OF IT IS HERE'));
@@ -1350,7 +1395,7 @@ td .bk__todo { margin-top: 0; }
   }
 
   function researchOpener() {
-    var sec = elem('section', 'bk__page bk__research');
+    var sec = elem('section', 'bk__page bk__research bk__navtarget');
     sec.id = 'bk-research';
     sec.appendChild(elem('p', 'bk__eyebrow', 'APPENDIX · FIELD RESEARCH'));
     sec.appendChild(elem('h2', 'bk__h2', research.title));
@@ -1765,6 +1810,79 @@ td .bk__todo { margin-top: 0; }
     }
   }
 
+  /* ─── section nav ─────────────────────────────────────────────────────── */
+
+  // One entry per top-level part of the book. 'id' is the single element the
+  // link jumps to (a real #anchor, so the jump needs no JS); 'watch' is only
+  // for the highlight below and names the class shared by every element that
+  // should count as "here" for that entry, for the two entries that are more
+  // than one element: the five sector spreads, and the appendix's own pages.
+  var NAV = [
+    { id: 'bk-cover', label: 'Cover' },
+    { id: 'bk-at-a-glance', label: 'At a glance' },
+    { id: 'bk-master', label: 'The map' },
+    { id: 'bk-sectors', label: 'Sectors', watch: 'bk__sector' },
+    { id: 'bk-k2k', label: 'K2K' },
+    { id: 'bk-costs', label: 'Costs' },
+    { id: 'bk-season', label: 'Seasons' },
+    { id: 'bk-planning', label: 'Planning' },
+    { id: 'bk-research', label: 'The archive', watch: 'bk__research' }
+  ];
+
+  // Runs immediately, not from the boot chain below: the nav names no route
+  // data, so a reader should not have to wait on template.json to get it.
+  function renderNav() {
+    if (!el.nav) return;
+    el.nav.replaceChildren();
+    NAV.forEach(function (item) {
+      var a = document.createElement('a');
+      a.href = '#' + item.id;
+      a.textContent = item.label;
+      a.setAttribute('aria-current', 'false');
+      a.dataset.navId = item.id;
+      el.nav.appendChild(a);
+    });
+  }
+
+  // Highlights the nav entry for whichever section is under the sticky bars.
+  // Purely an enhancement over the plain #anchor links renderNav() already
+  // built, which jump without it, so where IntersectionObserver is
+  // unavailable this quietly does nothing and the nav still works.
+  function initScrollSpy() {
+    if (!('IntersectionObserver' in window)) return;
+    if (!el.nav) return;
+    var links = Array.prototype.slice.call(el.nav.querySelectorAll('a'));
+    if (!links.length) return;
+
+    function setCurrent(id) {
+      links.forEach(function (a) {
+        a.setAttribute('aria-current', String(a.dataset.navId === id));
+      });
+    }
+
+    // A thin band just under the two sticky bars: a section only takes over
+    // the highlight once its heading has cleared them, not the instant any
+    // part of it enters the viewport.
+    var spy = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) setCurrent(e.target.dataset.navGroup);
+      });
+    }, { rootMargin: '-118px 0px -70% 0px', threshold: 0 });
+
+    NAV.forEach(function (item) {
+      var el2 = document.getElementById(item.id);
+      var targets = item.watch
+        ? document.getElementsByClassName(item.watch)
+        : (el2 ? [el2] : []);
+      Array.prototype.forEach.call(targets, function (t) {
+        t.dataset.navGroup = item.id;
+        spy.observe(t);
+      });
+    });
+  }
+
+  renderNav();
+
   /* ─── boot ────────────────────────────────────────────────────────────── */
 
   el.print.addEventListener('click', function () { window.print(); });
@@ -1821,6 +1939,7 @@ td .bk__todo { margin-top: 0; }
     renderK2k();
     renderResearch();
     renderFiles();
+    initScrollSpy();
   }).catch(function (err) {
     if (el.loading) el.loading.remove();
     el.error.hidden = false;

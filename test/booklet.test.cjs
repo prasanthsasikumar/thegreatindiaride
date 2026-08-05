@@ -519,3 +519,55 @@ test('the planning pages are blank to write on, not pre-filled with advice', asy
     assert.strictEqual(b.children[1].textContent, '');
   });
 });
+
+test('the section nav jumps to every top-level part of the book, and is screen-only', async function () {
+  // Deep links and browser search are the whole reason a nav was chosen over tabs, so
+  // this asserts every entry actually resolves rather than trusting the labels. Break
+  // one entry's target on purpose (change 'bk-costs' to, say, 'bk-costz' in the NAV
+  // table below the boot section of booklet.html) and this test must fail; put it back
+  // and it must pass again.
+  const { main, byId } = await render();
+
+  const nav = byId['bk-nav'];
+  assert.ok(nav, 'the nav element is on the page');
+
+  // The stub DOM (see render(), above) reconstructs every static id as a bare div and
+  // does not carry static class attributes over, so noprint has to be checked against
+  // the markup itself rather than against the stand-in node.
+  const html = fs.readFileSync(path.join(ROOT, 'booklet.html'), 'utf8');
+  const navTag = html.match(/<nav\b[^>]*>/);
+  assert.ok(navTag, 'the <nav> tag is in the markup');
+  assert.match(navTag[0], /id="bk-nav"/, 'found a stray <nav> that is not this one');
+  assert.match(navTag[0], /class="[^"]*\bnoprint\b[^"]*"/,
+    'the nav is screen-only chrome, same as the rest of the toolbar');
+
+  const links = nav.children.filter(function (n) { return n.tagName === 'a'; });
+  assert.strictEqual(links.length, 9,
+    'one entry per top-level part: cover, at a glance, the map, sectors, K2K, costs, ' +
+    'seasons, planning, the archive');
+
+  links.forEach(function (a) {
+    const id = String(a.href || '').replace(/^#/, '');
+    assert.ok(id, 'a nav link has no hash target: "' + a.textContent + '"');
+    const target = byId[id] || main.collect(function (n) { return n.id === id; })[0];
+    assert.ok(target, 'nav entry "' + a.textContent + '" points at #' + id + ', which does not exist');
+  });
+});
+
+test('no content section is hidden with display: none on screen', async function () {
+  // The trap this design exists to avoid: a screen rule hiding a whole content section
+  // with display: none, which @media print would have to reverse exactly or a page
+  // silently vanishes from the PDF. A sticky nav hides nothing, so this scans the
+  // screen half of the stylesheet (everything before @media print) and requires that
+  // every display: none rule found there is gated on the [hidden] attribute: used for
+  // transient UI state (the loading/error message, the appendix skip toggle), never for
+  // parking a whole section off-screen.
+  const html = fs.readFileSync(path.join(ROOT, 'booklet.html'), 'utf8');
+  const screenCss = html.slice(html.indexOf('<style>'), html.indexOf('@media print'));
+  const hides = screenCss.match(/[^\n{}]+\{[^{}]*display\s*:\s*none[^{}]*\}/g) || [];
+  assert.ok(hides.length > 0, 'sanity check: the known [hidden]-gated rules should still be found');
+  hides.forEach(function (rule) {
+    assert.match(rule, /\[hidden\]/,
+      'a screen rule hides something without gating it on [hidden]: ' + rule.trim());
+  });
+});
