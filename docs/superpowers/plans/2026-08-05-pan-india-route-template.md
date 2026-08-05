@@ -11,6 +11,13 @@
 ## Global Constraints
 
 - **No npm dependencies.** `package-lock.json` has an empty `packages` map and stays that way. Tests use Node 22's built-in `node:test` and `node:assert`. No jsdom, no bundler, no build step for the site itself.
+- **NO EM DASHES (—) anywhere.** Author's instruction, 2026-08-05. Applies to all site
+  copy, generated content, comments and docs. Use a colon when the second half explains
+  the first, a semicolon when two clauses balance, parentheses for a true aside, or start
+  a new sentence. Restructuring usually beats substituting a mark. En dashes in numeric
+  ranges (6,000–9,000 km) are a different character and are fine. The one exception is
+  material transcribed verbatim from a third party, where the punctuation is theirs:
+  flag it rather than silently rewriting a quotation.
 - **Run the tests as `node --test`, with no path argument.** On Node 22.23 a directory argument (`node --test test/`) is resolved as a module path and dies with `Cannot find module`. Bare `node --test` discovers `test/**` correctly.
 - **Source spreadsheets stay outside the repo.** Generators take a path argument. The itinerary CSV lives at `~/Downloads/Pan India Trip  - Itinerary.csv` (note the **two spaces** before the hyphen).
 - **House JS style in `index.html` / `atlas.js` / `booklet.html`:** `var` not `let`/`const`, `function () {}` not arrow functions, no template literals, no optional chaining. The existing file is uniform in this and new code must not stand out. Node `.cjs` scripts use `const` and modern syntax, matching `build-route.cjs`.
@@ -2315,6 +2322,61 @@ Mutation-check by pointing one entry at a missing id and confirming the test fai
 
 Bare `node --test`. Section and page counts unchanged; the 15 gaps still 15; cost parity
 intact.
+
+---
+
+## Task 12: Remove every em dash
+
+**Files:** `index.html`, `booklet.html`, `template-notes.json`, `research.json`, `README.md`, and any `.cjs` comment that carries one.
+
+**WHY:** the author's instruction, given 2026-08-05. It is now a Global Constraint, so
+Tasks 8, 10 and 11 must comply as they are written. This task cleans up what already
+shipped.
+
+Current counts: `index.html` 42, `booklet.html` 52, `research.json` 80,
+`template-notes.json` 5, `README.md` 25.
+
+**DO NOT do this with a blanket find-and-replace.** An em dash does different jobs in
+different sentences, and a global swap to a hyphen or a comma produces prose that reads
+as though it was processed rather than written. Rewrite each one:
+
+- second half explains the first: use a colon
+- two balanced independent clauses: use a semicolon, or split the sentence
+- a genuine aside: parentheses, or commas
+- an interruption or a turn: usually a full stop and a new sentence
+
+Where the sentence resists all four, restructure it. The result must read as if it never
+contained an em dash.
+
+**`research.json` needs care.** Roughly 80 of these sit in prose transcribed from the
+author's own field report, and Task 9 was explicitly a transcription exercise whose
+fidelity the review verified line by line. The em dashes there are the report's
+typography, not a rider's words. Rewrite them the same way, BUT leave untouched any
+punctuation inside a directly quoted sentence attributed to a named third party (the
+pull quotes from `nb21` and Mehdia Fathima, and any quoted forum text). Altering a
+quotation to suit a house style is a different thing from restyling narration. List in
+your report every quotation you left alone and why.
+
+**En dashes are not em dashes.** Numeric ranges such as 6,000–11,000 km and ₹100–200
+use U+2013 and must survive. Only U+2014 is in scope. Check what you are matching.
+
+- [ ] **Step 1: Sweep and rewrite**
+
+Work file by file. After each, `grep -c '—'` to confirm zero.
+
+- [ ] **Step 2: Add a guard so they cannot come back**
+
+Extend `test/booklet.test.cjs` (or add `test/style.test.cjs`) with a test asserting that
+`index.html`, `booklet.html`, `template-notes.json` and `research.json` contain no U+2014,
+excluding any attributed-quotation fields you deliberately preserved. Mutation-check it by
+reintroducing one and confirming the test fails.
+
+- [ ] **Step 3: Verify nothing else moved**
+
+Bare `node --test`. The 15 rendered gaps still 15; cost and totals parity unchanged; all
+eight figure credits intact. Rewriting prose must not disturb any figure or assertion.
+
+- [ ] **Step 4: Commit**
 
 ---
 
