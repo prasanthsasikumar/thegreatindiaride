@@ -356,6 +356,14 @@ test('every research photograph carries its credit line, in the same figure', as
   assert.deepStrictEqual(seen.sort(), RESEARCH.figures.map(function (f) { return f.file; }).sort());
 });
 
+test('no optional field renders as the string "undefined"', async function () {
+  // Every one of these records is optional somewhere — a caption, a note, a source.
+  // A missing one has to render as nothing, not as the word "undefined" printed
+  // under a photograph or in the middle of a cost sentence.
+  const { main } = await render();
+  assert.doesNotMatch(main.textContent, /undefined/);
+});
+
 test('the research files it names all exist on disk', async function () {
   RESEARCH.figures.forEach(function (f) {
     assert.ok(fs.existsSync(path.join(ROOT, f.file)), f.file + ' is missing');

@@ -284,8 +284,12 @@ td .bk__todo { margin-top: 0; }
    watermark intact, so the credit is part of the figure and not a caption
    flourish: it is emitted with the image, always, in both media. */
 .bk__fig { margin: var(--space-6) 0; }
+/* Capped on height as well as width, and never stretched past its own pixels:
+   the two portrait plates are 665×1100 and 733×1100, and at width:100% in this
+   column they would be upscaled to roughly 1,390px tall — a soft image and a
+   figure taller than the screen. Print caps the same way, in millimetres. */
 .bk__fig img {
-  display: block; width: 100%; height: auto;
+  display: block; width: auto; max-width: 100%; height: auto; max-height: 620px;
   border-radius: var(--radius-sm); border: var(--rule);
 }
 .bk__fig figcaption {
@@ -441,7 +445,9 @@ td .bk__todo { margin-top: 0; }
   /* Small tables stay whole and a row never splits down the middle. */
   table { break-inside: avoid; }
   tr { break-inside: avoid; }
-  h1, h2, h3 { break-after: avoid; }
+  /* h4 included: the cost-page archive block is deliberately breakable, and its
+     heading is an h4, so without this it can be orphaned at the foot of a sheet. */
+  h1, h2, h3, h4 { break-after: avoid; }
 
   /* …except the waypoint tables and the blank log, which have to be allowed to
      break: the long east is 51 legs, and a table told to avoid a break is pushed
@@ -1069,9 +1075,10 @@ td .bk__todo { margin-top: 0; }
     fig.appendChild(img);
 
     // Caption as an explicit text node rather than via textContent, so appending the
-    // credit after it cannot displace it.
+    // credit after it cannot displace it — and only when there is one, or a record
+    // without a caption would print the string "undefined" under the photograph.
     var cap = elem('figcaption');
-    cap.appendChild(document.createTextNode(found.caption));
+    if (found.caption) cap.appendChild(document.createTextNode(found.caption));
     cap.appendChild(elem('div', 'bk__credit', found.credit));
     fig.appendChild(cap);
     return fig;
@@ -1233,8 +1240,10 @@ td .bk__todo { margin-top: 0; }
     parent.insertBefore(researchRefs(), anchor);
 
     el.skip.hidden = false;
+    // toggle(), not className: rewriting the whole list would silently drop any
+    // class later added to <main>.
     el.skipToggle.addEventListener('change', function () {
-      el.book.className = el.skipToggle.checked ? 'bk bk--no-appendix' : 'bk';
+      el.book.classList.toggle('bk--no-appendix', el.skipToggle.checked);
     });
   }
 
@@ -1265,7 +1274,7 @@ td .bk__todo { margin-top: 0; }
     box.appendChild(elem('p', 'bk__body',
       'As a planning rule the archive supports something like ' + rupee(ppd.low) + '–' +
       num(ppd.high) + ' per person per day, ' + ppd.basis + ', in ' + ppd.year +
-      ' money. ' + ppd.note));
+      ' money.'));
 
     var it = b.itemised;
     var t1 = elem('table', 'bk__table');
