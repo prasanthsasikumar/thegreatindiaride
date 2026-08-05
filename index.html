@@ -157,6 +157,15 @@ button { font: inherit; color: inherit; }
   background: var(--color-text);
 }
 .hero__cta:hover { color: var(--color-bg); background: var(--color-muted); }
+/* The CTA and its escape hatch travel together, or space-between in .hero__foot
+   would throw the quiet link to the far edge of the hero. */
+.hero__acts { flex: 0 0 auto; display: flex; align-items: baseline; flex-wrap: wrap; }
+.hero__alt {
+  display: inline-block; margin-left: var(--space-4); font-size: 13px;
+  color: var(--color-muted); text-decoration: none;
+  border-bottom: 1px solid var(--color-line-strong);
+}
+.hero__alt:hover { color: var(--color-text); }
 
 /* stats band */
 .band {
@@ -178,7 +187,9 @@ button { font: inherit; color: inherit; }
 
 @media (max-width: 700px) {
   .hero__body { padding-top: clamp(36px, 9vh, 80px); }
+  .hero__acts { width: 100%; }
   .hero__cta { width: 100%; text-align: center; }
+  .hero__alt { margin: var(--space-3) auto 0; }
   .band { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .band > div { padding: var(--space-4) var(--space-4); }
   .band > div:nth-child(3), .band > div:nth-child(4) { border-top: var(--rule); }
@@ -288,6 +299,38 @@ button { font: inherit; color: inherit; }
 .atlas[data-mode="map"] .india { fill: none; stroke-width: 1.5; }
 .atlas[data-mode="map"] .neighbour { stroke: color-mix(in srgb, #201e1d 45%, transparent); }
 .atlas .tile-img { image-rendering: auto; }
+
+/* ─── the overview ─────────────────────────────────────────────────────── */
+.ov { border-top: var(--rule); padding-top: var(--space-3); margin-top: var(--space-3); }
+.ov[hidden] { display: none; }
+.ov__leg {
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.12em;
+  color: var(--color-accent-2);
+}
+.ov__where {
+  font-family: var(--font-heading); font-weight: var(--fw-bold);
+  font-size: 18px; margin-top: 2px;
+}
+.ov__text { font-size: 13px; color: var(--color-muted); margin: 6px 0 0; min-height: 3em; }
+.ov__caption { transition: opacity 260ms ease; }
+.ov__caption[data-fade="true"] { opacity: 0; }
+.ov__bar { display: flex; align-items: center; gap: var(--space-3); margin-top: var(--space-3); }
+.ov__btn {
+  background: none; border: 1px solid var(--color-line-strong); border-radius: var(--radius);
+  color: var(--color-text); font: inherit; font-size: 12px; padding: 5px 10px; cursor: pointer;
+}
+.ov__btn:hover { border-color: var(--color-text); }
+.ov__btn--x { margin-left: auto; font-family: var(--font-mono); letter-spacing: 0.08em; }
+.ov__dots { display: flex; gap: 6px; flex: 1; }
+.ov__dot {
+  flex: 1; height: 3px; border: 0; padding: 0; cursor: pointer;
+  background: var(--color-line-strong);
+}
+.ov__dot[data-on="true"] { background: var(--color-accent); }
+
+@media (prefers-reduced-motion: reduce) {
+  .ov__caption { transition: none; }
+}
 
 /* ─── legs + regions ───────────────────────────────────────────────────── */
 .leg__head { background: var(--color-surface); color: var(--color-text); border: var(--rule); border-radius: var(--radius); }
@@ -558,7 +601,11 @@ button { font: inherit; color: inherit; }
   /* Four across fits the 460px pane: 18,000 at 24px bold is about 80px wide. */
   /* Four across the 460px pane: Space Grotesk sets "18,000" wider than Archivo did
      and it collided with the next column at 24px. */
-  .mapsection { flex: 1; min-height: 0; margin-top: 0; border-top: 0; padding-top: 16px; }
+  /* The pane is exactly 100vh and clips whatever will not fit. The map alone always
+     did; the overview adds a caption and a control bar under it, and those are the
+     last things that should fall off the bottom of a short window. Let this section
+     scroll instead — when it fits, which is every ordinary laptop, nothing changes. */
+  .mapsection { flex: 1; min-height: 0; margin-top: 0; border-top: 0; padding-top: 16px; overflow-y: auto; }
   .mapsection__head { display: none; }
   .pane__foot {
     display: block; border-top: var(--rule); padding-top: 10px;
@@ -645,7 +692,10 @@ button { font: inherit; color: inherit; }
     <h1>The Great India Ride</h1>
     <div class="hero__foot">
       <p class="hero__blurb">Home in Trivandrum to Kanyakumari, up to Ladakh, across to the Arunachal border, and back down the east coast, told in the order it happened.</p>
-      <a class="hero__cta" href="#region-0">SEE THE CLIPS →</a>
+      <div class="hero__acts">
+        <a class="hero__cta" href="#overview" id="overview-cta">SEE THE OVERVIEW ▸</a>
+        <a class="hero__alt" href="#region-0">or go straight to the clips</a>
+      </div>
     </div>
   </div>
 
@@ -680,6 +730,21 @@ button { font: inherit; color: inherit; }
           </div>
         </div>
       </div>
+
+      <div class="ov" id="overview" hidden>
+        <div class="ov__caption" id="ov-caption" aria-live="polite">
+          <div class="ov__leg" id="ov-leg"></div>
+          <div class="ov__where" id="ov-where"></div>
+          <p class="ov__text" id="ov-text"></p>
+        </div>
+        <div class="ov__bar">
+          <button type="button" class="ov__btn" id="ov-play" aria-label="Pause">❚❚</button>
+          <div class="ov__dots" id="ov-dots" role="group" aria-label="Chapters"></div>
+          <button type="button" class="ov__btn" id="ov-sound" aria-pressed="false" hidden aria-label="Narration">🔇</button>
+          <button type="button" class="ov__btn ov__btn--x" id="ov-exit">EXIT</button>
+        </div>
+      </div>
+
       <p class="map__attr" id="map-attr" hidden>© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors</p>
     </section>
 
@@ -803,6 +868,11 @@ button { font: inherit; color: inherit; }
   var activeIdx = 0, activeIdxs = [0], lbPos = -1;
   var expanded = {};
 
+  // True while the overview is playing. It lives out here, not behind Overview.isOn(),
+  // because the scroll handler reads it on every frame and is registered before the
+  // player is built — a bare reference would throw and take scrolling down with it.
+  var overviewOn = false;
+
   // The lightbox builds a fresh <video> per clip, so unmuting used to last exactly
   // one clip. Remember the choice, and keep it across visits.
   var MAP_KEY = 'ride:map-mode';
@@ -870,6 +940,16 @@ button { font: inherit; color: inherit; }
     tplSectors: document.getElementById('tpl-sectors'),
     tplDiff: document.getElementById('tpl-diff'),
     tplCosts: document.getElementById('tpl-costs'),
+    overview: document.getElementById('overview'),
+    ovCaption: document.getElementById('ov-caption'),
+    ovLeg: document.getElementById('ov-leg'),
+    ovWhere: document.getElementById('ov-where'),
+    ovText: document.getElementById('ov-text'),
+    ovDots: document.getElementById('ov-dots'),
+    ovPlay: document.getElementById('ov-play'),
+    ovSound: document.getElementById('ov-sound'),
+    ovExit: document.getElementById('ov-exit'),
+    ovCta: document.getElementById('overview-cta'),
   };
 
   /* ─── helpers ───────────────────────────────────────────────────────── */
@@ -1031,6 +1111,9 @@ button { font: inherit; color: inherit; }
 
       return {
         id: L.def.id, title: L.def.title, sub: L.def.sub, count: all,
+        // Optional narration track, carried through from LEGS. No leg declares one
+        // today; the overview's speaker control only appears if some leg does.
+        narration: L.def.narration || null,
         dates: dated.length
           ? (fmt(dated[0].captured) + ' – ' + fmt(dated[dated.length - 1].captured)).toUpperCase() : '',
         regions: L.runs.map(function (r) {
@@ -1547,6 +1630,10 @@ button { font: inherit; color: inherit; }
     if (raf) return;
     raf = requestAnimationFrame(function () {
       raf = null;
+      // The overview drives the page, not the scroll. jump() scrolls, so without this
+      // the sweep below would re-derive activeIdx from wherever the page happened to
+      // be mid-transition and overwrite the region the player had just chosen.
+      if (overviewOn) return;
       var line = DESKTOP.matches ? 200 : 140;
       var cur = activeIdx;
       document.querySelectorAll('[data-region-idx]').forEach(function (n) {
@@ -1560,6 +1647,187 @@ button { font: inherit; color: inherit; }
       }
     });
   }, { passive: true });
+
+  /* ─── the overview ──────────────────────────────────────────────────── */
+  //
+  // Plays the ride in place: the map eases to each region, the legs column scrolls
+  // with it, and the caption below the map names where you are. It is a reading of
+  // the same data the page already shows, not a second story — every step is a
+  // jump() the reader could have made by hand.
+  //
+  // Narration audio is optional and ships as plumbing only. A leg in LEGS may carry
+  // `narration: "media/narration/leg-01.m4a"`; no leg does today, so the speaker never
+  // appears, and if the named file is absent playback simply carries on. Sound stays
+  // off until asked for — autoplay policy aside, nobody wants a phone talking at them
+  // in public.
+  var Overview = (function () {
+    var DWELL = 2600;          // ms per region, when not driven by audio
+    var paused = false, pos = 0, timer = null;
+    var audio = null, narrOn = false, wasPlanned = false;
+
+    function regions() { return regionsFlat; }
+
+    // Every stop the page matched to this block, as a lat/lon box for atlas.focus.
+    // A block with no stops of its own (a run made only of undated clips) gives null,
+    // which resets the map rather than framing nothing.
+    function boundsFor(r) {
+      var pts = mapPlaced.filter(function (p) { return p.idx === r.index; });
+      if (!pts.length) return null;
+      var lats = [], lons = [];
+      pts.forEach(function (p) { lats.push(p.stop.lat); lons.push(p.stop.lon); });
+      return {
+        minLat: Math.min.apply(null, lats), maxLat: Math.max.apply(null, lats),
+        minLon: Math.min.apply(null, lons), maxLon: Math.max.apply(null, lons)
+      };
+    }
+
+    function legOf(r) {
+      for (var i = 0; i < legs.length; i++) {
+        if (legs[i].regions.indexOf(r) >= 0) return legs[i];
+      }
+      return null;
+    }
+
+    function paint(r) {
+      var L = legOf(r);
+      el.ovCaption.dataset.fade = 'true';
+      // Swap the words at the bottom of the fade, not the top of it. Under reduced
+      // motion there is no fade, so the swap is immediate.
+      setTimeout(function () {
+        el.ovLeg.textContent = L ? ('LEG ' + L.id + ' · ' + L.title).toUpperCase() : '';
+        el.ovWhere.textContent = r.name;
+        el.ovText.textContent = r.count + (r.count === 1 ? ' clip · ' : ' clips · ') + r.range +
+          (L && L.sub ? ' — ' + L.sub : '');
+        el.ovCaption.dataset.fade = 'false';
+      }, MOTION.matches ? 0 : 260);
+
+      el.ovDots.querySelectorAll('.ov__dot').forEach(function (d, i) {
+        d.dataset.on = String(legs[i] === L);
+      });
+    }
+
+    function show(i) {
+      var rs = regions();
+      if (i < 0 || i >= rs.length) return stop();
+      pos = i;
+      var r = rs[i];
+
+      // jump() is the single mover: it names the block, lights the map, scrolls the
+      // legs column and opens the accordion on mobile. The page's own scroll handler
+      // is held off while overviewOn, or the scroll jump() causes would bounce back
+      // and overwrite the block the player just chose.
+      jump(r.index);
+      if (atlas) atlas.focus(boundsFor(r), !MOTION.matches);
+      paint(r);
+
+      var L = legOf(r);
+      if (L && L.narration && narrOn) playTrack(L.narration);
+      schedule(DWELL);
+    }
+
+    function schedule(ms) {
+      clearTimeout(timer);
+      if (paused) return;
+      timer = setTimeout(function () { show(pos + 1); }, ms);
+    }
+
+    function playTrack(src) {
+      if (audio && audio.src.indexOf(src) >= 0) return;
+      stopTrack();
+      audio = new Audio(src);
+      audio.play().catch(function () { /* missing file, or no gesture yet */ });
+    }
+    function stopTrack() { if (audio) { audio.pause(); audio = null; } }
+
+    function buildDots() {
+      el.ovDots.replaceChildren();
+      legs.forEach(function (L) {
+        var b = document.createElement('button');
+        b.type = 'button'; b.className = 'ov__dot';
+        b.title = L.title;
+        b.setAttribute('aria-label', L.title);
+        b.addEventListener('click', function () {
+          show(regions().indexOf(L.regions[0]));
+        });
+        el.ovDots.appendChild(b);
+      });
+    }
+
+    function setPaused(p) {
+      paused = p;
+      el.ovPlay.textContent = p ? '▶' : '❚❚';
+      el.ovPlay.setAttribute('aria-label', p ? 'Play' : 'Pause');
+      if (audio) { if (p) audio.pause(); else audio.play().catch(function () {}); }
+      if (p) clearTimeout(timer); else schedule(DWELL);
+    }
+
+    function start() {
+      if (overviewOn || !regions().length) return;
+      overviewOn = true;
+      paused = false;
+      el.ovPlay.textContent = '❚❚';
+      el.ovPlay.setAttribute('aria-label', 'Pause');
+
+      // One line at a time — the planned overlay would confuse a map that is already
+      // moving. Remember the reader's choice and put it back on the way out, rather
+      // than quietly rewriting a stored preference they never changed.
+      wasPlanned = planned;
+      setPlanned(false);
+      hideStop();
+
+      el.overview.hidden = false;
+      buildDots();
+      // Only offer the sound control if some leg actually declares a track.
+      el.ovSound.hidden = !legs.some(function (L) { return !!L.narration; });
+      el.ovCta.textContent = 'OVERVIEW PLAYING';
+      show(0);
+    }
+
+    function stop() {
+      if (!overviewOn) return;
+      overviewOn = false;
+      clearTimeout(timer);
+      stopTrack();
+      el.overview.hidden = true;
+      el.ovCta.textContent = 'SEE THE OVERVIEW ▸';
+      setPlanned(wasPlanned);
+      if (atlas) atlas.focus(null, !MOTION.matches);
+    }
+
+    return {
+      start: start, stop: stop,
+      next: function () { show(pos + 1); },
+      toggle: function () { setPaused(!paused); },
+      isOn: function () { return overviewOn; },
+      setSound: function (v) {
+        narrOn = v;
+        el.ovSound.setAttribute('aria-pressed', String(v));
+        el.ovSound.textContent = v ? '🔊' : '🔇';
+        if (!v) stopTrack();
+      }
+    };
+  })();
+
+  el.ovCta.addEventListener('click', function (e) {
+    e.preventDefault();
+    if (Overview.isOn()) Overview.stop(); else Overview.start();
+  });
+  el.ovExit.addEventListener('click', Overview.stop);
+  el.ovPlay.addEventListener('click', Overview.toggle);
+  el.ovSound.addEventListener('click', function () {
+    Overview.setSound(el.ovSound.getAttribute('aria-pressed') !== 'true');
+  });
+  document.addEventListener('keydown', function (e) {
+    // The lightbox owns the keyboard while it is open; it uses ArrowRight too.
+    if (!Overview.isOn() || lbPos !== -1) return;
+    // Space is also how you press the button you have tabbed to. Leave it alone when
+    // something focusable has it, or EXIT could never be reached from the keyboard.
+    var tag = e.target && e.target.tagName;
+    var held = tag === 'BUTTON' || tag === 'A' || tag === 'INPUT' || tag === 'TEXTAREA';
+    if (e.key === 'Escape') Overview.stop();
+    if (e.key === ' ' && !held) { e.preventDefault(); Overview.toggle(); }
+    if (e.key === 'ArrowRight') { e.preventDefault(); Overview.next(); }
+  });
 
   /* ─── lightbox ──────────────────────────────────────────────────────── */
   function openLb(pos) {

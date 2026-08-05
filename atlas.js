@@ -220,6 +220,15 @@
         var minW = W / 3, minH = H / 3;
         if (w < minW) { x -= (minW - w) / 2; w = minW; }
         if (h < minH) { y -= (minH - h) / 2; h = minH; }
+
+        // Letterbox the box back to the map's own shape. The <svg> carries no width or
+        // height attribute, so its intrinsic ratio comes from the viewBox: a box of a
+        // different shape resizes the ELEMENT, and the whole pane would jump about as
+        // the overview moved. Grow the short side rather than crop the long one.
+        var ar = W / H;
+        if (w / h > ar) { var nh = w / ar; y -= (nh - h) / 2; h = nh; }
+        else { var nw = h * ar; x -= (nw - w) / 2; w = nw; }
+
         to = [x, y, w, h];
       }
       var vb = svg.viewBox.baseVal;
