@@ -156,6 +156,36 @@ test('the southbound line draws every stop it charges for', function () {
   assert.ok(Math.abs(walked - K2K.south.measuredKm) < 0.05);
 });
 
+test('the Kutch spur inside the measured total is measured and disclosed separately', function () {
+  // 884 km of the 4,449.1 is a detour to the Pakistan border that no K2K rider makes,
+  // and template.json's own sector name for the stretch is "West coast & Kutch", so
+  // the repo already treats it as something other than the west coast. It cannot be
+  // dropped from the sum: there is no measured Rajkot-to-Palanpur road here to put in
+  // its place, and inventing one is the thing this whole task exists not to do. So it
+  // is quantified instead, or a reader sets 4,449 beside NH-44's 3,745 and concludes
+  // the west coast is 700 km longer than the highway, when most of that gap is this.
+  const SPUR = ['Rajkot', 'Bhuj', 'Narayan Sarovar', 'Dhordo', 'Dholavira', 'Palanpur'];
+  const pairs = {};
+  TEMPLATE.hops.forEach(function (h) { pairs[h.from + ' ' + h.to] = h.km; pairs[h.to + ' ' + h.from] = h.km; });
+  let sum = 0;
+  for (let i = 0; i < SPUR.length - 1; i++) {
+    const km = pairs[SPUR[i] + ' ' + SPUR[i + 1]];
+    assert.ok(km !== undefined, SPUR[i] + ' to ' + SPUR[i + 1] + ' is not a template hop');
+    sum += km;
+  }
+  assert.strictEqual(sum, 884);
+  assert.strictEqual(K2K.south.spurKm, sum);
+  assert.strictEqual(K2K.south.spurFrom, 'Rajkot');
+  assert.strictEqual(K2K.south.spurTo, 'Palanpur');
+  assert.ok(K2K.south.spurKm < K2K.south.measuredKm, 'the spur is part of the total, not the total');
+
+  // And the stored note discloses it without offering a shorter total, which would be
+  // an estimate of the direct road by another name.
+  assert.match(K2K.south.note, /884 km of that total is the Kutch spur/);
+  assert.match(K2K.south.note, /none is guessed/);
+  assert.doesNotMatch(K2K.south.note, /shorter by/);
+});
+
 test('the real-world total is carried with the reason it is bigger than the highway', function () {
   assert.strictEqual(K2K.realWorld.low, 6000);
   assert.strictEqual(K2K.realWorld.high, 11000);
@@ -178,7 +208,7 @@ const K2K_SRC = cut('function syncK2k() {', '\n  }') + cut('function setK2k(on) 
 
 function fakeNode() {
   return {
-    dataset: {}, attrs: {}, textContent: '', hidden: true,
+    dataset: {}, attrs: {}, textContent: '', hidden: true, disabled: false, title: '',
     setAttribute: function (k, v) { this.attrs[k] = String(v); },
     addEventListener: function () {},
   };
@@ -186,7 +216,7 @@ function fakeNode() {
 
 function toggleHarness(on) {
   const writes = [];
-  const el = { atlas: fakeNode(), k2kToggle: fakeNode() };
+  const el = { atlas: fakeNode(), k2kToggle: fakeNode(), planToggle: fakeNode() };
   const ctx = {
     el: el,
     k2kOn: !!on,
@@ -225,6 +255,20 @@ test('turning K2K on marks the map, which is what dims the other two lines', fun
   assert.strictEqual(h.el.k2kToggle.attrs['aria-pressed'], 'false');
 });
 
+test('the planned-route toggle is turned off rather than left lying about its line', function () {
+  // K2K removes the planned loop outright, so a toggle still reading "Hide planned"
+  // and still answering clicks would be offering to hide a line that is not on the
+  // map. It goes dead for as long as K2K is up, and says why.
+  const h = toggleHarness(false);
+  assert.strictEqual(h.el.planToggle.disabled, false);
+  h.setK2k(true);
+  assert.strictEqual(h.el.planToggle.disabled, true);
+  assert.match(h.el.planToggle.title, /K2K already draws this side of the loop/);
+  h.setK2k(false);
+  assert.strictEqual(h.el.planToggle.disabled, false);
+  assert.strictEqual(h.el.planToggle.title, '');
+});
+
 test('the stylesheet is what steps the other lines back, and puts them back afterwards', function () {
   // The dimming is CSS keyed off the same attribute the toggle writes, so there is
   // no second copy of the rule in JS that could drift out of step with it.
@@ -249,7 +293,7 @@ test('both pages read k2k.json rather than repeating its figures', function () {
 test('the page says which number is cited and which was measured', function () {
   // The copy is where the distinction is actually made to a reader, so it is run
   // rather than read: the real renderK2k, over the real k2k.json.
-  const src = cut('function renderK2k() {', '\n  }');
+  const src = cut('function hasK2k() {', '\n  }') + cut('function renderK2k() {', '\n  }');
   const node = function (tag) {
     return {
       tagName: tag, className: '', textContent: '', hidden: true, children: [],
@@ -285,6 +329,14 @@ test('the page says which number is cited and which was measured', function () {
   assert.match(text, /6,000–11,000 km/);
   assert.match(text, /4,449 km/);
   assert.match(text, /Roadory/);
+  // The spur has to be next to the total it inflates, not merely in the JSON.
+  assert.match(text, /884 km of it is the Kutch spur out to Narayan Sarovar/);
+  assert.match(text, /no measured Rajkot to Palanpur road/);
+  assert.match(text, /not going to guess one/);
+  // And the two lines must not be left reading as a circuit.
+  assert.match(text, /The two do not meet/);
+  assert.match(text, /ends at Srinagar/);
+  assert.match(text, /picks up at Delhi/);
   // Neither figure may be given without saying which kind it is.
   assert.ok(text.indexOf('Vajiram') > 0, 'the second source is named too');
 });
@@ -293,10 +345,58 @@ test('the cache this build writes is ignored, like the other geocode caches', fu
   assert.match(read('.gitignore'), /^\.k2kcache\.json$/m);
 });
 
-test('nothing this task added uses an em dash', function () {
-  // Escaped rather than written out, so this file passes its own rule.
-  const EM_DASH = '\u2014';
+// Escaped rather than written out, so this file passes its own rule.
+const EM_DASH = '\u2014';
+
+test('nothing this task added uses an em dash: the files it owns outright', function () {
   ['build-k2k.cjs', 'k2k.json', 'test/k2k.test.cjs'].forEach(function (f) {
     assert.ok(read(f).indexOf(EM_DASH) < 0, f + ' contains an em dash');
+  });
+});
+
+test('nothing this task added uses an em dash: the K2K blocks inside the two pages', function () {
+  // The first version of this guard scanned only the three files above, which are
+  // exactly the three the violation did not land in: a legend swatch in booklet.html
+  // was three em dashes and the test reported safety. So it now reaches into both
+  // pages.
+  //
+  // WHAT IT COVERS: every line of either page that mentions k2k in any case, and the
+  // whole body of every function this task added, which is where all of its prose
+  // lives.
+  //
+  // WHAT IT DELIBERATELY DOES NOT COVER: the rest of index.html and booklet.html.
+  // Both are full of pre-existing em dashes that a later task sweeps, so a whole-file
+  // assertion here would fail today for reasons that are not this task's, and would
+  // have to be deleted rather than fixed.
+  const pages = { 'index.html': PAGE, 'booklet.html': read('booklet.html') };
+
+  Object.keys(pages).forEach(function (name) {
+    pages[name].split('\n').forEach(function (line, i) {
+      if (!/k2k/i.test(line)) return;
+      assert.ok(line.indexOf(EM_DASH) < 0,
+        name + ':' + (i + 1) + ' has an em dash: ' + line.trim());
+    });
+  });
+
+  const blocks = [
+    ['index.html', 'function hasK2k() {'],
+    ['index.html', 'function syncK2k() {'],
+    ['index.html', 'function setK2k(on) {'],
+    ['index.html', 'function renderK2k() {'],
+    ['booklet.html', 'function k2kMap(svg) {'],
+    ['booklet.html', 'function southLegs() {'],
+    ['booklet.html', 'function k2kPage() {'],
+    ['booklet.html', 'function hasK2k() {'],
+    ['booklet.html', 'function renderK2k() {'],
+  ];
+  blocks.forEach(function (b) {
+    const src = pages[b[0]];
+    const a = src.indexOf(b[1]);
+    assert.ok(a >= 0, 'could not find ' + b[1] + ' in ' + b[0]);
+    const end = src.indexOf('\n  }', a);
+    assert.ok(end > a, 'could not find the end of ' + b[1] + ' in ' + b[0]);
+    const body = src.slice(a, end);
+    assert.ok(body.indexOf(EM_DASH) < 0, b[0] + ' ' + b[1] + ' contains an em dash');
+    assert.ok(body.length > 60, b[0] + ' ' + b[1] + ' matched an empty block');
   });
 });

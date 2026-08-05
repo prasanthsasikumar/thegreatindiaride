@@ -1,5 +1,5 @@
 {
- "generated": "2026-08-05T18:27:29.214Z",
+ "generated": "2026-08-05T18:47:56.812Z",
  "source": "NH-44 corridor + template.json west-coast hops",
  "north": {
   "name": "Up the spine: NH-44",
@@ -111,9 +111,13 @@
  "south": {
   "name": "Down the west coast",
   "measuredKm": 4449.1,
+  "spurKm": 884,
+  "spurName": "the Kutch spur out to Narayan Sarovar",
+  "spurFrom": "Rajkot",
+  "spurTo": "Palanpur",
   "measured": true,
   "hops": 23,
-  "note": "Summed from this ride’s own measured hops, 23 of them, and drawn through every stop those hops pass: the Kutch spur out to Narayan Sarovar is inside the figure, so it is inside the line.",
+  "note": "Summed from this ride’s own measured hops, 23 of them, and drawn through every stop those hops pass. 884 km of that total is the Kutch spur out to Narayan Sarovar, which is not on any K2K. Skipping it makes the west-coast run shorter; by how much is not stated, because there is no measured distance here for the direct Rajkot to Palanpur road and none is guessed.",
   "points": [
    {
     "name": "Delhi",

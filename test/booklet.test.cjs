@@ -434,6 +434,28 @@ test('the K2K page keeps the cited highway apart from the measured half', async 
   assert.match(text, /a drawing and not a distance/);
   assert.match(text, /Nagpur/);
 
+  // The measured total sits two paragraphs from the cited one, so the 884 km of it
+  // that is a detour to the Pakistan border has to be printed between them. Without
+  // that a reader concludes the west coast is 700 km longer than NH-44; most of the
+  // gap is the spur. And no shorter total may be offered, because the road that would
+  // replace the spur was never measured for this book.
+  assert.match(text, /884 km of it is the Kutch spur out to Narayan Sarovar/);
+  assert.match(text, /no measured Rajkot to Palanpur road in this book/);
+  assert.match(text, /no figure for it is offered here/);
+  assert.match(text, /Cut the Kutch spur first/);
+  assert.match(text, /21-day clock/);
+
+  // Two lines that stop at Srinagar and start at Delhi are not a circuit.
+  assert.match(text, /do not join up/);
+
+  // The print key has to describe the lines that are actually drawn, and none of its
+  // swatches may be an em dash.
+  const key = page.collect(function (n) { return hasClass(n, 'bk__legend'); })[0];
+  assert.ok(key, 'the page carries a key, since aria-labels do not print');
+  assert.ok(key.textContent.indexOf('—') < 0, 'the key uses rules, not em dashes');
+  assert.match(key.textContent, /up the spine, the NH-44 corridor/);
+  assert.match(key.textContent, /down the west coast, measured/);
+
   // The measured half is printed leg by leg and the legs add up to the stored total.
   const rows = rowsOf(page.collect(function (n) { return hasClass(n, 'bk__k2k-legs'); })[0]);
   assert.strictEqual(rows.length, K2K.south.hops + 2);   // head, 23 legs, total

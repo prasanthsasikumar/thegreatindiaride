@@ -197,7 +197,7 @@ td .bk__todo { margin-top: 0; }
    because they are its two directions and on paper dash is all a reader gets. */
 .atlas .route--k2k { fill: none; stroke: var(--color-accent); stroke-width: 2; }
 .atlas .route--k2k-n { stroke-linejoin: round; stroke-linecap: round; }
-.atlas .route--k2k-s { stroke-dasharray: 8 5; stroke-linejoin: round; stroke-linecap: round; }
+.atlas .route--k2k-s { stroke-dasharray: 9 4 1.5 4; stroke-linejoin: round; stroke-linecap: round; }
 .bk__legend i.k2k { color: var(--color-accent); }
 
 .bk__map { max-width: 340px; margin: var(--space-4) 0; }
@@ -442,7 +442,7 @@ td .bk__todo { margin-top: 0; }
   /* In toner the accent is a mid grey indistinguishable from the loop, so both K2K
      lines go to full black and are told apart by their dash alone. */
   .atlas .route--k2k { stroke: #111; stroke-width: 1.6; }
-  .atlas .route--k2k-s { stroke-dasharray: 7 2 1.5 2; }
+  .atlas .route--k2k-s { stroke-dasharray: 7 3 1.2 3; }
   .atlas .stop { fill: #fff; stroke: #111; }
   .atlas .tiles { display: none; }   /* tiles never print usefully */
 
@@ -472,6 +472,11 @@ td .bk__todo { margin-top: 0; }
   .bk__stage { break-inside: auto; }
   .bk__hops, .bk__blank { break-inside: auto; }
   .bk__stage-h, .bk__hops thead, .bk__blank thead { break-after: avoid; }
+  /* The K2K legs need the same exemption for the same reason. 25 rows on a page that
+     already carries a map, a lede, a key, a caveat, two headings and three paragraphs
+     is a table that would be pushed whole onto a second sheet. */
+  .bk__k2k-legs { break-inside: auto; }
+  .bk__k2k-legs thead { break-after: avoid; }
   thead { display: table-header-group; }
 
   /* ── field research in print ──────────────────────────────────────────
@@ -1219,7 +1224,11 @@ td .bk__todo { margin-top: 0; }
     sec.appendChild(elem('p', 'bk__lede',
       'The length of the country, bottom to top, up NH-44: the prestige pan-India ' +
       'route and the one most often attempted. It is ridden as two lines, up one ' +
-      'side and down the other, and this loop already contains the second of them.'));
+      'side and down the other, and this loop already contains the second of them. ' +
+      'The two drawn here do not join up: the northbound one ends at ' +
+      n.points[n.points.length - 1].name + ' and the southbound one starts at ' +
+      s.points[0].name + ', because ' + s.points[0].name + ' is where this loop’s ' +
+      'measured west side begins.'));
 
     var spread = elem('div', 'bk__spread');
 
@@ -1234,9 +1243,12 @@ td .bk__todo { margin-top: 0; }
     mapBox.appendChild(svg);
     mapCol.appendChild(mapBox);
     mapCol.appendChild(legend([
-      { mark: '———', label: 'up the spine, the NH-44 corridor', cls: 'k2k' },
-      { mark: '– – –', label: 'down the west coast, measured', cls: 'k2k' },
-      { mark: '· · ·', label: 'the rest of the loop', dim: true }
+      // Box-drawing rules, not dashes of any kind: the swatches have to survive a
+      // reader looking at them next to the lines they describe, and the south one is
+      // dash-dot on the map so it is dash-dot here too.
+      { mark: '───', label: 'up the spine, the NH-44 corridor', cls: 'k2k' },
+      { mark: '── · ──', label: 'down the west coast, measured', cls: 'k2k' },
+      { mark: '── ── ──', label: 'the rest of the loop', dim: true }
     ]));
     mapCol.appendChild(elem('p', 'bk__caveat',
       'The northbound line is a corridor sketch: it joins the cities NH-44 runs by ' +
@@ -1264,9 +1276,18 @@ td .bk__todo { margin-top: 0; }
       s.hops + ' legs of this loop, ' + s.points[0].name + ' down to ' +
       s.points[s.points.length - 1].name + ', at ' + num(s.measuredKm) +
       ' km. These are the itinerary’s own road distances, added up and not ' +
-      're-measured. The Kutch spur out to Narayan Sarovar is inside the figure, ' +
-      'which is why it is inside the line: a route book may not draw one road and ' +
-      'charge for another.'));
+      're-measured.'));
+    col.appendChild(elem('p', 'bk__caveat',
+      'Do not read that ' + num(s.measuredKm) + ' against the ' + num(n.citedKm) +
+      ' above without this: ' + num(s.spurKm) + ' km of it is ' + s.spurName + ', ' +
+      'which is not on any K2K and which accounts for most of the gap between the ' +
+      'two figures. It is inside the total because it is inside the line, and it is ' +
+      'inside the line because there is no measured ' + s.spurFrom + ' to ' + s.spurTo +
+      ' road in this book to put in its place: a route book may not draw one road and ' +
+      'charge for another, and it may not invent a third. Skipping the spur makes ' +
+      'the west-coast run shorter. By how much is not something this book can tell ' +
+      'you, because the direct road was never measured for it, and no figure for it ' +
+      'is offered here.'));
 
     var legs = southLegs();
     if (legs) {
@@ -1299,20 +1320,31 @@ td .bk__todo { margin-top: 0; }
       'Almost nobody lives at either end, so the ride is always longer than the ' +
       'road. Riders add the run to the start line and the run home, and a K2K ' +
       'routinely totals ' + num(rw.low) + '–' + num(rw.high) + ' km rather ' +
-      'than ' + num(n.citedKm) + '. Plan for the bigger number.'));
+      'than ' + num(n.citedKm) + ' km. Plan for the bigger number.'));
     sec.appendChild(elem('p', 'bk__body',
       'The practical point of this page: a rider with three weeks does not have to ' +
       'plan a K2K from nothing. The west-coast half is already drawn, already ' +
       'measured and already broken into legs above. Take it, ride NH-44 the other ' +
-      'way, and the rest of this book still applies.'));
+      'way, and the rest of this book still applies. Cut the Kutch spur first, ' +
+      'though: ' + num(s.spurKm) + ' km out to the border and back is a real bite ' +
+      'out of a 21-day clock, and re-measure the ' + s.spurFrom + ' to ' + s.spurTo +
+      ' road yourself, because this book cannot hand you that leg.'));
     if (n.cite) sec.appendChild(elem('p', 'bk__fine', n.cite));
 
     if (basemap) k2kMap(svg);
     return sec;
   }
 
+  // The same predicate the page's map, its tables and its prose all depend on, so a
+  // present-but-malformed k2k.json costs the book the page rather than half of one.
+  function hasK2k() {
+    return !!(k2k && k2k.north && k2k.south &&
+      k2k.north.points && k2k.north.points.length > 1 &&
+      k2k.south.points && k2k.south.points.length > 1);
+  }
+
   function renderK2k() {
-    if (!k2k || !k2k.north || !k2k.south) return;
+    if (!hasK2k()) return;
     var anchor = el.k2kAnchor;
     anchor.parentNode.insertBefore(k2kPage(), anchor);
   }

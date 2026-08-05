@@ -67,6 +67,21 @@ const SOUTH_ANCHORS = [
   'Thiruvananthapuram', 'Kanniyakumari',
 ];
 
+// The Kutch spur, and why it needs its own number.
+//
+// template.json calls this whole sector "West coast & Kutch": the repo itself treats
+// Kutch as something other than the west coast, and it is right to. The run out past
+// Bhuj to Narayan Sarovar is a detour to the Pakistan border that no K2K rider makes.
+//
+// It cannot be dropped from the sum. There is no measured Rajkot-to-Udaipur hop in
+// this repo, so leaving the spur out would mean inventing a distance for the direct
+// road, which is the one thing this file exists not to do. And the line has to draw
+// every kilometre it charges for. So the spur stays in, gets measured separately, and
+// is disclosed: without its own figure a reader comparing 4,449 against NH-44's cited
+// 3,745 concludes the west coast is 700 km longer than the highway, when most of that
+// gap is this detour.
+const SOUTH_SPUR = ['Rajkot', 'Bhuj', 'Narayan Sarovar', 'Dhordo', 'Dholavira', 'Palanpur'];
+
 // What to ask Nominatim, for the corridor cities template.json does not name. The
 // state is part of the query on purpose: "Salem" alone is a town in Oregon and
 // several other places, and a wrong hit here puts the line through the sea.
@@ -200,12 +215,27 @@ function buildSouth() {
     die('the southbound line has ' + names.length + ' points for ' + used.size + ' hops');
   }
 
+  // The spur, measured out of the same hops so the two figures cannot disagree. Every
+  // step of it must be a direct template hop AND already inside the walk above: a spur
+  // the line does not actually ride would be a subtraction offered against nothing.
+  let spurKm = 0;
+  for (let i = 0; i < SOUTH_SPUR.length - 1; i++) {
+    const edges = (graph[SOUTH_SPUR[i]] || []).filter(e => e.to === SOUTH_SPUR[i + 1]);
+    if (!edges.length) die(SOUTH_SPUR[i] + ' to ' + SOUTH_SPUR[i + 1] + ' is not a template hop');
+    if (!used.has(edges[0].n)) {
+      die('the Kutch spur leg ' + SOUTH_SPUR[i] + ' to ' + SOUTH_SPUR[i + 1] +
+        ' is not on the southbound line, so it cannot be disclosed as part of it');
+    }
+    spurKm += edges[0].km;
+  }
+
   return {
     names,
     hops: used.size,
     // The hops carry one decimal place; the sum of twenty-three of them carries
     // float noise, which would print as 4449.099999999999.
     km: Math.round(km * 10) / 10,
+    spurKm: Math.round(spurKm * 10) / 10,
   };
 }
 
@@ -310,11 +340,19 @@ async function main() {
     south: {
       name: 'Down the west coast',
       measuredKm: south.km,
+      spurKm: south.spurKm,
+      spurName: 'the Kutch spur out to Narayan Sarovar',
+      spurFrom: SOUTH_SPUR[0],
+      spurTo: SOUTH_SPUR[SOUTH_SPUR.length - 1],
       measured: true,
       hops: south.hops,
       note: 'Summed from this ride’s own measured hops, ' + south.hops +
-        ' of them, and drawn through every stop those hops pass: the Kutch spur out ' +
-        'to Narayan Sarovar is inside the figure, so it is inside the line.',
+        ' of them, and drawn through every stop those hops pass. ' + south.spurKm +
+        ' km of that total is the Kutch spur out to Narayan Sarovar, which is not on ' +
+        'any K2K. Skipping it makes the west-coast run shorter; by how much is not ' +
+        'stated, because there is no measured distance here for the direct ' +
+        SOUTH_SPUR[0] + ' to ' + SOUTH_SPUR[SOUTH_SPUR.length - 1] + ' road and none ' +
+        'is guessed.',
       points: southPoints,
     },
     realWorld: REAL_WORLD,
@@ -327,7 +365,8 @@ async function main() {
     northPoints.filter(p => p.source === 'nominatim').length + ' geocoded, ' +
     'cited at ' + NH44.citedKm.toLocaleString('en-IN') + ' km (not measured)');
   console.log('  south  ' + southPoints.length + ' points, ' + south.hops + ' measured hops, ' +
-    south.km.toLocaleString('en-IN') + ' km');
+    south.km.toLocaleString('en-IN') + ' km, of which ' +
+    south.spurKm.toLocaleString('en-IN') + ' km is the Kutch spur');
   console.log('  a real K2K, start line and run home included: ' +
     REAL_WORLD.low.toLocaleString('en-IN') + ' to ' + REAL_WORLD.high.toLocaleString('en-IN') + ' km');
 }
