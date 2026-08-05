@@ -381,8 +381,8 @@ and back through Dholavira to Palanpur. No K2K rider makes that detour. It canno
 dropped either, because there is no measured direct Rajkot to Palanpur road in this
 repo and inventing one is the single thing this script exists not to do. So it stays
 in, is measured separately, and is disclosed on both the site and the book: without
-its own figure a reader comparing 4,449 against 3,745 concludes the west coast is
-700 km longer than the highway, when most of that gap is this spur.
+its own figure a reader comparing 4,449 against 3,745 reads a difference between two
+figures that were never measuring the same road.
 
 Every written point carries `source: "template"` or `source: "nominatim"`, so
 provenance survives into the data instead of living only in a comment. Six corridor
@@ -505,14 +505,18 @@ Browser files (`index.html`, `booklet.html`, `atlas.js`, `costs.js`) are ES5-fla
 chaining. `.cjs` build scripts are under no such constraint and use modern syntax
 freely.
 
-**No em dashes anywhere.** `test/style.test.cjs` walks `git ls-files`, skips binaries
-and `docs/superpowers/**`, and fails the build on any U+2014 with the file, the line
-and the surrounding sentence. It is repo-wide rather than a list of the files that were
-wrong last time, because the rule had already been broken three times by three
-different hands in files no scoped test was watching.
+**No em dashes anywhere.** `test/style.test.cjs` walks `git ls-files`, skips binaries,
+and fails the build on any U+2014 with the file, the line and the surrounding sentence.
+It is repo-wide rather than a list of the files that were wrong last time, because the
+rule had already been broken three times by three different hands in files no scoped
+test was watching.
 
-Two exemptions, both because the text is somebody else's:
+Three exemptions, matching `SKIP_DIRS`, `QUOTED_THREAD_TITLES` and `CAPTION_ONLY` in
+that file. The first is ours; the other two are somebody else's text:
 
+- **Two directories**, skipped whole: `docs/superpowers/**`, the planning documents,
+  which are never served to a reader; and `.superpowers/**`, gitignored scratch. Both
+  are in `SKIP_DIRS`. Nothing else is skipped by path.
 - **Five xBhp thread titles** in `research.json`'s reference list, quoted verbatim
   inside curly quotes and attributed by name. They are citations: a reader searching
   xBhp for one of these strings has to find the thread, and restyling somebody's title
@@ -525,9 +529,13 @@ Two exemptions, both because the text is somebody else's:
   `"caption"` lines only; any other line in either file is in scope. If these ever do
   need sweeping, the fix belongs in the generators, not in the JSON.
 
-The en dash is a different character doing a different job (6,000–11,000 km, ₹100–200,
-₹2,000–2,200 a day) and a separate test asserts three of those survived, because a
-sweep written against the wrong code point would silently take them too.
+The en dash is a different character doing a different job: a numeric range
+(6,000–11,000 km, ₹100–200), a date range (23 Jan – 27 Mar), a route join
+(Kolhapur–Belgaum). A sweep written against the wrong code point would silently take
+those too, so a separate test pins every distinct en-dash-joined token in
+`research.json` and `template-notes.json` and fails if any one of them is flattened.
+The list moves when the transcription legitimately does, which is deliberate: these
+are somebody else's words, so a range changing shape should cost a look.
 
 ## Known issues
 

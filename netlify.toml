@@ -96,3 +96,17 @@
   for = "/media/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
+
+# ...except these eight. media/research/fig-01.jpg through fig-08.jpg are other
+# people's photographs, reproduced with credit. Their names are sequential rather
+# than content-addressed and they are referenced with no hash and no query, so
+# replacing a plate reuses its filename. A year of `immutable` would mean a
+# correction, a re-credit or a takedown could not reach a returning visitor at all.
+# An hour is the price of being able to withdraw someone else's picture.
+#
+# This MUST stay BELOW /media/* (see ORDER MATTERS, above: the last matching block
+# wins). Moved above it, this rule is silently overridden and does nothing.
+[[headers]]
+  for = "/media/research/*"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"

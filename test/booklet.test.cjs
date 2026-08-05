@@ -13,6 +13,30 @@ const ROOT = path.join(__dirname, '..');
 //
 // It deliberately does NOT try to be a browser: no layout, no CSS, no events. Print
 // appearance is not testable here and is not claimed to be.
+//
+// ────────────────────────────────────────────────────────────────────────────
+// READ THIS BEFORE TRUSTING ANY SWEEP IN THIS FILE.
+//
+// render() does not parse booklet.html. It scrapes the ids the markup declares and
+// rebuilds each one as a bare, CLASSLESS <div> with no text and no children, purely
+// so the page's inline script has somewhere to write. Everything the author typed
+// into the markup by hand (every heading, every paragraph of prose, every class
+// attribute, every static <section>) is therefore ABSENT from `main`.
+//
+// So a sweep that looks page-wide is not page-wide. `main.textContent` is the
+// DYNAMIC content only: what the script built out of template.json, k2k.json,
+// research.json, template-notes.json and costs.js. An assertion like
+//
+//     assert.doesNotMatch(main.textContent, /undefined/)
+//
+// says nothing whatever about the static half of the book. The same goes for any
+// collect() that filters on a class: a statically-declared element cannot match one,
+// because it does not have one here.
+//
+// Anything about the markup itself has to be asserted against the raw source, the
+// way the nav-coverage test below does. This is stated once, here, rather than in
+// each test that happens to remember.
+// ────────────────────────────────────────────────────────────────────────────
 
 function Node(tag) {
   this.tagName = tag;
@@ -24,10 +48,14 @@ function Node(tag) {
   this.parentNode = null;
   this._text = '';
 }
+// Own text first, then children. The page routinely sets textContent on an element
+// and THEN appends to it (a waypoint's place name, then its point-of-interest span),
+// which in a real DOM reads back as both. Returning only the children when there are
+// any, as this used to, silently dropped the place name off every waypoint row that
+// had a point of interest beside it.
 Object.defineProperty(Node.prototype, 'textContent', {
   get: function () {
-    if (!this.children.length) return this._text;
-    return this.children.map(function (c) { return c.textContent; }).join('');
+    return this._text + this.children.map(function (c) { return c.textContent; }).join('');
   },
   set: function (v) { this._text = String(v); this.children = []; },
 });
@@ -49,6 +77,7 @@ Node.prototype.insertBefore = function (c, ref) {
 };
 Node.prototype.replaceChildren = function () {
   this.children = [];
+  this._text = '';                 // it replaces text nodes too, same as the real one
   for (let i = 0; i < arguments.length; i++) this.appendChild(arguments[i]);
 };
 Node.prototype.remove = function () {
@@ -318,10 +347,56 @@ test('the season calendar leaves both columns blank for every sector', async fun
 });
 
 test('every leg of the template appears exactly once across the waypoint tables', async function () {
+  // The waypoint tables ARE the route book: strip them and what is left is a cover,
+  // some totals and an essay. So this compares the legs actually printed against the
+  // legs actually in template.json, in order, by content.
+  //
+  // It used to compare only sum(rows) against totals.hops, which is a count and not a
+  // route. Point stageBlock at tpl.hops[st.hopFrom] instead of tpl.hops[i] and every
+  // row in a sector prints that sector's FIRST leg: 96 of the 97 legs vanish from the
+  // printed book, the row count is untouched, and the old assertion passed. Make that
+  // change and this test must fail; put it back and it must pass.
   const { main } = await render();
   const tables = main.collect(function (n) { return hasClass(n, 'bk__hops'); });
-  const legs = tables.reduce(function (a, t) { return a + rowsOf(t).length - 1; }, 0);
-  assert.strictEqual(legs, TEMPLATE.totals.hops);
+
+  // What the page printed. The destination cell carries an optional " · point of
+  // interest" suffix appended after the place name; the leg is the name.
+  const printed = [];
+  tables.forEach(function (t) {
+    rowsOf(t).slice(1).forEach(function (r) {      // drop the column heads
+      printed.push({ n: r[0], to: r[1].split(' · ')[0], km: r[2], hours: r[3] });
+    });
+  });
+
+  // What template.json says should have been printed, in the order the page walks it:
+  // sector by sector, stage by stage, hopFrom through hopTo. Formatted the way the
+  // page formats it, so a leg landing in the wrong row is a mismatch and not a
+  // rounding argument.
+  const num = function (v) { return Math.round(v).toLocaleString('en-IN'); };
+  const expected = [];
+  TEMPLATE.sectors.forEach(function (s) {
+    s.stages.forEach(function (st) {
+      for (let i = st.hopFrom; i <= st.hopTo; i++) {
+        const hop = TEMPLATE.hops[i];
+        expected.push({
+          n: String(i - st.hopFrom + 1),
+          to: hop.to,
+          km: num(hop.km),
+          hours: hop.hours.toFixed(1),
+        });
+      }
+    });
+  });
+
+  assert.strictEqual(expected.length, TEMPLATE.totals.hops,
+    'sanity check: the sectors between them should walk every hop in the sheet');
+  assert.deepStrictEqual(printed, expected);
+
+  // And the same legs as a set, so a permutation that happened to re-sum correctly is
+  // still caught by name rather than by arithmetic.
+  assert.deepStrictEqual(
+    printed.map(function (r) { return r.to; }).slice().sort(),
+    TEMPLATE.hops.map(function (h) { return h.to; }).slice().sort());
 });
 
 test('every research photograph carries its credit line, in the same figure', async function () {
@@ -360,6 +435,9 @@ test('no optional field renders as the string "undefined"', async function () {
   // Every one of these records is optional somewhere: a caption, a note, a source.
   // A missing one has to render as nothing, not as the word "undefined" printed
   // under a photograph or in the middle of a cost sentence.
+  //
+  // Dynamic content only, which is where an "undefined" can come from: see the
+  // caveat at the top of this file. The static markup is not in `main`.
   const { main } = await render();
   assert.doesNotMatch(main.textContent, /undefined/);
 });
@@ -531,9 +609,8 @@ test('the section nav jumps to every top-level part of the book, and is screen-o
   const nav = byId['bk-nav'];
   assert.ok(nav, 'the nav element is on the page');
 
-  // The stub DOM (see render(), above) reconstructs every static id as a bare div and
-  // does not carry static class attributes over, so noprint has to be checked against
-  // the markup itself rather than against the stand-in node.
+  // noprint is a static class attribute, so it is checked against the markup itself
+  // rather than against the stand-in node (see the caveat at the top of this file).
   const html = fs.readFileSync(path.join(ROOT, 'booklet.html'), 'utf8');
   const navTag = html.match(/<nav\b[^>]*>/);
   assert.ok(navTag, 'the <nav> tag is in the markup');
@@ -542,9 +619,26 @@ test('the section nav jumps to every top-level part of the book, and is screen-o
     'the nav is screen-only chrome, same as the rest of the toolbar');
 
   const links = nav.children.filter(function (n) { return n.tagName === 'a'; });
-  assert.strictEqual(links.length, 10,
-    'one entry per top-level part: cover, at a glance, the map, sectors, K2K, costs, ' +
-    'seasons, planning, the archive, fork it');
+
+  // The nav it actually built, label and target, in order. This used to be a bare
+  // count, which is a number one increment away from being wrong in either direction
+  // and says nothing about where any entry points. Pinning the pairs means a
+  // retargeted entry, a relabelled one, a lost one and a reordered one are each a
+  // failure that names itself.
+  assert.deepStrictEqual(links.map(function (a) {
+    return [a.textContent, String(a.href || '').replace(/^#/, '')];
+  }), [
+    ['Cover', 'bk-cover'],
+    ['At a glance', 'bk-at-a-glance'],
+    ['The map', 'bk-master'],
+    ['Sectors', 'bk-sectors'],
+    ['K2K', 'bk-k2k'],
+    ['Costs', 'bk-costs'],
+    ['Seasons', 'bk-season'],
+    ['Planning', 'bk-planning'],
+    ['The archive', 'bk-research'],
+    ['Fork it', 'bk-fork'],
+  ]);
 
   links.forEach(function (a) {
     const id = String(a.href || '').replace(/^#/, '');
@@ -563,14 +657,26 @@ test('every top-level page in the book is reachable from the nav, or is a named 
   // built. A page landing in neither list now (Task 8, say, adding another one) has
   // to be a test failure, not a silent gap.
   //
-  // NAV_TARGETS is what the nav in booklet.html actually points at. Most map to
-  // exactly one top-level page; 'bk-sectors' and 'bk-research' are the two entries
-  // that deliberately stand for more than one (the five sector spreads; the
-  // appendix's opener, its parts and its references page); GROUP_SIZE says how many.
-  const NAV_TARGETS = [
-    'bk-cover', 'bk-at-a-glance', 'bk-master', 'bk-sectors', 'bk-k2k',
-    'bk-costs', 'bk-season', 'bk-planning', 'bk-research', 'bk-fork'
-  ];
+  // NAV_TARGETS is read off the nav booklet.html actually built, not written down
+  // here. It used to be a hardcoded array in this file, which meant this test
+  // compared the page's ids against a literal rather than against the nav: the nav
+  // could have been empty, or could have pointed every entry at the cover, and this
+  // still passed. Retarget the Costs entry at 'bk-cover' in booklet.html's NAV table
+  // and the Costs page becomes unreachable; this test must fail. Put it back and it
+  // must pass.
+  const { main, byId } = await render();
+  const nav = byId['bk-nav'];
+  assert.ok(nav, 'the nav element is on the page');
+  const NAV_TARGETS = nav.children
+    .filter(function (n) { return n.tagName === 'a'; })
+    .map(function (a) { return String(a.href || '').replace(/^#/, ''); });
+  assert.ok(NAV_TARGETS.length,
+    'the nav rendered no links at all, so no page in the book is reachable from it');
+
+  // Most targets map to exactly one top-level page; 'bk-sectors' and 'bk-research'
+  // are the two entries that deliberately stand for more than one (the five sector
+  // spreads; the appendix's opener, its parts and its references page); GROUP_SIZE
+  // says how many.
   const GROUP_SIZE = {
     'bk-sectors': TEMPLATE.sectors.length,
     'bk-research': RESEARCH.appendix.length + 2   // opener + one per part + references
@@ -582,16 +688,33 @@ test('every top-level page in the book is reachable from the nav, or is a named 
   const ALLOWLIST = {};
 
   // Every top-level page declared straight in the markup: a literal
-  // <section class="bk__page ..."> with its own id. Checked against the raw source,
-  // not the render()-built stub, because the stub reconstructs every static id as a
-  // bare, classless placeholder div (see render(), above): real class attributes on
-  // statically-declared elements do not survive it, which is exactly why #bk-fork's
-  // absence from the nav went unnoticed the first time: nothing was checking the
-  // markup itself.
-  const html = fs.readFileSync(path.join(ROOT, 'booklet.html'), 'utf8');
-  const staticIds = (html.match(/<section class="bk__page[^"]*"[^>]*id="[a-z0-9-]+"/g) || [])
-    .map(function (tag) { return tag.match(/id="([a-z0-9-]+)"/)[1]; });
-  assert.ok(staticIds.length >= 7, 'sanity check: expected at least the seven static top-level pages');
+  // <section class="bk__page ..."> with its own id. Checked against the raw source
+  // and not the render()-built stub, for the reason set out at the top of this file.
+  // That is exactly why #bk-fork's absence from the nav went unnoticed the first
+  // time: nothing was checking the markup itself.
+  //
+  // Comments are stripped first: the appendix anchor's comment quotes a
+  // <section class="bk__page"> as an example of what to add there, and matching
+  // inside it made an eighth, non-existent page appear in this scan.
+  //
+  // The tag match is order-independent. It used to require class before id, so an
+  // orphan page written <section id="..." class="bk__page ..."> was invisible here,
+  // and the >= 7 floor was too loose to notice one going missing either.
+  const html = fs.readFileSync(path.join(ROOT, 'booklet.html'), 'utf8')
+    .replace(/<!--[\s\S]*?-->/g, '');
+  const staticIds = (html.match(/<section\b[^>]*>/g) || [])
+    .filter(function (tag) { return /class="[^"]*\bbk__page\b/.test(tag); })
+    .map(function (tag) {
+      const m = tag.match(/\bid="([a-z0-9-]+)"/);
+      assert.ok(m, 'a top-level page carries no id, so nothing can link to it: ' + tag);
+      return m[1];
+    });
+  // Pinned rather than floored, so a page that stops being found is a failure here
+  // and not a silently smaller list quietly satisfying the loop below.
+  assert.deepStrictEqual(staticIds.slice().sort(), [
+    'bk-at-a-glance', 'bk-cover', 'bk-costs', 'bk-fork',
+    'bk-master', 'bk-planning', 'bk-season'
+  ].sort());
 
   staticIds.forEach(function (id) {
     assert.ok(NAV_TARGETS.indexOf(id) >= 0 || ALLOWLIST[id],
@@ -602,7 +725,6 @@ test('every top-level page in the book is reachable from the nav, or is a named 
   // page) really does belong to one of the nav's two grouped entries, or to K2K's
   // own, so a new page-building function that forgets to join a group is caught the
   // same way a new static page would be.
-  const { main } = await render();
   const dynamicPages = main.collect(function (n) { return hasClass(n, 'bk__page'); });
   const sectorPages = dynamicPages.filter(function (p) { return p.id && p.id.indexOf('sector-') === 0; });
   const researchPages = dynamicPages.filter(function (p) { return hasClass(p, 'bk__research'); });

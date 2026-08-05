@@ -387,6 +387,17 @@ button { font: inherit; color: inherit; }
 .ov__dot {
   flex: 1; height: 3px; border: 0; padding: 0; cursor: pointer;
   background: var(--color-line-strong);
+  position: relative;
+}
+/* The bar carries play/pause, these dots, sound and exit, and no next button, so on
+   touch a dot is the ONLY way to jump a chapter. A 3px-tall target fails WCAG 2.5.8,
+   which wants 24x24. The hit area is a transparent pseudo-element centred on the
+   rule and overflowing it, rather than padding on the button itself: the dot's own
+   box stays 3px, so nothing in the bar moves and the visible rule is unchanged. The
+   6px gap keeps neighbouring hit areas from overlapping. */
+.ov__dot::after {
+  content: ''; position: absolute; left: 0; right: 0;
+  top: 50%; height: 24px; transform: translateY(-50%);
 }
 .ov__dot[data-on="true"] { background: var(--color-accent); }
 /* No reduced-motion rule for .ov__caption: the blanket transition-duration override
@@ -804,7 +815,7 @@ button { font: inherit; color: inherit; }
       <p class="tpl__lede">
         The ride was drawn before it was ridden, and the drawing is a loop anyone can
         run: five sectors, every waypoint with its distance and hours, and two join
-        points at Bangalore and Delhi where you can start, stop, or go home from
+        points at Bengaluru and Delhi where you can start, stop, or go home from
         where you began. Free to fork.
       </p>
       <p class="tpl__figs" id="tpl-figs" hidden></p>
@@ -909,6 +920,12 @@ button { font: inherit; color: inherit; }
   var K2K_KEY = 'ride:k2k';
   var k2kOn = false;
   try { k2kOn = localStorage.getItem(K2K_KEY) === '1'; } catch (e) { /* private mode */ }
+  // Set by renderMap, and only once both lines are actually in the SVG. Having
+  // k2k.json is not the same thing as having a map: basemap.json is a separate
+  // optional fetch and atlas.js is a separate script, and either can be absent while
+  // k2k.json is fine. Everything downstream of "there is a K2K overlay to talk
+  // about" hangs off this rather than off the data alone.
+  var k2kDrawn = false;
 
   var SOUND_KEY = 'ride:sound-on';
   // Sound on unless you've turned it off. Opening a clip is a deliberate click, so
@@ -1566,6 +1583,7 @@ button { font: inherit; color: inherit; }
     if (hasK2k()) {
       atlas.drawRoute(k2k.south.points, 'route--k2k route--k2k-s');
       atlas.drawRoute(k2k.north.points, 'route--k2k route--k2k-n');
+      k2kDrawn = true;
       el.k2kToggle.hidden = false;
     }
 
@@ -2037,7 +2055,14 @@ button { font: inherit; color: inherit; }
   // the map is named as a sketch in the same paragraph that describes it, because a
   // polyline through sixteen cities looks exactly like a route and is not one.
   function renderK2k() {
-    if (!hasK2k()) return;
+    // Gated on the map having drawn the overlay, not on k2k.json having loaded. Every
+    // paragraph below describes two lines on a map and tells the reader to turn them
+    // on with a button beside it. With basemap.json or atlas.js missing there is no
+    // map, no button and no lines, and this section used to appear anyway: an essay
+    // about a drawing that is not on the page, pointing at a control that is not
+    // either. It stays hidden instead, which is what the rest of the map's absence
+    // already does.
+    if (!k2kDrawn) return;
     var n = k2k.north, s = k2k.south, rw = k2k.realWorld || {};
     var body = document.getElementById('tpl-k2k-body');
     if (!body) return;
@@ -2113,7 +2138,6 @@ button { font: inherit; color: inherit; }
     template = res[2];
     k2k = res[3];
     renderRouteBook();
-    renderK2k();
 
     var totals = build(manifest);
     el.statRegions.textContent = String(totals.totalRegions);
@@ -2127,6 +2151,10 @@ button { font: inherit; color: inherit; }
     render();
     renderStrip();
     renderMap();
+    // After renderMap and not before. The section is an explanation of an overlay on
+    // that map, so it cannot be shown until the map has actually drawn one; renderMap
+    // is what sets k2kDrawn.
+    renderK2k();
     syncStrip();
 
     setMapMode(mapMode);
@@ -2139,10 +2167,13 @@ button { font: inherit; color: inherit; }
       setPlanned(!planned);
     });
 
-    // A remembered "on" with no k2k.json would dim the ridden route and hide the
+    // A remembered "on" with nothing drawn would dim the ridden route and hide the
     // planned loop in favour of two lines that were never drawn, behind a toggle
-    // that is not on the page to undo it with.
-    if (!hasK2k()) k2kOn = false;
+    // that is not on the page to undo it with. k2kDrawn rather than hasK2k(),
+    // because a good k2k.json with no map is exactly that situation: syncK2k would
+    // otherwise leave the planned-route toggle disabled with no visible control to
+    // re-enable it.
+    if (!k2kDrawn) k2kOn = false;
     syncK2k();
     el.k2kToggle.addEventListener('click', function () {
       setK2k(!k2kOn);

@@ -68,7 +68,6 @@
     var clusters = [];
     var api = {};
 
-    api.frame = { W: W, H: H, k: k, minX: minX, minY: minY, offX: offX, offY: offY };
     api.project = project;
 
     api.drawBase = function () {
@@ -157,8 +156,6 @@
 
       return clusters;
     };
-
-    api.clusters = function () { return clusters; };
 
     // The map already draws in Mercator, and Web Mercator is the same projection up to
     // a linear transform, so tiles land exactly on the drawn coastline with no
@@ -253,7 +250,6 @@
 
   global.Atlas = {
     create: create,
-    CLUSTER_PX: CLUSTER_PX,
     // Exposed for tests only: pure maths, no DOM.
     _merc: merc,
     _cluster: cluster

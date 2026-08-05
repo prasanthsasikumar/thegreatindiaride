@@ -18,6 +18,7 @@ function cut(from, to) {
 }
 
 const SCROLL_SRC = cut("window.addEventListener('scroll', function () {", '}, { passive: true });');
+const ROWMATES_SRC = cut('function rowMates(idx) {', '\n  }');
 const OVERVIEW_SRC = cut('var Overview = (function () {', '\n  })();');
 // Neither function nests a block that closes at this indent, so the first `\n  }` is
 // the function's own.
@@ -28,22 +29,41 @@ const PLANNED_SRC = cut('function syncPlannedLine() {', '\n  }') +
 // The page re-derives the active block from element positions on every scroll. The
 // overview drives the page by calling jump(), which scrolls, so without a guard the
 // handler would overwrite the block the player had just chosen, mid-transition.
+// A region block, laid out the way the page lays them out. A two-up row is a pair
+// sharing a top; a stacked block sits below the one before it and only ever touches
+// its neighbour at an edge.
+function block(idx, top, height) {
+  const h = height == null ? 400 : height;
+  const box = { top: top, bottom: top + h, height: h };
+  return {
+    dataset: { regionIdx: String(idx) },
+    getBoundingClientRect: function () { return box; },
+  };
+}
+
+// rowMates is cut out of the page and run for real. It used to be stubbed here as
+// `function (i) { return [i]; }`, which is exactly the one-block-at-a-time behaviour
+// that commit 979e24c replaced: with that stub in place the real overlap threshold
+// could be broken outright and this suite stayed green.
 function runScrollHandler(opts) {
   const calls = { syncMap: 0, syncStrip: 0 };
   let frame = null;
   let fired = null;
 
-  const node = function (idx, top) {
-    return { dataset: { regionIdx: String(idx) }, getBoundingClientRect: function () { return { top: top }; } };
-  };
-  const nodes = [node(0, 500), node(1, 100), node(2, -300)];
+  // Stacked by default: 2 above 1 above 0, no two of them sharing a row.
+  const nodes = opts.nodes || [block(0, 500), block(1, 100), block(2, -300)];
+  const byId = {};
+  nodes.forEach(function (n) { byId['region-' + n.dataset.regionIdx] = n; });
 
   const ctx = {
     window: { addEventListener: function (name, fn) { if (name === 'scroll') fired = fn; } },
-    document: { querySelectorAll: function () { return nodes; } },
+    document: {
+      querySelectorAll: function () { return nodes; },
+      getElementById: function (id) { return byId[id] || null; },
+    },
     requestAnimationFrame: function (fn) { frame = fn; return 1; },
     DESKTOP: { matches: true },          // the sweep line is 200px on desktop
-    rowMates: function (i) { return [i]; },
+    Math: Math,
     syncMap: function () { calls.syncMap++; },
     syncStrip: function () { calls.syncStrip++; },
     activeIdx: opts.activeIdx,
@@ -52,19 +72,25 @@ function runScrollHandler(opts) {
   };
   ctx.globalThis = ctx;
   vm.createContext(ctx);
-  vm.runInContext('var raf = null;\n' + SCROLL_SRC, ctx);
+  vm.runInContext('var raf = null;\n' + ROWMATES_SRC + '\n' + SCROLL_SRC, ctx);
 
   fired();                               // a scroll
   assert.ok(frame, 'the handler should have asked for a frame');
   frame();                               // ...and the frame it queued
 
-  return { ctx: ctx, calls: calls, raf: vm.runInContext('raf', ctx) };
+  // activeIdxs is now built by the real rowMates, inside the sandbox realm, so it is
+  // copied out before it is compared: deepStrictEqual checks prototypes and a
+  // cross-realm Array is not the Array this file's literals are.
+  return {
+    ctx: ctx, calls: calls, raf: vm.runInContext('raf', ctx),
+    idxs: Array.from(vm.runInContext('activeIdxs', ctx)),
+  };
 }
 
 test('the scroll handler names the block you have read down to', function () {
   const r = runScrollHandler({ activeIdx: 0, activeIdxs: [0], overviewOn: false });
   assert.strictEqual(r.ctx.activeIdx, 2, 'the last block above the line wins');
-  assert.deepStrictEqual(r.ctx.activeIdxs, [2]);
+  assert.deepStrictEqual(r.idxs, [2]);
   assert.strictEqual(r.calls.syncMap, 1);
 });
 
@@ -72,11 +98,36 @@ test('the overview guard stops the scroll handler overwriting the player', funct
   // The player has just called jump(7); the scroll that caused fires the handler.
   const r = runScrollHandler({ activeIdx: 7, activeIdxs: [7], overviewOn: true });
   assert.strictEqual(r.ctx.activeIdx, 7, 'the player\'s block survived the scroll');
-  assert.deepStrictEqual(r.ctx.activeIdxs, [7]);
+  assert.deepStrictEqual(r.idxs, [7]);
   assert.strictEqual(r.calls.syncMap, 0, 'the map was not re-lit from the scroll');
   assert.strictEqual(r.calls.syncStrip, 0);
   // The guard sits AFTER raf is cleared, so scrolling is not wedged once it ends.
   assert.strictEqual(r.raf, null, 'the frame token was left set, so scrolling would stall');
+});
+
+test('a two-up row lights both of its blocks, named by the left one', function () {
+  // What 979e24c is for. The sweep finishes on whichever block comes last in document
+  // order, which for a pair laid out side by side is the right-hand one. Both are on
+  // screen, so both light, and the block NAMED is the one a reader reaches first.
+  const r = runScrollHandler({
+    activeIdx: 0, activeIdxs: [0], overviewOn: false,
+    nodes: [block(0, 900), block(1, 100), block(2, 100)],   // 1 and 2 share a row
+  });
+  assert.deepStrictEqual(r.idxs, [1, 2], 'both halves of the row are lit');
+  assert.strictEqual(r.ctx.activeIdx, 1, 'and the left one names it');
+  assert.strictEqual(r.calls.syncMap, 1);
+});
+
+test('blocks that merely graze each other are not on the same row', function () {
+  // The threshold is a MAJORITY overlap with the shorter of the pair, not any
+  // overlap. Two stacked blocks offset by half their height overlap by exactly half,
+  // which must not qualify, or scrolling past a tall block would light its neighbour.
+  const r = runScrollHandler({
+    activeIdx: 0, activeIdxs: [0], overviewOn: false,
+    nodes: [block(1, -100), block(2, 100)],   // 400 tall each, exactly 200 of overlap
+  });
+  assert.deepStrictEqual(r.idxs, [2], 'exactly half is not a majority, so 1 does not join');
+  assert.strictEqual(r.ctx.activeIdx, 2);
 });
 
 /* ── the player ─────────────────────────────────────────────────────────── */
@@ -320,4 +371,91 @@ test('stepping inside the fade drops the swap it interrupted', function () {
   assert.strictEqual(h.clk.due(0).length, 1, 'one pending swap, not two');
   h.clk.flush(0);
   assert.strictEqual(h.el.ovWhere.textContent, 'Tamil Nadu', 'the region you stepped to');
+});
+
+/* ── what the page remembers ────────────────────────────────────────────── */
+/*
+ * Five preferences survive a reload. ride:planned is covered above and ride:k2k in
+ * test/k2k.test.cjs; these are the other three, which had no coverage at all: every
+ * one of their setItem calls could be deleted outright with the whole suite green.
+ * For a preference that means the reader re-sets it on every visit and nothing ever
+ * says so, which is the quietest kind of regression there is.
+ *
+ * Each test runs the page's own writer, cut out of index.html, over a localStorage
+ * that records what reaches it.
+ */
+function prefCtx(extra) {
+  const writes = [];
+  const ctx = Object.assign({
+    Math: Math, String: String, Boolean: Boolean, console: console,
+    localStorage: {
+      setItem: function (k, v) { writes.push({ key: k, value: v }); },
+      getItem: function () { return null; },
+    },
+  }, extra);
+  ctx.globalThis = ctx;
+  vm.createContext(ctx);
+  return { ctx: ctx, writes: writes };
+}
+
+test('flipping the map between outline and tiles is remembered', function () {
+  const p = prefCtx({
+    MAP_KEY: 'ride:map-mode',
+    el: { atlas: { dataset: {} }, mapToggle: fakeNode(), mapAttr: { hidden: false } },
+    atlas: null,
+  });
+  vm.runInContext('var mapMode = "outline";\n' +
+    cut('function setMapMode(mode) {', '\n  }'), p.ctx);
+
+  vm.runInContext('setMapMode("map")', p.ctx);
+  assert.deepStrictEqual(p.writes, [{ key: 'ride:map-mode', value: 'map' }]);
+  assert.strictEqual(vm.runInContext('mapMode', p.ctx), 'map');
+  assert.strictEqual(p.ctx.el.mapToggle.textContent, 'Outline', 'the button offers the way back');
+
+  vm.runInContext('setMapMode("outline")', p.ctx);
+  assert.deepStrictEqual(p.writes[1], { key: 'ride:map-mode', value: 'outline' });
+});
+
+test('unmuting a clip is remembered, and the automatic mute is not', function () {
+  const video = fakeNode();
+  video.muted = true;
+  const p = prefCtx({ SOUND_KEY: 'ride:sound-on', v: video });
+  vm.runInContext('var soundOn = false, syncing = false;\n' +
+    cut("v.addEventListener('volumechange', function () {", '\n    });'), p.ctx);
+
+  video.handlers.volumechange();
+  assert.deepStrictEqual(p.writes, [{ key: 'ride:sound-on', value: '0' }]);
+
+  video.muted = false;
+  video.handlers.volumechange();
+  assert.deepStrictEqual(p.writes[1], { key: 'ride:sound-on', value: '1' });
+  assert.strictEqual(vm.runInContext('soundOn', p.ctx), true);
+
+  // The autoplay fallback mutes the element itself to get playback started. That is
+  // the page talking to itself, not a reader choosing silence, and it must not reach
+  // the disk or it would overwrite the preference it is standing in for.
+  vm.runInContext('syncing = true', p.ctx);
+  video.muted = true;
+  video.handlers.volumechange();
+  assert.strictEqual(p.writes.length, 2, 'the guarded mute was persisted anyway');
+});
+
+test('turning autoplay off in the lightbox is remembered', function () {
+  const btn = fakeNode();
+  let painted = 0;
+  const p = prefCtx({
+    AUTO_KEY: 'ride:autoplay',
+    el: { lbAuto: btn },
+    paintAuto: function () { painted++; },
+  });
+  vm.runInContext('var autoOn = true;\n' +
+    cut("el.lbAuto.addEventListener('click', function () {", '\n  });'), p.ctx);
+
+  btn.handlers.click();
+  assert.deepStrictEqual(p.writes, [{ key: 'ride:autoplay', value: '0' }]);
+  assert.strictEqual(vm.runInContext('autoOn', p.ctx), false);
+  assert.strictEqual(painted, 1, 'the button repaints to match');
+
+  btn.handlers.click();
+  assert.deepStrictEqual(p.writes[1], { key: 'ride:autoplay', value: '1' });
 });

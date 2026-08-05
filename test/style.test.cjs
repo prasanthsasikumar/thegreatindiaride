@@ -101,13 +101,69 @@ test('no tracked file carries an em dash', function () {
     'em dashes found in ' + bad.length + ' place(s):\n  ' + bad.join('\n  '));
 });
 
-// The en dash is a different character doing a different job: 6,000–11,000 km,
-// ₹100–200, 2,000–2,200 per day. Sweeping em dashes must never take these with
-// them, and a regex written against the wrong code point silently would.
-test('numeric ranges still use en dashes, not hyphens', function () {
+/*
+ * The en dash is a different character doing a different job: a numeric range
+ * (6,000–11,000 km, ₹100–200), a date range (23 Jan – 27 Mar) or a route join
+ * (Kolhapur–Belgaum). Sweeping em dashes must never take these with them, and a
+ * regex written against the wrong code point silently would.
+ *
+ * This used to assert three hardcoded literals, which meant 36 of research.json's
+ * 38 en dashes could be flattened to hyphens with the suite still green. It is
+ * pinned against the real content now: every distinct en-dash-joined token in the
+ * two files that carry any. Converting ANY one of them fails here.
+ *
+ * The list moves when the content legitimately does, and that is the point: these
+ * are transcriptions of somebody else's writing, so a range changing shape should
+ * cost somebody a deliberate look rather than passing unnoticed.
+ */
+function enDashTokens(text) {
+  // Collapse the spaced form ("23 Jan – 27 Mar") onto the tight one so both kinds of
+  // range extract as a single token, then trim the JSON and sentence punctuation
+  // that happens to sit at either end.
+  const tight = text.replace(/\s*–\s*/g, '–');
+  const found = tight.match(/[^\s"]*–[^\s"]*/g) || [];
+  const seen = {};
+  found.forEach(function (t) {
+    seen[t.replace(/^[^\w₹]+/, '').replace(/[^\w]+$/, '')] = true;
+  });
+  return Object.keys(seen).sort();
+}
+
+test('every en dash in the transcribed files survives, character for character', function () {
   const research = fs.readFileSync(path.join(ROOT, 'research.json'), 'utf8');
   const notes = fs.readFileSync(path.join(ROOT, 'template-notes.json'), 'utf8');
-  assert.ok(research.indexOf('6,000–11,000 km') >= 0, 'the K2K range kept its en dash');
-  assert.ok(research.indexOf('₹2,000–2,200') >= 0, 'the per-day range kept its en dash');
-  assert.ok(notes.indexOf('₹100–200') >= 0, 'the permit range kept its en dash');
+
+  assert.deepStrictEqual(enDashTokens(research), [
+    '0–2',
+    '13–15',
+    '2014–15',
+    '28–29',
+    '3–4',
+    '5–28',
+    '6,000–10,000',
+    '6,000–11,000',
+    '6–8',
+    '7,000–8,500',
+    'April–May',
+    'Bangalore–Kanyakumari–Khardung',
+    'Belgaum–Dharwad',
+    'Chennai–Mumbai',
+    'Delhi–Kolkata',
+    'Delhi–Mumbai',
+    'Hubli–Davangere',
+    'II–IV',
+    'Jan–27',
+    'Kanyakumari–Kashmir',
+    'Kolhapur–Belgaum',
+    'Kolkata–Chennai',
+    'La–Pangong–Bangalore',
+    'Mumbai–Chennai–Kolkata–Delhi–Mumbai',
+    'November–16',
+    'Sept–14',
+    'xBhp–Sundeep',
+    '₹100–200',
+    '₹2,000–2,200',
+  ]);
+
+  assert.deepStrictEqual(enDashTokens(notes), ['₹100–200']);
 });

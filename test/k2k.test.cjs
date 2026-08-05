@@ -18,8 +18,24 @@ test('k2k.json exists and carries both lines', function () {
   const k = readJson('k2k.json');
   assert.ok(k.north, 'the northbound line');
   assert.ok(k.south, 'the southbound line');
-  assert.ok(Array.isArray(k.north.points) && k.north.points.length >= 10);
-  assert.ok(Array.isArray(k.south.points) && k.south.points.length >= 10);
+  assert.ok(Array.isArray(k.north.points));
+  assert.ok(Array.isArray(k.south.points));
+
+  // The northbound line is a corridor sketch, and what makes it NH-44 rather than a
+  // polyline through sixteen arbitrary cities is WHICH cities and in what order. A
+  // floor of >= 10 was not that: drop Hyderabad and Gwalior, which is to say drop
+  // the highway's Deccan crossing and its run up to Agra, and 16 becomes 14 and the
+  // floor still passed. The corridor is pinned instead, bottom to top.
+  assert.deepStrictEqual(k.north.points.map(function (p) { return p.name; }), [
+    'Kanniyakumari', 'Madurai', 'Salem', 'Bengaluru', 'Kurnool', 'Hyderabad',
+    'Nagpur', 'Jhansi', 'Gwalior', 'Agra', 'Delhi', 'Kurukshetra', 'Ambala',
+    'Jammu', 'Udhampur', 'Srinagar',
+  ]);
+
+  // The southbound line is this ride's own measured hops, so it is pinned to the leg
+  // count the file itself stores rather than to a literal: the two must not drift.
+  assert.strictEqual(k.south.points.length, k.south.hops + 1,
+    'one point per measured leg, plus the leg it starts from');
 });
 
 const K2K = fs.existsSync(path.join(ROOT, 'k2k.json')) ? readJson('k2k.json') : { north: {}, south: {} };
@@ -303,7 +319,7 @@ test('the page says which number is cited and which was measured', function () {
   };
   const body = node('div'), section = node('section');
   const ctx = {
-    k2k: K2K, Math: Math, String: String, Number: Number,
+    k2k: K2K, k2kDrawn: true, Math: Math, String: String, Number: Number,
     document: {
       createElement: node,
       getElementById: function (id) {
@@ -339,6 +355,43 @@ test('the page says which number is cited and which was measured', function () {
   assert.match(text, /picks up at Delhi/);
   // Neither figure may be given without saying which kind it is.
   assert.ok(text.indexOf('Vajiram') > 0, 'the second source is named too');
+});
+
+test('the K2K section stays hidden when the map never drew the overlay', function () {
+  // k2k.json is one of three things this section needs. basemap.json is a separate
+  // optional fetch and atlas.js is a separate script, and either can go missing while
+  // k2k.json loads perfectly. When that happens there is no map, no K2K toggle and no
+  // two lines, and this section used to appear regardless: several paragraphs about a
+  // drawing that is not on the page, telling the reader to turn it on with a control
+  // that is not on the page either. renderMap is what sets k2kDrawn, so this is what
+  // "the map did not draw" looks like from here.
+  const src = cut('function hasK2k() {', '\n  }') + cut('function renderK2k() {', '\n  }');
+  const node = function (tag) {
+    return {
+      tagName: tag, className: '', textContent: '', hidden: true, children: [],
+      appendChild: function (c) { this.children.push(c); },
+      replaceChildren: function () { this.children = []; },
+    };
+  };
+  const body = node('div'), section = node('section');
+  const ctx = {
+    k2k: K2K, k2kDrawn: false, Math: Math, String: String, Number: Number,
+    document: {
+      createElement: node,
+      getElementById: function (id) {
+        if (id === 'tpl-k2k-body') return body;
+        if (id === 'tpl-k2k') return section;
+        return null;
+      },
+    },
+  };
+  ctx.globalThis = ctx;
+  vm.createContext(ctx);
+  vm.runInContext(src, ctx);
+  vm.runInContext('renderK2k()', ctx);
+
+  assert.strictEqual(section.hidden, true, 'the section was shown with no map under it');
+  assert.strictEqual(body.children.length, 0, 'and nothing was written into it');
 });
 
 test('the cache this build writes is ignored, like the other geocode caches', function () {
