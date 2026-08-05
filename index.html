@@ -28,6 +28,12 @@
    and states, never for words. No gradients anywhere. */
 :root {
   --color-bg:       #0f0f0f;
+  /* Same ink as --color-bg at zero and at just over half alpha. Gradients need
+     the colour spelled out: interpolating to the `transparent` keyword runs
+     through transparent BLACK, which greys the middle of the ramp. Keep these
+     in step with --color-bg above. */
+  --bg-0:           rgba(15, 15, 15, 0);
+  --bg-half:        rgba(15, 15, 15, 0.62);
   --color-surface:  #17171b;
   --color-raise:    #1e1e24;
   --color-text:     #ffffff;
@@ -96,7 +102,7 @@ button { font: inherit; color: inherit; }
 
 /* ─── hero, from design 4a ─────────────────────────────────────────────── */
 .hero {
-  position: relative; isolation: isolate; background: #000;
+  position: relative; isolation: isolate; background: var(--color-bg);
   min-height: clamp(300px, 42vh, 480px);
   display: flex; flex-direction: column;
 }
@@ -113,12 +119,18 @@ button { font: inherit; color: inherit; }
   from { object-position: 16% 42%; }
   to   { object-position: 84% 42%; }
 }
-/* Flat scrims rather than a wash: enough to hold white type over the photo. */
+/* Flat scrims rather than a wash: enough to hold white type over the photo.
+   The last layer also runs the photo out into the page ground, so it dissolves
+   at the bottom instead of stopping on a cut edge. */
 .hero__veil {
   position: absolute; inset: 0; z-index: -1;
-  background: rgba(10, 10, 12, 0.44);
-  box-shadow: inset 0 -140px 120px -60px rgba(10, 10, 12, 0.92),
-              inset 0 120px 90px -60px rgba(10, 10, 12, 0.70);
+  background:
+    linear-gradient(to bottom, var(--bg-0) 46%, var(--bg-half) 82%, var(--color-bg) 100%),
+    rgba(10, 10, 12, 0.44);
+  /* No bottom scrim any more: it painted over the ramp and left the hero's last
+     row darker than the page beneath it, which is the very step this removes.
+     The ramp doubles as the ground the title needs. */
+  box-shadow: inset 0 120px 90px -60px rgba(10, 10, 12, 0.70);
 }
 
 .hero__body { margin-top: auto; padding: var(--space-8) var(--pad-x) clamp(28px, 5vh, 52px); }
@@ -457,26 +469,32 @@ button { font: inherit; color: inherit; }
   }
   .strip { display: none; }                     /* the map itself is the desktop index */
 
-  /* The figures ride on the photo rather than banding the page under it, which
-     buys back the vertical space the map needs to clear the fold. Absolute
-     against .top so the mobile stack, where they sit on solid ground below the
-     photo, is untouched. */
-  .top { position: relative; }
-  .band {
-    position: absolute; right: var(--pad-x); bottom: clamp(28px, 5vh, 52px);
-    margin: 0; width: min(360px, 32vw);
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    border: var(--rule); background: rgba(10, 10, 12, 0.55);
-  }
-  .band > div { padding: var(--space-4) var(--space-5); }
-  .band > div:nth-child(odd) { border-left: 0; }
-  .band > div:nth-child(3), .band > div:nth-child(4) { border-top: var(--rule); }
-  .band__n { font-size: 30px; }
+  /* The photo keeps the left 70% and the figures get a solid column beside it,
+     rather than the photo running the full width with the figures laid over it.
+     A 70% box crops far closer to the frame's own proportions, so the picture
+     stops being stretched to fill a shape it was never shot for, and the
+     figures sit on ink instead of competing with a mountainside.
 
-  /* Leave the photo's right third to the figures, and drop the CTA under the
-     blurb rather than across from it, where it would now collide. */
-  .hero__body { padding-right: calc(var(--pad-x) + min(360px, 32vw) + var(--space-8)); }
-  .hero__foot { flex-direction: column; align-items: flex-start; gap: var(--space-5); }
+     Mobile keeps the stack — photo, then figures on solid ground beneath it. */
+  .top { display: grid; grid-template-columns: 70% 30%; }
+  .hero { min-height: clamp(320px, 46vh, 520px); }
+  /* The photo runs out into the figures' column rather than meeting it on a
+     seam, so the hairline that used to mark the join is gone with it. */
+  .hero__veil {
+    background:
+      linear-gradient(to right, var(--bg-0) 50%, var(--bg-half) 84%, var(--color-bg) 99%),
+      linear-gradient(to bottom, var(--bg-0) 46%, var(--bg-half) 82%, var(--color-bg) 100%),
+      rgba(10, 10, 12, 0.44);
+  }
+  .band {
+    grid-template-columns: auto; align-content: center;
+    margin: 0; background: var(--color-bg);
+    border: 0;
+    padding: var(--space-6) clamp(24px, 2.6vw, 52px);
+  }
+  .band > div { padding: var(--space-4) 0; border-left: 0; }
+  .band > div + div { border-left: 0; border-top: var(--rule); }
+  .band__n { font-size: clamp(28px, 2.2vw, 38px); }
 
   .legs { min-width: 0; padding: 0 40px 80px; }
   .leg { margin-top: 40px; }
