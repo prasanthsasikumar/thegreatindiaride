@@ -43,7 +43,7 @@ const CACHE_FILE = '.k2kcache.json';
 const OUT_FILE = 'k2k.json';
 
 // Nominatim asks for a descriptive UA and max 1 req/sec. We respect both.
-const USER_AGENT = 'ride-assets-k2k/1.0 (+https://thegreatindiaride.prasanthsasikumar.com)';
+const USER_AGENT = 'thegreatindiaride-k2k/1.0 (+https://thegreatindiaride.prasanthsasikumar.com)';
 const RATE_LIMIT_MS = 1100;
 
 /* ---------- the two lines, declared ---------- */

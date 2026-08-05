@@ -1,94 +1,189 @@
-# Ride Assets - Media Hosting
+# The Great India Ride
 
-This repository hosts media assets (images and videos) for prasanthsasikumar.com ride pages.
+An 18,181 km motorcycle loop of India, Nepal and Bhutan, published as a **route
+template you can fork** rather than only as a travelogue.
 
-## Structure
+**[The ride](https://thegreatindiaride.prasanthsasikumar.com/)** ·
+**[The route book](https://thegreatindiaride.prasanthsasikumar.com/booklet.html)** ·
+**[The data](https://thegreatindiaride.prasanthsasikumar.com/template.json)** ·
+**[llms.txt](https://thegreatindiaride.prasanthsasikumar.com/llms.txt)**
 
+![The route book: the pan-India loop](docs/screenshots/route-book.png)
+
+## What this is
+
+Three things and the scripts that built them.
+
+**1. A route template.** `template.json` is the loop as it was drawn: 97 hops, 94
+unique waypoints, 18,181.3 km, 411.93 riding hours, five sectors, three countries.
+Every hop carries its start and end coordinates, its distance and its riding time.
+This is the file to fork.
+
+**2. A printable route book.** [`booklet.html`](https://thegreatindiaride.prasanthsasikumar.com/booklet.html)
+turns that data into something you can carry: a cover map, the figures at a glance, a
+master map, one spread per sector with every waypoint tabled, the Kanyakumari-to-Kashmir
+page, a cost projection, a season and permit calendar, blank pages to plan on, and a
+field-research appendix drawn from twenty years of the xBhp forum archive. It reads on
+a screen and prints to 37 sheets of A4.
+
+**3. The ride that was actually run.** [`index.html`](https://thegreatindiaride.prasanthsasikumar.com/)
+tells it in the order it happened: 93 nights, 29 regions, every place slept, what was
+spent, and 222 clips from the road.
+
+The template and the record are deliberately **not the same file**. Sections of the
+Northeast closed and the weather windows do not overlap, so the loop as planned and the
+loop as ridden differ, and both are published.
+
+## Who this is for
+
+Anyone putting together an all-India ride, or a piece of one, and starting from a blank
+map. That is a research problem before it is a riding problem: which way round, how many
+days, what it costs, when each sector is open, and which borders need paperwork.
+
+What is here that a blog post is not:
+
+- **Real coordinates and real distances**, hop by hop, in JSON you can fetch and
+  re-plan against, rather than a line on somebody's screenshot.
+- **Sector boundaries you can cut at.** The loop returns to Bengaluru and Delhi, and
+  those recurrences are exactly where a rider joins or leaves. Take one sector, take
+  two, ride the whole thing backwards.
+- **A cost model derived from a real ride**, with its own assumptions printed beside
+  the number.
+- **The gaps left visible.** Where nothing was researched, the book says so in a dashed
+  box instead of filling the space. See below; this is the part most worth reading.
+- **The build scripts.** Point them at your own spreadsheet and you get your own
+  version of all of this.
+
+## The loop
+
+| Sector | | From → to | km | Riding hours |
+|---|---|---|---|---|
+| **S0** | Southern opener | Trivandrum → Bengaluru | 1,130.1 | 22.2 |
+| **S1** | West coast & Kutch | Bengaluru → Delhi | 3,643.0 | 74.0 |
+| **S2** | Himalayan out-and-back | Delhi → Delhi | 2,742.0 | 61.8 |
+| **S3** | The long east | Delhi → Bengaluru | 9,955.2 | 237.4 |
+| **S4** | Closing run | Bengaluru → Trivandrum | 711.0 | 16.5 |
+| | **The whole loop** | Trivandrum → Trivandrum | **18,181.3** | **411.9** |
+
+S3 is subdivided again in the data (Gangetic plain and Nepal, Bhutan and the Northeast,
+east coast home), because 51 hops is three different kinds of riding.
+
+![The shape of it: the figures and the five sectors](docs/screenshots/route-book-glance.png)
+
+## Use the data
+
+Everything is served from `https://thegreatindiaride.prasanthsasikumar.com` with CORS
+enabled, so you can fetch it straight from a browser, a notebook or a script. Nothing
+needs a key and nothing is rate limited.
+
+```bash
+curl -s https://thegreatindiaride.prasanthsasikumar.com/template.json | jq '.totals'
 ```
-media/
-  ├── stories/     # Instagram stories organized by date
-  ├── reels/       # Instagram reels
-  ├── profile/     # Profile pictures
-  └── garage/      # Vehicle + garage media (cars, motorcycles, tours)
+
+```js
+const tpl = await (await fetch('https://thegreatindiaride.prasanthsasikumar.com/template.json')).json();
+
+// Sector 2, as a list of waypoints you could hand to any mapping library.
+const s = tpl.sectors[2];
+const legs = tpl.hops.slice(s.hopFrom, s.hopTo + 1).map(h => ({
+  from: h.from, to: h.to, km: h.km, hours: h.hours,
+  line: [[h.fromLat, h.fromLon], [h.toLat, h.toLon]],
+}));
 ```
 
-## Usage
+| File | What is in it |
+|---|---|
+| [`template.json`](https://thegreatindiaride.prasanthsasikumar.com/template.json) | The planned loop. Sectors, stages, and every hop with coordinates, distance and hours. **Fork this one.** |
+| [`template-notes.json`](https://thegreatindiaride.prasanthsasikumar.com/template-notes.json) | The hand-written guidance: seasons, permits, points of interest. Anything reading `TO WRITE` is a declared gap. |
+| [`route.json`](https://thegreatindiaride.prasanthsasikumar.com/route.json) | The ride as run: stops, nights, hotels and spend. The cost projection is derived from this. |
+| [`research.json`](https://thegreatindiaride.prasanthsasikumar.com/research.json) | The xBhp archive field research, transcribed with its own caveats attached. |
+| [`k2k.json`](https://thegreatindiaride.prasanthsasikumar.com/k2k.json) | Kanyakumari to Kashmir as two lines, one cited and one measured. Every point records where its coordinate came from. |
+| [`basemap.json`](https://thegreatindiaride.prasanthsasikumar.com/basemap.json) | Country outlines for the maps, ~32KB, from Natural Earth's India point-of-view file. |
+| [`manifest.json`](https://thegreatindiaride.prasanthsasikumar.com/manifest.json) | The media library: 222 clips with capture time, region and caption. |
 
-Assets are accessible via:
-```
-https://[your-netlify-url]/media/stories/202501/filename.mp4
-```
+There is also [`llms.txt`](https://thegreatindiaride.prasanthsasikumar.com/llms.txt),
+which is this description in one generated markdown page for language models and
+search crawlers, and a `sitemap.xml` that lists the data files as well as the pages.
+See [Machine-readable front door](#machine-readable-front-door).
 
-## Deployment
+## What this material will not tell you
 
-This is deployed as a static site on Netlify with CORS enabled for cross-origin requests from the main website.
+The most useful thing here may be what it refuses to guess.
 
-## Garage media
+![The season calendar, mostly unwritten on purpose](docs/screenshots/route-book-seasons.png)
 
-Put vehicle/garage images & videos under `media/garage/` (any subfolder structure is fine).
-Then run the manifest generator so the browser UI and `manifest.json` include the new category.
+- **Riding seasons are unwritten.** Ten guidance notes in `template-notes.json` are
+  empty, and each renders as a dashed "Not written yet" box rather than as filler. A
+  route book is *acted on*: somebody rides in the month it names, or arrives at a
+  border without a permit. An admitted hole is better than invented advice.
+- **The forum archive could not fill them.** The field research found that pan-India
+  riders time their trips by when they can get leave, not by weather. That is a fact
+  about riders and not a calendar, so nothing in that corpus was used to write a season.
+- **The cost projection is a floor, not a forecast.** It carries no bike, no shipping,
+  no flights and no repairs, and budgets no rest days.
+- **Permits change.** The Inner Line Permit note for the Northeast reflects sources
+  read in 2025. Check the current rules before you ride.
+- **Two totals disagree, on purpose.** The itinerary sheet's own total row says
+  18,039.2 km; its rows sum to 18,181.3 km. The sum is published, because the sum is
+  what every table is built from, and the 142.1 km gap is disclosed rather than
+  quietly reconciled.
 
-## Region tags
+![Sector spread: map, stages and every waypoint](docs/screenshots/route-book-sector.png)
 
-`tags.json` maps each file to the state/region it was shot in, plus its real capture
-time, caption, and (for reels) its subtitle file. It's generated from an Instagram
-data export:
+## Build your own
 
-```
-node tag-media.cjs /path/to/instagram-<account>-<date>-<id>
-node generate-manifest.cjs
-```
+Everything published here is generated from two Google Sheets exports, neither of which
+is in this repo. Swap in your own and the whole site rebuilds around them.
 
-`tag-media.cjs` reads GPS coordinates out of the export's EXIF data and reverse-geocodes
-the unique points via OpenStreetMap's Nominatim API (rate-limited to 1 req/sec, so a
-first run takes a couple of minutes). Results are cached in `.geocache.json`, so re-runs
-are instant.
+```bash
+# 1. The planned loop. One row per hop: origin and destination, their coordinates,
+#    the distance and the riding time. Sector boundaries are derived, not configured.
+node build-template.cjs "/path/to/Your Trip - Itinerary.csv"
 
-Each file records how its region was decided, in `stateSource`:
+# 2. The ride as run. One row per night: where you slept, what you paid.
+node build-route.cjs "/path/to/Your Trip - Trip expenses.csv"
 
-| value | meaning | trust |
-|---|---|---|
-| `gps` | the file's own EXIF coordinates | good, but phones cache stale fixes |
-| `time` | nearest-in-time neighbour, no GPS of its own | **low**, shown with a `~` prefix |
-| `manual` | corrected by hand via `overrides.json` | authoritative |
+# 3. Derived views.
+node build-k2k.cjs          # the two Kanyakumari-to-Kashmir lines
+node build-basemap.cjs      # country outlines, only if you swap the source data
+node build-seo.cjs          # robots.txt, sitemap.xml, llms.txt, the schema.org blocks
 
-### Why the automatic guesses drift
-
-204 of 222 files are `source_type: "library"`, uploaded from the camera roll rather
-than shot in-app. For those, Instagram's `creation_timestamp` is the **upload** time.
-Against the 59 files that also kept EXIF `date_time_original`, the median capture→upload
-gap is 5.2 hours, p90 is 33 hours, and the max is 125 hours. On a road trip that is
-easily one or more states of drift, so anything tagged `time` should be treated as a
-placeholder.
-
-`captured` uses EXIF `date_time_original` where it survived and falls back to upload
-time otherwise; `timeSource` records which. (`modified` is just the checkout date and
-is meaningless, and the browser UI sorts by `captured` to get ride order.)
-
-### Correcting regions by hand
-
-Open any tile in the browser UI. The **Region** field is a dropdown whose first group,
-*Nearest*, is ranked by distance from that file's own coordinates, so the right answer
-is usually in the top few. Pick it.
-
-Corrections accumulate in `localStorage`, and a bar appears at the bottom of the page.
-Click **Save overrides.json**, drop the file in the repo root, then:
-
-```
-node tag-media.cjs /path/to/instagram-export   # overrides win over GPS and timing
-node generate-manifest.cjs
+# 4. Check it.
+node --test                 # 108 tests, no dependencies
 ```
 
-`overrides.json` is a flat `{ "media/...": "State" }` map, hand-editable if you'd
-rather bulk-fix in a text editor.
+`build-template.cjs` **refuses to run without `template-notes.json`**, because a route
+book with silent holes where its guidance belongs is worse than no route book. Write
+the file, even if every entry in it starts as `TO WRITE`.
 
-**Privacy:** `tags.json` deliberately carries only state and country, never raw
-coordinates. `netlify.toml` publishes `.`, so anything committed is world-readable;
-`.geocache.json` holds the ~1km coordinates and is gitignored.
+Two knobs you will want, both at the top of the scripts that own them: `CROSSINGS` in
+`build-template.cjs` names the cities your loop returns to, and `SKIP_NIGHTS` /
+`ORIGIN` in `build-route.cjs` handle rows that are not on the motorcycle route.
 
-To get an export: Instagram → Settings → Accounts Center → Your information and
-permissions → Export your information. Choose **JSON** format. The download link
-expires after 4 days.
+Serve the folder to look at it; `index.html` fetches JSON, which browsers block over
+`file://`:
+
+```bash
+python3 -m http.server 8899   # then open http://127.0.0.1:8899/
+```
+
+## Repo map
+
+| | |
+|---|---|
+| `index.html` | The whole front page: the ride, the map, the media library. One DOM, two layouts. |
+| `booklet.html` | The printable route book. |
+| `atlas.js`, `costs.js` | Shared by both pages. Map projection and drawing; the cost projection. DOM-free, so the tests run them headless. |
+| `build-template.cjs` | Itinerary sheet → `template.json`. Derives sectors, asserts the totals re-sum. |
+| `build-route.cjs` | Expenses sheet → `route.json`. One row per night, in travel order. |
+| `build-k2k.cjs` | → `k2k.json`. Northbound cited, southbound measured. |
+| `build-basemap.cjs` | Natural Earth GeoJSON → `basemap.json`. |
+| `build-seo.cjs` | → `robots.txt`, `sitemap.xml`, `llms.txt`, and the schema.org block in each page. |
+| `tag-media.cjs`, `generate-manifest.cjs` | Instagram export → `tags.json`, `manifest.json`. |
+| `test/` | 108 tests, Node's built-in runner, zero dependencies. |
+| `docs/screenshots/` | The images in this README. |
+
+![The ride, told in the order it happened](docs/screenshots/home-desktop.png)
 
 ## The site
 
@@ -495,8 +590,8 @@ headless under `node:vm` against the real source rather than a paraphrase.
 
 `research.json` is a transcription of the author's own field report on the xBhp
 "Tourer" board, India's oldest motorcycling forum: 337 index pages, 3,317 travelogue
-threads, of which 14 pan-India ride reports were read end to end, crawled 5 August
-2026. It supplies the appendix at the back of the route book, the archive cost
+threads, of which 14 pan-India ride reports were read end to end, crawled in
+2025. It supplies the appendix at the back of the route book, the archive cost
 benchmark, and the permit note for the Northeast. The book prints the report's own
 caveats on its own numbers (the corpus counts are keyword-derived from URL slugs, and
 the record table spans a change in the state count), because a reader who sees either
@@ -519,6 +614,119 @@ is the whole of an image for a screen-reader user, so inferring one from adjacen
 prose is not a method. Caption knowledge that is not visible in the frame (distances,
 place names, a pass the camera is not pointed at) does not belong in it either.
 
+## Machine-readable front door
+
+This material is meant to be found and quoted, by people and by the crawlers that
+answer people's questions. `build-seo.cjs` writes the four things that needs:
+
+| | |
+|---|---|
+| `robots.txt` | Everything allowed. The AI crawler tokens are named one by one rather than left to the wildcard: a bare `User-agent: *` already permits them, but several of those operators publish a token precisely so a site can state a position, and "allowed, deliberately" is a different statement from "never considered". |
+| `sitemap.xml` | The two pages **and the seven data files**. A sitemap is usually pages only; here the JSON is the deliverable, and a crawler that never sees `template.json` cannot tell anyone it exists. |
+| `llms.txt` | The [llmstxt.org](https://llmstxt.org) convention: one markdown page giving the whole picture, the sector table, what each file holds, and the caveats. Served as `text/markdown`. |
+| schema.org JSON-LD | A `TouristTrip` whose itinerary is the five sectors, a `Dataset` with one `DataDownload` per file, and a `Person`, injected into both pages between markers. |
+
+**The JSON-LD is injected rather than fetched, and that is the whole point.** Both
+pages build their figures from `template.json` at load time, which is right for a
+reader with a browser and useless to a crawler that does not run scripts. So the
+numbers are baked into the markup, and `build-seo.cjs` is what bakes them.
+
+That would normally be exactly the drift this repo argues against, and
+`test/routebook.test.cjs` still bans a hand-typed distance anywhere else in the page.
+What makes the exception safe is `test/seo.test.cjs`: it rebuilds every artefact from
+the data files and requires the committed copy to match byte for byte. A sheet that was
+rebuilt without re-running the generator fails the build rather than shipping a stale
+number to a machine that will repeat it. If one of those tests fails, the fix is
+`node build-seo.cjs`, never an edit to the file it complains about.
+
+The caveats travel into the machine-readable copy too, for the same reason they are on
+the page: the `TechArticle` for the route book carries a `disambiguatingDescription`
+saying how many guidance notes are unwritten, and `llms.txt` has a "what this material
+does not claim" section. Something summarising this route without its holes would be
+more dangerous than no summary at all.
+
+## The media library
+
+### Region tags
+
+`tags.json` maps each file to the state/region it was shot in, plus its real capture
+time, caption, and (for reels) its subtitle file. It's generated from an Instagram
+data export:
+
+```
+node tag-media.cjs /path/to/instagram-<account>-<date>-<id>
+node generate-manifest.cjs
+```
+
+`tag-media.cjs` reads GPS coordinates out of the export's EXIF data and reverse-geocodes
+the unique points via OpenStreetMap's Nominatim API (rate-limited to 1 req/sec, so a
+first run takes a couple of minutes). Results are cached in `.geocache.json`, so re-runs
+are instant.
+
+Each file records how its region was decided, in `stateSource`:
+
+| value | meaning | trust |
+|---|---|---|
+| `gps` | the file's own EXIF coordinates | good, but phones cache stale fixes |
+| `time` | nearest-in-time neighbour, no GPS of its own | **low**, shown with a `~` prefix |
+| `manual` | corrected by hand via `overrides.json` | authoritative |
+
+### Why the automatic guesses drift
+
+204 of 222 files are `source_type: "library"`, uploaded from the camera roll rather
+than shot in-app. For those, Instagram's `creation_timestamp` is the **upload** time.
+Against the 59 files that also kept EXIF `date_time_original`, the median capture→upload
+gap is 5.2 hours, p90 is 33 hours, and the max is 125 hours. On a road trip that is
+easily one or more states of drift, so anything tagged `time` should be treated as a
+placeholder.
+
+`captured` uses EXIF `date_time_original` where it survived and falls back to upload
+time otherwise; `timeSource` records which. (`modified` is just the checkout date and
+is meaningless, and the browser UI sorts by `captured` to get ride order.)
+
+### Correcting regions by hand
+
+There is no browser UI for this any more: the media-library page that carried the
+region dropdown was replaced by the journey layouts, and it is in git history at
+`index.html`, commit `1a1b71f`. Edit `overrides.json` instead, a flat
+`{ "media/...": "State" }` map, then re-run both generators:
+
+```
+node tag-media.cjs /path/to/instagram-export   # overrides win over GPS and timing
+node generate-manifest.cjs
+```
+
+**Privacy:** `tags.json` deliberately carries only state and country, never raw
+coordinates. `netlify.toml` publishes `.`, so anything committed is world-readable;
+`.geocache.json` holds the ~1km coordinates and is gitignored.
+
+To get an export: Instagram → Settings → Accounts Center → Your information and
+permissions → Export your information. Choose **JSON** format. The download link
+expires after 4 days.
+
+### Garage media
+
+Put vehicle/garage images & videos under `media/garage/` (any subfolder structure is fine).
+Then run the manifest generator so the browser UI and `manifest.json` include the new category.
+
+### Caching the research plates
+
+`netlify.toml` serves `/media/*` as `immutable, max-age=31536000`. That is right for
+the Instagram filenames, which are content-addressed IDs and never change, and it is
+the rule that keeps ~800MB of video inside a 100GB/month allowance. It is wrong for
+`media/research/fig-0N.jpg`, which are replaceable: those names are ours, and a
+re-extracted plate under the same name would otherwise be served stale for a year to
+anyone who had already loaded the page. Since these are other riders' photographs used
+with credit, a correction or a takedown has to be able to reach people who have already
+visited.
+
+So `/media/research/*` carries its own `max-age=3600`. Where that rule sits in the file
+is load-bearing, and the trap is in `netlify.toml`'s own comment: when several
+`[[headers]]` blocks match one request, Netlify applies them in file order and the last
+matching block wins. The narrower `/media/research/*` rule therefore sits **after**
+`/media/*`, not before it. Move it above, as ordering intuition suggests, and the
+catch-all silently overrides it and nothing appears to change.
+
 ## Tests
 
 ```
@@ -529,12 +737,22 @@ Bare. **No path argument and no glob.** `node --test test/` fails on Node 22.23 
 `Cannot find module .../test`, because a directory argument is resolved as a module
 path rather than as a place to look for tests.
 
-86 tests, zero dependencies, Node's built-in runner. They cover the generator's CSV
+108 tests, zero dependencies, Node's built-in runner. They cover the generator's CSV
 parsing and sector derivation, the atlas's projection and clustering, the cost
 projection, the K2K build, the overview, the route book (rendered headless under
-`node:vm` against the real page source, stub DOM and stub `fetch`), and the house
-style. The UI itself has no automated coverage; the per-task checklists in the plan are
-the record of what to walk through by hand.
+`node:vm` against the real page source, stub DOM and stub `fetch`), the crawler-facing
+files, and the house style. The UI itself has no automated coverage; the per-task
+checklists in the plan are the record of what to walk through by hand.
+
+Most of them are ordinary assertions about behaviour. A handful are **staleness
+guards**, and they are the ones worth knowing about before you edit a file by hand,
+because their failure message is not the fix:
+
+| If this fails | The fix |
+|---|---|
+| `test/seo.test.cjs` | Run `node build-seo.cjs`. Every artefact it checks is generated; editing the artefact makes the next rebuild fight you. |
+| the unwritten-notes count in `test/booklet.test.cjs` | Nothing, if you just wrote one of the notes. Update the pinned number in the same commit, so filling a gap is a deliberate act with a visible diff. |
+| `test/style.test.cjs` | Replace the em dash. Repo-wide, and it prints the file, the line and the sentence. |
 
 ## House style
 
@@ -581,39 +799,7 @@ elsewhere. Losing that home would take the range off the page entirely and the p
 list can no longer catch it, so a second test asserts each one at the file it now
 lives in: `k2k.json`, `template-notes.json` and `research.json`'s benchmark block.
 
-## Caching the research plates
-
-`netlify.toml` serves `/media/*` as `immutable, max-age=31536000`. That is right for
-the Instagram filenames, which are content-addressed IDs and never change, and it is
-the rule that keeps ~800MB of video inside a 100GB/month allowance. It is wrong for
-`media/research/fig-0N.jpg`, which are replaceable: those names are ours, and a
-re-extracted plate under the same name would otherwise be served stale for a year to
-anyone who had already loaded the page. Since these are other riders' photographs used
-with credit, a correction or a takedown has to be able to reach people who have already
-visited.
-
-So `/media/research/*` carries its own `max-age=3600`. Where that rule sits in the file
-is load-bearing, and the trap is in `netlify.toml`'s own comment: when several
-`[[headers]]` blocks match one request, Netlify applies them in file order and the last
-matching block wins. The narrower `/media/research/*` rule therefore sits **after**
-`/media/*`, not before it. Move it above, as ordering intuition suggests, and the
-catch-all silently overrides it and nothing appears to change.
-
-## Correcting region tags
-
-There is no longer a browser UI for this. The media-library page that carried the
-region dropdown was replaced by the journey layouts. Edit `overrides.json` by hand
-(a flat `{ "media/...": "State" }` map), then re-run:
-
-```
-node tag-media.cjs /path/to/instagram-export
-node generate-manifest.cjs
-```
-
-`tag-media.cjs` still applies overrides ahead of GPS and timing, exactly as before.
-The previous library UI is in git history at `index.html`, commit `1a1b71f`.
-
-## Local Development
+## Local development
 
 `index.html` fetches `manifest.json`, which browsers block over `file://`. Serve the
 folder instead:
@@ -621,3 +807,15 @@ folder instead:
 ```
 python3 -m http.server 8899   # then open http://127.0.0.1:8899/
 ```
+
+## Licence and credit
+
+The route data, the build scripts and the pages are free to fork and adapt. Two things
+in here are not covered by that, and both are marked where they live:
+
+- The **eight photographs under `media/research/`** are other riders' work, reproduced
+  from the xBhp forum with their watermarks intact and a per-image credit naming the
+  photographer, the board and the year. They belong to the people credited beside them.
+- The **ride media under `media/`** is the author's own.
+
+If you build something on this, a link back is appreciated and not required.

@@ -1,6 +1,6 @@
 {
-  "name": "ride-assets",
-  "description": "Media hosting for prasanthsasikumar.com ride pages",
+  "name": "thegreatindiaride",
+  "description": "The Great India Ride: an 18,181 km pan-India motorcycle loop published as reusable route data, a printable route book, and the media from the ride itself. CORS enabled, no key needed.",
   "baseUrl": "https://thegreatindiaride.prasanthsasikumar.com",
   "assets": {
     "stories": {

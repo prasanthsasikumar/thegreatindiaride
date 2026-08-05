@@ -39,7 +39,7 @@ const OVERRIDES_FILE = 'overrides.json';
 const OUT_FILE = 'tags.json';
 
 // Nominatim asks for a descriptive UA and max 1 req/sec. We respect both.
-const USER_AGENT = 'ride-assets-tagger/1.0 (+https://thegreatindiaride.prasanthsasikumar.com)';
+const USER_AGENT = 'thegreatindiaride-tagger/1.0 (+https://thegreatindiaride.prasanthsasikumar.com)';
 const RATE_LIMIT_MS = 1100;
 const GEO_PRECISION = 2; // ~1.1 km, finer than any state boundary question we care about
 const CANDIDATES = 6;    // length of the shortlist offered in the UI dropdown
