@@ -104,6 +104,14 @@ button { font: inherit; color: inherit; }
 .hero__img {
   position: absolute; inset: 0; width: 100%; height: 100%;
   object-fit: cover; object-position: 50% 42%; z-index: -2;
+  /* On a phone the crop is tight enough that most of the frame never shows, so
+     the eye drifts across it instead. Only the part that overflows the box
+     moves, which means this is a no-op on wide screens rather than a wobble. */
+  animation: heropan 44s ease-in-out infinite alternate;
+}
+@keyframes heropan {
+  from { object-position: 16% 42%; }
+  to   { object-position: 84% 42%; }
 }
 /* Flat scrims rather than a wash: enough to hold white type over the photo. */
 .hero__veil {
@@ -113,27 +121,12 @@ button { font: inherit; color: inherit; }
               inset 0 120px 90px -60px rgba(10, 10, 12, 0.70);
 }
 
-.hero__bar {
-  display: flex; align-items: center; justify-content: space-between;
-  gap: var(--space-4); padding: var(--space-6) var(--pad-x);
-}
-.hero__brand {
-  font-family: var(--font-heading); font-weight: var(--fw-bold);
-  font-size: 17px; color: var(--color-text); text-decoration: none;
-}
-.hero__brand span { color: var(--color-accent-2); }
-.hero__nav { display: flex; gap: var(--space-8); }
-.hero__nav a {
-  font-family: var(--font-mono); font-size: 13px; letter-spacing: 0.08em;
-  color: var(--color-text); text-decoration: none;
-}
-.hero__nav a[aria-current="page"] { color: var(--color-accent-2); }
-.hero__nav a:hover { color: var(--color-accent-2); }
-
 .hero__body { margin-top: auto; padding: var(--space-8) var(--pad-x) clamp(28px, 5vh, 52px); }
+/* Pink at 12px over a photo was the one line on the page you had to squint at.
+   White carries the same accent role at this size without losing the contrast. */
 .hero__eyebrow {
   font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.16em;
-  color: var(--color-accent-2); text-transform: uppercase; margin: 0;
+  color: var(--color-text); text-transform: uppercase; margin: 0;
 }
 .hero h1 {
   font-size: clamp(40px, 7.4vw, 76px); line-height: 1.02;
@@ -172,10 +165,6 @@ button { font: inherit; color: inherit; }
 }
 
 @media (max-width: 700px) {
-  .hero__bar { flex-wrap: wrap; row-gap: var(--space-2); }
-  .hero__brand { font-size: 15px; }
-  .hero__nav { gap: var(--space-4); }
-  .hero__nav a { font-size: 11px; }
   .hero__body { padding-top: clamp(70px, 22vh, 150px); }
   .hero__cta { width: 100%; text-align: center; }
   .band { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -297,6 +286,14 @@ button { font: inherit; color: inherit; }
 .region__name { font-family: var(--font-heading); font-weight: var(--fw-bold); flex: 1; }
 .region__meta { font-size: 12px; letter-spacing: 0.04em; color: var(--color-dim); text-align: right; }
 .region__sign { font-family: var(--font-heading); font-weight: var(--fw-bold); font-size: 18px; color: var(--color-muted); width: 18px; text-align: center; }
+.region__rep {
+  display: inline-block; margin: 0 0 12px; text-decoration: none;
+  font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.1em;
+  color: var(--color-faint); border-bottom: 1px solid var(--color-line);
+  padding-bottom: 2px;
+}
+.region__rep:hover { color: var(--color-text); border-bottom-color: var(--color-line-strong); }
+.region[data-expanded="false"] .region__rep { display: none; }
 
 .clips { display: grid; gap: 2px; }
 
@@ -417,7 +414,23 @@ button { font: inherit; color: inherit; }
 .close { margin-top: 56px; padding: 30px 22px 34px; }
 .close h2 { font-size: clamp(28px, 8vw, 40px); line-height: 1.02; }
 
-.pagefoot { margin-top: 32px; border-top: var(--rule); padding-top: 12px; font-size: 11px; color: var(--color-dim); }
+.pagefoot {
+  margin-top: 32px; border-top: var(--rule); padding: 14px 0 24px;
+  font-size: 11px; color: var(--color-dim);
+  display: flex; align-items: center; justify-content: space-between; gap: var(--space-4);
+}
+.totop {
+  flex: 0 0 auto; background: none; border: var(--rule); border-radius: 999px;
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em;
+  color: var(--color-muted); padding: 8px 16px; cursor: pointer;
+}
+.totop:hover { color: var(--color-text); border-color: var(--color-line-strong); }
+.lb__auto {
+  background: none; border: var(--rule); border-radius: 999px; cursor: pointer;
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em;
+  color: var(--color-dim); padding: 7px 14px; white-space: nowrap;
+}
+.lb__auto[aria-pressed="true"] { color: var(--color-bg); background: var(--color-text); border-color: var(--color-text); }
 
 /* ══ DESKTOP — "Atlas Split" ═════════════════════════════════════════════ */
 @media (min-width: 1080px) {
@@ -467,7 +480,7 @@ button { font: inherit; color: inherit; }
 
   .close { margin: 56px 0 0; padding: 34px 30px 38px; }
   .close h2 { font-size: 44px; line-height: 1; }
-  .pagefoot { display: none; }
+  .pagefoot { margin: 48px var(--space-8) 0; }
 
   .lb__top { padding: 14px 24px; }
   .lb__foot { padding: 12px 24px 18px; display: flex; align-items: center; gap: 16px; }
@@ -475,15 +488,10 @@ button { font: inherit; color: inherit; }
   .lb__nav { gap: 16px; }
 }
 
-/* The brand and three links stop fitting on one line here. */
-@media (max-width: 430px) {
-  .hero__brand { font-size: 13px; }
-  .hero__nav { gap: var(--space-3); }
-  .hero__nav a { font-size: 10px; letter-spacing: 0.06em; }
-}
-
 @media (prefers-reduced-motion: reduce) {
   * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  /* The blanket rule above would leave the pan frozen at its end frame. */
+  .hero__img { animation: none !important; object-position: 50% 42% !important; }
 }
 </style>
 </head>
@@ -492,15 +500,6 @@ button { font: inherit; color: inherit; }
 <header class="hero" id="hero">
   <img class="hero__img" src="hero.jpg" alt="" aria-hidden="true">
   <div class="hero__veil"></div>
-
-  <nav class="hero__bar">
-    <a class="hero__brand" href="https://prasanthsasikumar.com">PrasanthSasikumar<span>.com</span></a>
-    <span class="hero__nav">
-      <a href="https://prasanthsasikumar.com/posts">POSTS</a>
-      <a href="https://thegreatindiaride.prasanthsasikumar.com/" aria-current="page">RIDES</a>
-      <a href="https://prasanthsasikumar.com/garage">GARAGE</a>
-    </span>
-  </nav>
 
   <div class="hero__body">
     <p class="hero__eyebrow">JAN – APR 2025 · ONE MOTORCYCLE</p>
@@ -560,7 +559,10 @@ button { font: inherit; color: inherit; }
       <a href="https://www.instagram.com/thegreatindiaride/" target="_blank" rel="noopener">THE RIDE ON INSTAGRAM ↗</a>
     </section>
 
-    <footer class="pagefoot">thegreatindiaride.prasanthsasikumar.com</footer>
+    <footer class="pagefoot">
+      <span>thegreatindiaride.prasanthsasikumar.com</span>
+      <button type="button" class="totop" id="totop">BACK TO TOP ↑</button>
+    </footer>
   </main>
 </div>
 
@@ -578,6 +580,7 @@ button { font: inherit; color: inherit; }
     <div class="lb__nav">
       <button type="button" class="lb__btn lb__btn--nav" id="lb-prev" aria-label="Previous clip">‹</button>
       <button type="button" class="lb__btn lb__btn--nav" id="lb-next" aria-label="Next clip">›</button>
+      <button type="button" class="lb__auto" id="lb-auto" aria-pressed="true">AUTOPLAY</button>
       <span class="lb__spacer"></span>
       <a id="lb-raw" target="_blank" rel="noopener">OPEN RAW ↗</a>
     </div>
@@ -610,6 +613,7 @@ button { font: inherit; color: inherit; }
   // ~1080px the legs column drops to three columns — narrower than the mobile
   // layout manages in its 600px measure. Below this the Journey layout is better.
   var DESKTOP = window.matchMedia('(min-width: 1080px)');
+  var MOTION = window.matchMedia('(prefers-reduced-motion: reduce)');
 
   // Blocks at or under this many clips may share a row with the next one.
   var PAIR_MAX = 6;
@@ -634,8 +638,19 @@ button { font: inherit; color: inherit; }
     if (pref !== null) soundOn = pref === '1';
   } catch (e) { /* private mode */ }
 
+  var AUTO_KEY = 'ride:autoplay';
+  // Rolling on to the next clip is the point of a 222-clip reel, so it is on
+  // unless you turn it off. Stored like the sound choice, for the same reason.
+  var autoOn = true;
+  try {
+    var autoPref = localStorage.getItem(AUTO_KEY);
+    if (autoPref !== null) autoOn = autoPref === '1';
+  } catch (e) { /* private mode */ }
+
   var el = {
     legs: document.getElementById('legs'),
+    totop: document.getElementById('totop'),
+    lbAuto: document.getElementById('lb-auto'),
     loading: document.getElementById('loading'),
     error: document.getElementById('error'),
     close: document.getElementById('close'),
@@ -850,6 +865,22 @@ button { font: inherit; color: inherit; }
       r.clips.forEach(function (c) { flatClips.push({ clip: c, region: r }); });
     });
 
+    // A place the ride passed through more than once gets a block per visit, and
+    // those blocks can sit thousands of pixels apart. Each one carries where it
+    // falls in the sequence and where the next one is, so a block can offer a way
+    // straight there instead of leaving you to scroll and hope.
+    var byName = {};
+    regionsFlat.forEach(function (r) { (byName[r.name] = byName[r.name] || []).push(r); });
+    Object.keys(byName).forEach(function (name) {
+      var group = byName[name];
+      if (group.length < 2) return;
+      group.forEach(function (r, i) {
+        r.repeatAt = i + 1;
+        r.repeatOf = group.length;
+        r.repeatNext = group[(i + 1) % group.length];   // last one wraps to the first
+      });
+    });
+
     // Distinct places, not blocks: Delhi and Assam get a block per visit.
     var distinct = {};
     regionsFlat.forEach(function (r) { distinct[r.name] = true; });
@@ -929,6 +960,19 @@ button { font: inherit; color: inherit; }
       setExpanded(r.index, !isExpanded(r.index));
     });
     wrap.appendChild(bar);
+
+    if (r.repeatOf) {
+      // Outside the bar, which is a <button> — an anchor cannot live inside one.
+      var rep = document.createElement('a');
+      rep.className = 'region__rep';
+      rep.href = '#region-' + r.repeatNext.index;
+      var back = r.repeatAt === r.repeatOf;
+      rep.textContent = 'VISIT ' + r.repeatAt + ' OF ' + r.repeatOf + ' \u00b7 ' +
+        (back ? 'BACK TO ' : 'NEXT ') + r.name.toUpperCase() + ' AT ' +
+        r.repeatNext.num + (back ? ' \u2191' : ' \u2193');
+      rep.addEventListener('click', function (e) { e.preventDefault(); jump(r.repeatNext.index); });
+      wrap.appendChild(rep);
+    }
 
     var grid = document.createElement('div');
     grid.className = 'clips';
@@ -1442,6 +1486,13 @@ button { font: inherit; color: inherit; }
       try { localStorage.setItem(SOUND_KEY, soundOn ? '1' : '0'); } catch (e) { /* private mode */ }
     });
 
+    // Roll straight into the next clip. Only when this playthrough is still the
+    // current one, or a fast run of clicks would leave two videos advancing.
+    v.addEventListener('ended', function () {
+      if (!autoOn || lbPos !== pos || !el.lb.open) return;
+      if (pos + 1 < flatClips.length) openLb(pos + 1); else closeLb();
+    });
+
     el.lbStage.appendChild(v);
 
     // Browsers refuse unmuted autoplay until they trust the gesture. Drop back to
@@ -1471,6 +1522,21 @@ button { font: inherit; color: inherit; }
 
   el.lb.addEventListener('close', function () { el.lbStage.replaceChildren(); lbPos = -1; });
   el.lbClose.addEventListener('click', closeLb);
+  function paintAuto() {
+    el.lbAuto.setAttribute('aria-pressed', autoOn ? 'true' : 'false');
+    el.lbAuto.textContent = autoOn ? 'AUTOPLAY' : 'AUTOPLAY OFF';
+  }
+  paintAuto();
+  el.lbAuto.addEventListener('click', function () {
+    autoOn = !autoOn;
+    try { localStorage.setItem(AUTO_KEY, autoOn ? '1' : '0'); } catch (e) { /* private mode */ }
+    paintAuto();
+  });
+
+  el.totop.addEventListener('click', function () {
+    window.scrollTo({ top: 0, behavior: MOTION.matches ? 'auto' : 'smooth' });
+  });
+
   el.lbPrev.addEventListener('click', function () { openLb(lbPos - 1); });
   el.lbNext.addEventListener('click', function () { openLb(lbPos + 1); });
   document.addEventListener('keydown', function (e) {
