@@ -1,0 +1,23 @@
+{
+  "_comment": "Hand-authored. POIs, seasons and permits are content, not data. Entries marked TO WRITE are shown on the site as an explicit gap, never as invented text.",
+  "sourcing": "TO WRITE — how this loop was distilled from xbhp forum ride reports and Facebook touring groups.",
+  "plannedVsRidden": "TO WRITE — which sections closed, and what was decided instead.",
+  "hoursPerDay": 6,
+  "sectors": {
+    "S0": { "season": "TO WRITE", "permits": "", "note": "" },
+    "S1": { "season": "TO WRITE", "permits": "", "note": "" },
+    "S2": { "season": "TO WRITE", "permits": "", "note": "" },
+    "S3": { "season": "TO WRITE", "permits": "", "note": "" },
+    "S4": { "season": "TO WRITE", "permits": "", "note": "" }
+  },
+  "pois": {
+    "Dholavira": "Harappan city on the salt flat.",
+    "Dhordo": "The white Rann.",
+    "Narayan Sarovar": "The westernmost point of the loop.",
+    "Khardung La": "The high point of the ride.",
+    "Hemis Monastery": "",
+    "Gandikota": "The gorge above the Penna.",
+    "Paro Taktsang": "Tiger's Nest.",
+    "GOLDEN PAGODA India": "Kongmu Kham, Namsai."
+  }
+}
