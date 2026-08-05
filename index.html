@@ -147,11 +147,11 @@ button { font: inherit; color: inherit; }
 .hero__cta {
   flex: 0 0 auto; text-decoration: none; white-space: nowrap;
   font-family: var(--font-heading); font-weight: var(--fw-bold);
-  font-size: 13px; letter-spacing: 0.08em; color: var(--color-text);
+  font-size: 13px; letter-spacing: 0.08em; color: var(--color-bg);
   padding: 14px 26px; border-radius: 999px;
-  background: linear-gradient(90deg, var(--color-accent-2), var(--color-accent));
+  background: var(--color-text);
 }
-.hero__cta:hover { color: var(--color-text); filter: brightness(1.12); }
+.hero__cta:hover { color: var(--color-bg); background: var(--color-muted); }
 
 /* stats band */
 .band {
@@ -163,7 +163,7 @@ button { font: inherit; color: inherit; }
 .band > div + div { border-left: var(--rule); }
 .band__n {
   font-family: var(--font-heading); font-weight: var(--fw-bold);
-  font-size: clamp(26px, 3vw, 38px); line-height: 1; color: var(--color-accent);
+  font-size: clamp(26px, 3vw, 38px); line-height: 1; color: var(--color-text);
   letter-spacing: -0.02em; font-variant-numeric: tabular-nums; white-space: nowrap;
 }
 .band__l {
@@ -199,8 +199,12 @@ button { font: inherit; color: inherit; }
 /* ─── map ──────────────────────────────────────────────────────────────── */
 .mapwrap { position: relative; width: 100%; }
 .atlas { display: block; width: 100%; height: auto; }
-.atlas .neighbour { fill: none; stroke: rgba(255,255,255,0.22); stroke-width: 1; }
-.atlas .india { fill: #2b2b34; stroke: rgba(255,255,255,0.55); stroke-width: 1.25; }
+.atlas .neighbour { fill: none; stroke: rgba(255,255,255,0.20); stroke-width: 1; }
+/* On the dark ground a faint hairline loses the northern boundary entirely, so
+   Jammu and Kashmir reads as background rather than as part of the country. The
+   outline is the whole point of this view, so it stays near-white and the fill
+   sits far enough above #0f0f0f to hold its own shape. */
+.atlas .india { fill: #34343f; stroke: rgba(255,255,255,0.92); stroke-width: 1.4; }
 .atlas .route { fill: none; stroke: var(--color-accent-2); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
 /* 74 stops, not 29 regions — dots are small so a dense stretch still reads as a line. */
 .atlas .stop { fill: #10101a; stroke: rgba(255,255,255,0.75); stroke-width: 1.1; }
