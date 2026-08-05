@@ -327,10 +327,9 @@ button { font: inherit; color: inherit; }
   background: var(--color-line-strong);
 }
 .ov__dot[data-on="true"] { background: var(--color-accent); }
-
-@media (prefers-reduced-motion: reduce) {
-  .ov__caption { transition: none; }
-}
+/* No reduced-motion rule for .ov__caption: the blanket transition-duration override
+   at the foot of this sheet is !important and already outranks anything written here.
+   The player drops the fade's delay to 0 in JS to match. */
 
 /* ─── legs + regions ───────────────────────────────────────────────────── */
 .leg__head { background: var(--color-surface); color: var(--color-text); border: var(--rule); border-radius: var(--radius); }
@@ -885,6 +884,8 @@ button { font: inherit; color: inherit; }
   var planned = false;
   try { planned = localStorage.getItem(PLAN_KEY) === '1'; } catch (e) { /* private mode */ }
   var plannedLine = null;
+  // Set while something else is using the map — see syncPlannedLine(). Never stored.
+  var plannedSuppressed = false;
 
   var SOUND_KEY = 'ride:sound-on';
   // Sound on unless you've turned it off. Opening a clip is a deliberate click, so
@@ -1532,7 +1533,7 @@ button { font: inherit; color: inherit; }
       var pts = [{ lat: template.hops[0].fromLat, lon: template.hops[0].fromLon }];
       template.hops.forEach(function (h) { pts.push({ lat: h.toLat, lon: h.toLon }); });
       plannedLine = atlas.drawRoute(pts, 'route--planned');
-      if (plannedLine) plannedLine.style.display = planned ? '' : 'none';
+      syncPlannedLine();
     }
 
     atlas.drawRoute(matched.map(function (o) {
@@ -1566,12 +1567,21 @@ button { font: inherit; color: inherit; }
     if (atlas) atlas.setTiles(mode === 'map');
   }
 
+  // Whether the second line is drawn is a view question with two independent answers:
+  // does the reader want it, and is anything currently borrowing the map. The overview
+  // borrows the map, and a borrowed map must never reach the stored preference — a
+  // reader who reloads or closes the tab mid-playback would otherwise find their
+  // planned-route choice quietly rewritten.
+  function syncPlannedLine() {
+    if (plannedLine) plannedLine.style.display = (planned && !plannedSuppressed) ? '' : 'none';
+  }
+
   function setPlanned(on) {
     planned = !!on;
     try { localStorage.setItem(PLAN_KEY, planned ? '1' : '0'); } catch (e) { /* private mode */ }
     el.planToggle.setAttribute('aria-pressed', String(planned));
     el.planToggle.textContent = planned ? 'Hide planned' : 'Planned route';
-    if (plannedLine) plannedLine.style.display = planned ? '' : 'none';
+    syncPlannedLine();
   }
 
   // Which blocks sit on the same row as this one. Two-up rows start level, so a
@@ -1662,8 +1672,8 @@ button { font: inherit; color: inherit; }
   // in public.
   var Overview = (function () {
     var DWELL = 2600;          // ms per region, when not driven by audio
-    var paused = false, pos = 0, timer = null;
-    var audio = null, narrOn = false, wasPlanned = false;
+    var paused = false, pos = 0, timer = null, capTimer = null;
+    var audio = null, narrOn = false;
 
     function regions() { return regionsFlat; }
 
@@ -1692,8 +1702,11 @@ button { font: inherit; color: inherit; }
       var L = legOf(r);
       el.ovCaption.dataset.fade = 'true';
       // Swap the words at the bottom of the fade, not the top of it. Under reduced
-      // motion there is no fade, so the swap is immediate.
-      setTimeout(function () {
+      // motion there is no fade, so the swap is immediate. The pending swap is always
+      // dropped first: a step taken inside the fade — or an exit — would otherwise
+      // land the previous region's words a quarter-second later.
+      clearTimeout(capTimer);
+      capTimer = setTimeout(function () {
         el.ovLeg.textContent = L ? ('LEG ' + L.id + ' · ' + L.title).toUpperCase() : '';
         el.ovWhere.textContent = r.name;
         el.ovText.textContent = r.count + (r.count === 1 ? ' clip · ' : ' clips · ') + r.range +
@@ -1769,10 +1782,12 @@ button { font: inherit; color: inherit; }
       el.ovPlay.setAttribute('aria-label', 'Pause');
 
       // One line at a time — the planned overlay would confuse a map that is already
-      // moving. Remember the reader's choice and put it back on the way out, rather
-      // than quietly rewriting a stored preference they never changed.
-      wasPlanned = planned;
-      setPlanned(false);
+      // moving. Suppression is a view state and stops there: the reader's stored
+      // choice is not read, not written and not restored, so leaving mid-playback
+      // costs them nothing. The toggle stays live, and a click during a run takes
+      // effect the moment the run ends.
+      plannedSuppressed = true;
+      syncPlannedLine();
       hideStop();
 
       el.overview.hidden = false;
@@ -1787,10 +1802,12 @@ button { font: inherit; color: inherit; }
       if (!overviewOn) return;
       overviewOn = false;
       clearTimeout(timer);
+      clearTimeout(capTimer);
       stopTrack();
       el.overview.hidden = true;
       el.ovCta.textContent = 'SEE THE OVERVIEW ▸';
-      setPlanned(wasPlanned);
+      plannedSuppressed = false;
+      syncPlannedLine();
       if (atlas) atlas.focus(null, !MOTION.matches);
     }
 

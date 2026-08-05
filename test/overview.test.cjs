@@ -19,6 +19,10 @@ function cut(from, to) {
 
 const SCROLL_SRC = cut("window.addEventListener('scroll', function () {", '}, { passive: true });');
 const OVERVIEW_SRC = cut('var Overview = (function () {', '\n  })();');
+// Neither function nests a block that closes at this indent, so the first `\n  }` is
+// the function's own.
+const PLANNED_SRC = cut('function syncPlannedLine() {', '\n  }') +
+                    cut('function setPlanned(on) {', '\n  }');
 
 /* ── the scroll handler ─────────────────────────────────────────────────── */
 // The page re-derives the active block from element positions on every scroll. The
@@ -115,8 +119,8 @@ function harness(o) {
   o = o || {};
   const clk = clock();
   const el = {};
-  ['overview', 'ovCaption', 'ovLeg', 'ovWhere', 'ovText', 'ovDots', 'ovPlay', 'ovSound', 'ovExit', 'ovCta']
-    .forEach(function (k) { el[k] = fakeNode(); });
+  ['overview', 'ovCaption', 'ovLeg', 'ovWhere', 'ovText', 'ovDots', 'ovPlay', 'ovSound', 'ovExit',
+   'ovCta', 'planToggle'].forEach(function (k) { el[k] = fakeNode(); });
 
   // Two legs, four blocks, each with a stop or two of its own.
   const mk = function (index, name, count, range) {
@@ -136,15 +140,21 @@ function harness(o) {
     { idx: 3, stop: { lat: 23.2, lon: 69.7 } },
   ];
 
-  const log = { jumps: [], focus: [], planned: [], hideStop: 0 };
+  // The real setPlanned/syncPlannedLine are cut out of the page and run here too, over
+  // a localStorage that records every write. Stubbing them would hide the one thing
+  // these tests exist to watch: what reaches the disk while the overview is playing.
+  const log = { jumps: [], focus: [], hideStop: 0, writes: [] };
+  const plannedLine = { style: { display: o.planned ? '' : 'none' } };
+
   const ctx = {
     el: el, legs: legs, regionsFlat: regionsFlat, mapPlaced: mapPlaced,
     MOTION: { matches: o.reducedMotion !== false },
     atlas: { focus: function (b, a) { log.focus.push({ bounds: b, animate: a }); } },
     jump: function (i) { log.jumps.push(i); },
     hideStop: function () { log.hideStop++; },
-    setPlanned: function (v) { log.planned.push(v); ctx.planned = v; },
-    planned: !!o.planned,
+    planned: !!o.planned, plannedSuppressed: false, plannedLine: plannedLine,
+    PLAN_KEY: 'ride:planned',
+    localStorage: { setItem: function (k, v) { log.writes.push({ key: k, value: v }); } },
     overviewOn: false,
     document: { createElement: function () { return fakeNode(); } },
     setTimeout: clk.setTimeout, clearTimeout: clk.clearTimeout,
@@ -156,9 +166,11 @@ function harness(o) {
   };
   ctx.globalThis = ctx;
   vm.createContext(ctx);
+  vm.runInContext(PLANNED_SRC, ctx);
   vm.runInContext(OVERVIEW_SRC, ctx);
   return { ctx: ctx, el: el, legs: legs, regionsFlat: regionsFlat, log: log, clk: clk,
-           Overview: ctx.Overview };
+           plannedLine: plannedLine, Overview: ctx.Overview,
+           setPlanned: function (v) { return vm.runInContext('setPlanned', ctx)(v); } };
 }
 
 test('the speaker stays hidden while no leg declares a narration track', function () {
@@ -252,15 +264,60 @@ test('running off the end stops the overview and shows the whole country again',
   assert.strictEqual(h.clk.due(2600).length, 0, 'no dwell left ticking');
 });
 
-test('the planned overlay is put back the way it was found', function () {
-  const on = harness({ planned: true });
-  on.Overview.start();
-  assert.strictEqual(on.ctx.planned, false, 'one line at a time while it plays');
-  on.Overview.stop();
-  assert.strictEqual(on.ctx.planned, true, 'the reader\'s choice was not quietly rewritten');
+test('the overview hides the planned line without writing to localStorage', function () {
+  const h = harness({ planned: true });
+  assert.strictEqual(h.plannedLine.style.display, '', 'the reader had it on');
 
-  const off = harness({ planned: false });
-  off.Overview.start();
-  off.Overview.stop();
-  assert.strictEqual(off.ctx.planned, false);
+  h.Overview.start();
+  assert.strictEqual(h.plannedLine.style.display, 'none', 'one line at a time while it plays');
+  // The whole point: a reader who reloads, or closes the tab, mid-playback must still
+  // find their planned-route choice where they left it.
+  assert.deepStrictEqual(h.log.writes, [], 'nothing reached the stored preference');
+  assert.strictEqual(h.ctx.planned, true, 'the preference itself is untouched');
+
+  h.Overview.stop();
+  assert.strictEqual(h.plannedLine.style.display, '', 'and it comes back on exit');
+  assert.deepStrictEqual(h.log.writes, [], 'still nothing written');
+});
+
+test('a planned-route click during playback persists, and lands when the run ends', function () {
+  const h = harness({ planned: true });
+  h.Overview.start();
+
+  // The toggle stays live over the map. Turning it off mid-run is a real choice.
+  h.setPlanned(false);
+  assert.deepStrictEqual(h.log.writes, [{ key: 'ride:planned', value: '0' }],
+    'the click was persisted like any other');
+  assert.strictEqual(h.ctx.planned, false);
+  assert.strictEqual(h.el.planToggle.textContent, 'Planned route', 'the toggle reads back true');
+
+  h.Overview.stop();
+  assert.strictEqual(h.plannedLine.style.display, 'none', 'the click was not undone on exit');
+
+  // ...and the other direction: switched ON mid-run, it stays hidden until the end.
+  const g = harness({ planned: false });
+  g.Overview.start();
+  g.setPlanned(true);
+  assert.deepStrictEqual(g.log.writes, [{ key: 'ride:planned', value: '1' }]);
+  assert.strictEqual(g.plannedLine.style.display, 'none', 'still borrowed by the overview');
+  g.Overview.stop();
+  assert.strictEqual(g.plannedLine.style.display, '', 'and it takes effect when the run ends');
+});
+
+test('exiting drops the pending caption swap', function () {
+  const h = harness();
+  h.Overview.start();
+  assert.strictEqual(h.clk.due(0).length, 1, 'a caption swap is pending');
+  h.Overview.stop();
+  assert.strictEqual(h.clk.due(0).length, 0, 'and it does not fire after the exit');
+  assert.strictEqual(h.el.ovWhere.textContent, '', 'no region name landed after the exit');
+});
+
+test('stepping inside the fade drops the swap it interrupted', function () {
+  const h = harness();
+  h.Overview.start();
+  h.Overview.next();                       // before the first swap has run
+  assert.strictEqual(h.clk.due(0).length, 1, 'one pending swap, not two');
+  h.clk.flush(0);
+  assert.strictEqual(h.el.ovWhere.textContent, 'Tamil Nadu', 'the region you stepped to');
 });
