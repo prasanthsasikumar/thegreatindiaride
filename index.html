@@ -749,6 +749,7 @@ button { font: inherit; color: inherit; }
 <p class="sr-only" role="status" aria-live="polite" id="live"></p>
 
 <script src="atlas.js"></script>
+<script src="costs.js"></script>
 <script>
 (function () {
   'use strict';
@@ -1640,6 +1641,50 @@ button { font: inherit; color: inherit; }
 
     el.tplSectors.replaceChildren();
     t.sectors.forEach(function (s) { el.tplSectors.appendChild(sectorBlock(s)); });
+
+    renderCosts();
+  }
+
+  // No invented rates: every figure here comes from Costs.project(), which derives
+  // per-night rates from route.json's published totals (this ride, not the template —
+  // the template has no nights of its own). The hours-per-day assumption behind the
+  // sector day-counts is stated in the caption, not just used silently.
+  function renderCosts() {
+    if (!template || !manifest.route) return;
+    var hpd = (templateNotes && templateNotes.hoursPerDay) || 6;
+    var c = Costs.project(manifest.route, template, hpd);
+
+    var table = document.createElement('table');
+    var cap = document.createElement('caption');
+    cap.textContent =
+      'What one rider paid, early 2025 — ' + rupee(c.observed.total) + ' across ' +
+      c.nights + ' nights — applied to the template’s shape. Riding days are ' +
+      'estimated at ' + hpd + ' hours a day. These are rates that were actually paid, ' +
+      'not a quote.';
+    table.appendChild(cap);
+
+    var body = document.createElement('tbody');
+    function row(label, value, strong) {
+      var tr = document.createElement('tr');
+      var a = document.createElement('td'); a.textContent = label;
+      var b = document.createElement('td'); b.textContent = value;
+      if (strong) { a.style.fontWeight = '700'; b.style.fontWeight = '700'; }
+      tr.appendChild(a); tr.appendChild(b);
+      body.appendChild(tr);
+    }
+
+    row('A bed, per night', rupee(c.perNight.stay));
+    row('Fuel, food, everything else, per night', rupee(c.perNight.other));
+    row('Per night, all in', rupee(c.perNight.total), true);
+
+    c.sectors.forEach(function (s) {
+      var sec = template.sectors.filter(function (x) { return x.id === s.id; })[0];
+      row(s.id + ' · ' + sec.title + ' · ' + s.days + ' days', rupee(s.total));
+    });
+    row('The whole loop · ' + c.days + ' riding days', rupee(c.total), true);
+
+    table.appendChild(body);
+    el.tplCosts.replaceChildren(table);
   }
 
   function sectorBlock(s) {
