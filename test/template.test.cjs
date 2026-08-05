@@ -44,3 +44,15 @@ test('sector distances re-sum to the total', function () {
   const summed = t.sectors.reduce(function (a, s) { return a + s.km; }, 0);
   assert.ok(Math.abs(summed - t.totals.km) < 0.5);
 });
+
+test('sector labels are renamed even though hops keep the sheet spelling', function () {
+  const t = buildTemplate(parseCsv(SAMPLE), 'sample.csv');
+  // SAMPLE's first row spells the origin the way the sheet does: Thiruvananthapuram.
+  // hops[] should keep that spelling (checked elsewhere); sectors should not.
+  assert.strictEqual(t.sectors[0].from, 'Trivandrum');
+  // If the rename is missing here, the sector key becomes
+  // 'Thiruvananthapuram→Bengaluru', TITLES has no match for it, and title falls
+  // back to the generated 'Thiruvananthapuram to Bengaluru' — a plausible-looking
+  // string that hides the bug. Assert the real title, not just its presence.
+  assert.strictEqual(t.sectors[0].title, 'Southern opener');
+});
