@@ -150,6 +150,7 @@ function render() {
 
 const TEMPLATE = JSON.parse(fs.readFileSync(path.join(ROOT, 'template.json'), 'utf8'));
 const NOTES = JSON.parse(fs.readFileSync(path.join(ROOT, 'template-notes.json'), 'utf8'));
+const RESEARCH = JSON.parse(fs.readFileSync(path.join(ROOT, 'research.json'), 'utf8'));
 
 test('the book boots without falling into its error state', async function () {
   const { byId } = await render();
@@ -234,15 +235,67 @@ test('each sector map carries its own key, since aria-labels do not print', asyn
 
 test('every unwritten note renders as a visible gap, never as prose', async function () {
   // The single most damaging thing this page could do is invent a riding season or a
-  // permit. Count the gaps: one season block per sector, both calendar columns per
-  // sector, planned-vs-ridden, and sourcing.
+  // permit, so the gaps are counted rather than sampled: a gap that quietly stops
+  // being rendered is the failure this asserts against.
+  //
+  // The count is derived from what is actually written in template-notes.json, not
+  // hard-coded, so that filling a note is a deliberate act with a visible diff here
+  // rather than something that silently satisfies a smaller number. As of the xBhp
+  // field research this is 15: sourcing has been written, and S3's permits have been
+  // written, which is why it is no longer 17.
   const { main } = await render();
   const gaps = main.collect(function (n) { return hasClass(n, 'bk__todo'); });
   const sectors = TEMPLATE.sectors.length;
-  assert.strictEqual(gaps.length, sectors * 3 + 2);
+
+  const isWritten = function (s) { return !!s && String(s).indexOf('TO WRITE') !== 0; };
+  const unwrittenSeasons = TEMPLATE.sectors.filter(function (s) {
+    return !isWritten((NOTES.sectors[s.id] || {}).season);
+  }).length;
+  const unwrittenPermits = TEMPLATE.sectors.filter(function (s) {
+    return !isWritten((NOTES.sectors[s.id] || {}).permits);
+  }).length;
+
+  const expected =
+    unwrittenSeasons                        // the season block on each sector spread
+    + unwrittenSeasons                      // the season column of the calendar
+    + unwrittenPermits                      // the permits column of the calendar
+    + (isWritten(NOTES.plannedVsRidden) ? 0 : 1)
+    + (isWritten(NOTES.sourcing) ? 0 : 1);
+
+  assert.strictEqual(expected, 15,
+    'five unwritten seasons twice over, four unwritten permits, planned-vs-ridden');
+  assert.strictEqual(gaps.length, expected);
   gaps.forEach(function (g) { assert.match(g.textContent, /^Not written yet/); });
   // And nothing anywhere on the page leaked the raw placeholder text.
   assert.doesNotMatch(main.textContent, /TO WRITE/);
+});
+
+test('the season windows are still unwritten, and nothing was invented for them', async function () {
+  // The field research gives no riding calendar — its finding is that timing is set
+  // by leave rather than weather — so every season row must still be a gap. This is
+  // the assertion that would catch a calendar being back-filled out of the ride
+  // dates in the archive's case studies.
+  const { byId } = await render();
+  const rows = rowsOf(byId['bk-season-table']).slice(1);
+  rows.forEach(function (r, i) {
+    assert.strictEqual(r[2], 'Not written yet', TEMPLATE.sectors[i].id + ' season');
+  });
+  TEMPLATE.sectors.forEach(function (s) {
+    assert.strictEqual((NOTES.sectors[s.id] || {}).season, 'TO WRITE', s.id);
+  });
+});
+
+test('the researched permit note reaches the sector page, not only the calendar', async function () {
+  // A permit that has been researched is the one genuinely non-improvisable thing on
+  // this loop. It has to be printed on the spread a rider is actually looking at when
+  // they plan that leg, and it must not wait on a season note that nobody has written.
+  const { main } = await render();
+  const s3 = main.collect(function (n) { return n.id === 'sector-S3'; })[0];
+  assert.ok(s3, 'the S3 spread was rendered');
+  assert.match(s3.textContent, /Inner Line Permit/);
+  assert.match(s3.textContent, /Protected Area Permit/);
+  assert.match(s3.textContent, /Not written yet — season window/,
+    'and the unwritten season for that same sector is still shown as a gap');
 });
 
 test('the season calendar leaves both columns blank for every sector', async function () {
@@ -260,6 +313,7 @@ test('the season calendar leaves both columns blank for every sector', async fun
       assert.strictEqual(r[2], note.season, id + ' season');
     }
     if (!note.permits) assert.strictEqual(r[3], 'Not written yet', id + ' permits');
+    else assert.strictEqual(r[3], note.permits, id + ' permits');
   });
 });
 
@@ -268,6 +322,120 @@ test('every leg of the template appears exactly once across the waypoint tables'
   const tables = main.collect(function (n) { return hasClass(n, 'bk__hops'); });
   const legs = tables.reduce(function (a, t) { return a + rowsOf(t).length - 1; }, 0);
   assert.strictEqual(legs, TEMPLATE.totals.hops);
+});
+
+test('every research photograph carries its credit line, in the same figure', async function () {
+  // These are other riders' photographs, reproduced with their watermarks intact.
+  // A plate without its credit beside it is a defect, so this asserts the credit is
+  // inside the figure element rather than merely somewhere on the page: it is the
+  // adjacency that matters, and it is what survives a print that breaks pages.
+  const { main } = await render();
+  const figs = main.collect(function (n) { return n.tagName === 'figure'; });
+  assert.strictEqual(figs.length, RESEARCH.figures.length);
+
+  const seen = [];
+  figs.forEach(function (fig) {
+    const imgs = fig.collect(function (n) { return n.tagName === 'img'; });
+    assert.strictEqual(imgs.length, 1, 'one image per figure');
+    const src = imgs[0].getAttribute('src');
+    assert.match(src, /^media\/research\/fig-0\d\.jpg$/, src);
+    assert.ok(imgs[0].getAttribute('alt').length > 0, 'alt text on ' + src);
+    seen.push(src);
+
+    const credit = fig.collect(function (n) { return hasClass(n, 'bk__credit'); });
+    assert.strictEqual(credit.length, 1, 'a credit line inside the figure for ' + src);
+    assert.match(credit[0].textContent, /^© /, src);
+    assert.match(credit[0].textContent, /xBhp travelogue, 20(18|21)/, src);
+
+    // The caption survives having the credit appended after it.
+    const cap = fig.collect(function (n) { return n.tagName === 'figcaption'; })[0];
+    const expected = RESEARCH.figures.filter(function (f) { return f.file === src; })[0];
+    assert.ok(cap.textContent.indexOf(expected.caption) === 0, 'caption on ' + src);
+  });
+
+  assert.deepStrictEqual(seen.sort(), RESEARCH.figures.map(function (f) { return f.file; }).sort());
+});
+
+test('the research files it names all exist on disk', async function () {
+  RESEARCH.figures.forEach(function (f) {
+    assert.ok(fs.existsSync(path.join(ROOT, f.file)), f.file + ' is missing');
+    assert.ok(fs.statSync(path.join(ROOT, f.file)).size > 1024, f.file + ' is empty');
+  });
+});
+
+test('both of the report\'s caveats on its own numbers are printed, not just stored', async function () {
+  // The corpus counts are keyword-derived and the record table spans a state-count
+  // change. A reader who sees either table without its caveat reads those figures as
+  // harder than they are, so the caveats belong on the page beside them.
+  const { main } = await render();
+  const text = main.textContent;
+  assert.match(text, /keyword matching on URL slugs/);
+  assert.match(text, /picture of proportion, not an exact census/);
+  assert.match(text, /private record registries rather than Guinness/);
+  assert.match(text, /29 states; India has had 28 states and 8 union territories/);
+});
+
+test('the archive money is printed with its year and kept apart from this ride\'s rates', async function () {
+  // 2018 rupees and somebody else's ride. Every figure has to carry the year, and the
+  // page has to say the two sets of numbers are not comparable — otherwise the
+  // benchmark reads as a quote for the loop in this book.
+  const { byId } = await render();
+  const text = byId['bk-costs-archive'].textContent;
+  assert.match(text, /2018 RUPEES/);
+  assert.match(text, /₹1,04,695/);
+  assert.match(text, /₹2,000–2,200 per person per day/);
+  assert.match(text, /not comparable with the rates above/);
+
+  const rows = rowsOf(byId['bk-costs-archive']);
+  const find = function (needle) {
+    return rows.filter(function (r) { return r[0].indexOf(needle) === 0; })[0];
+  };
+  // The itemised lines, unrounded and in the report's own order.
+  assert.strictEqual(find('Fuel')[1], '₹34,172');
+  assert.strictEqual(find('Hotels (16 hotels)')[1], '₹31,775');
+  assert.strictEqual(find('Permits')[1], '₹200');
+  assert.strictEqual(find('Tyres (Pirelli MT60)')[1], '₹20,000');
+
+  // And the lines add up to the totals the report gives, which is the cheapest
+  // possible check that nothing was mistyped in transcription.
+  const sum = function (lines) {
+    return lines.reduce(function (a, l) { return a + l.amount; }, 0);
+  };
+  assert.strictEqual(sum(RESEARCH.benchmarks.itemised.lines), RESEARCH.benchmarks.itemised.total);
+  assert.strictEqual(sum(RESEARCH.benchmarks.preparation.lines), RESEARCH.benchmarks.preparation.total);
+});
+
+test('the appendix is appended as its own pages and can be left out of the print', async function () {
+  const { main } = await render();
+  const pages = main.collect(function (n) { return hasClass(n, 'bk__research'); });
+  // An opener, one page per part, and the references.
+  assert.strictEqual(pages.length, RESEARCH.appendix.length + 2);
+  pages.forEach(function (p) {
+    assert.ok(hasClass(p, 'bk__page'), 'every appendix page is a book page');
+  });
+  // It sits after the planning pages and before the closing one, which is what makes
+  // it skippable without the route pages moving.
+  const order = main.children.map(function (n) { return n.id; });
+  assert.ok(order.indexOf('bk-research') > order.indexOf('bk-planning'));
+  assert.ok(order.indexOf('bk-research') < order.indexOf('bk-fork'));
+});
+
+test('the closing observation about the decaying archive survives onto the page', async function () {
+  // It is the argument for this booklet existing: the threads that still read today
+  // are the ones whose authors self-hosted their images.
+  const { main } = await render();
+  assert.match(main.textContent, /Photobucket and Picasa links in the older threads are dead/);
+  assert.match(main.textContent, /self-hosted their images/);
+});
+
+test('the sourcing line names the board, the crawl and the date it was crawled', async function () {
+  const { byId } = await render();
+  const text = byId['bk-provenance'].textContent;
+  assert.match(text, /The Tourer/);
+  assert.match(text, /337 index pages/);
+  assert.match(text, /3,317 travelogue threads/);
+  assert.match(text, /14 pan-India ride reports/);
+  assert.match(text, /5 August 2026/);
 });
 
 test('the planning pages are blank to write on, not pre-filled with advice', async function () {

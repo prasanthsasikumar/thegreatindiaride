@@ -259,6 +259,96 @@ td .bk__todo { margin-top: 0; }
 }
 .bk__check-lines div { border-bottom: 1px solid var(--color-line); height: 26px; }
 
+/* ─── field research ───────────────────────────────────────────────────────
+ * The xBhp archive material. Two shapes: short bordered asides that sit inline
+ * with the sector or the cost table they bear on, and the appendix proper,
+ * which is ordinary book pages built out of the same tokens as everything else.
+ * Nothing here introduces a colour, a font or a radius the book did not already
+ * have — the print block below flips it all with the rest.
+ */
+.bk__archive {
+  border: var(--rule); border-radius: var(--radius);
+  padding: var(--space-4); margin-top: var(--space-6);
+}
+.bk__archive-h {
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.10em;
+  text-transform: uppercase; color: var(--color-accent-2); margin-bottom: var(--space-2);
+}
+.bk__archive-src {
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.06em;
+  color: var(--color-faint); margin-top: var(--space-3);
+}
+.bk__archive .bk__table { margin-top: var(--space-4); }
+
+/* Photographs. Every one of these is somebody else's work, reproduced with the
+   watermark intact, so the credit is part of the figure and not a caption
+   flourish: it is emitted with the image, always, in both media. */
+.bk__fig { margin: var(--space-6) 0; }
+.bk__fig img {
+  display: block; width: 100%; height: auto;
+  border-radius: var(--radius-sm); border: var(--rule);
+}
+.bk__fig figcaption {
+  font-size: 13px; line-height: 1.5; color: var(--color-muted);
+  max-width: 62ch; margin-top: var(--space-3);
+}
+.bk__credit {
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.06em;
+  color: var(--color-dim); margin-top: var(--space-2);
+}
+
+.bk__quote {
+  border-left: 3px solid var(--color-line-strong);
+  padding-left: var(--space-4); margin: var(--space-6) 0;
+  font-size: 16px; line-height: 1.55; color: var(--color-muted); max-width: 62ch;
+}
+.bk__quote-cite {
+  display: block; font-family: var(--font-mono); font-size: 11px;
+  letter-spacing: 0.06em; font-style: normal; color: var(--color-dim);
+  margin-top: var(--space-3);
+}
+
+.bk__log {
+  border: var(--rule); border-radius: var(--radius);
+  padding: var(--space-4); margin: var(--space-6) 0;
+}
+.bk__log-h {
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--color-dim); margin-bottom: var(--space-3);
+}
+.bk__log-row { display: flex; gap: var(--space-4); padding: 3px 0; }
+.bk__log-row + .bk__log-row { border-top: var(--rule); }
+.bk__log-k {
+  flex: 0 0 96px; font-family: var(--font-mono); font-size: 11px;
+  letter-spacing: 0.06em; color: var(--color-dim);
+}
+.bk__log-v { flex: 1; font-size: 13px; min-width: 0; }
+
+.bk__part { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.12em; }
+.bk__meta {
+  font-family: var(--font-mono); font-size: 12px; color: var(--color-dim);
+  font-variant-numeric: tabular-nums; margin-bottom: var(--space-2);
+}
+.bk__body { font-size: 14px; line-height: 1.6; color: var(--color-muted); max-width: 66ch; margin-top: var(--space-4); }
+
+.bk__refs { margin-top: var(--space-6); }
+.bk__refs h3 {
+  font-family: var(--font-mono); font-weight: 500; font-size: 11px;
+  letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-dim);
+  border-bottom: 1px solid var(--color-line-strong); padding-bottom: 4px;
+  margin: var(--space-6) 0 var(--space-3);
+}
+.bk__refs ol { margin: 0; padding-left: 20px; }
+.bk__refs li { font-size: 13px; line-height: 1.5; color: var(--color-muted); margin-bottom: var(--space-2); max-width: 72ch; }
+
+/* display:flex would otherwise beat the UA's [hidden] rule and show the toggle
+   before there is an appendix for it to hide. */
+.bk__skip {
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.06em;
+  color: var(--color-muted); display: flex; align-items: center; gap: var(--space-2);
+}
+.bk__skip[hidden] { display: none; }
+
 .state-msg { font-size: 13px; color: var(--color-dim); }
 .state-msg[hidden] { display: none; }
 
@@ -367,6 +457,42 @@ td .bk__todo { margin-top: 0; }
   .bk__stage-h, .bk__hops thead, .bk__blank thead { break-after: avoid; }
   thead { display: table-header-group; }
 
+  /* ── field research in print ──────────────────────────────────────────
+     A photograph cut in half by a page boundary is worse than no photograph,
+     and a credit line stranded on the following sheet is a defect — the figure
+     is therefore one indivisible block, image and credit together, and the
+     image is capped in millimetres so it cannot be taller than the space a
+     figure has on an A4 sheet. Portrait plates are the binding case: fig-01 and
+     fig-08 are roughly 2:3, so the cap is on height, not width. */
+  .bk__fig { break-inside: avoid; margin: 5mm 0; }
+  .bk__fig img {
+    width: auto; max-width: 100%; max-height: 92mm;
+    border-radius: 0; border: 0.5pt solid rgba(0,0,0,0.3);
+  }
+  .bk__fig figcaption { font-size: 8.6pt; }
+  .bk__credit { font-size: 7.6pt; color: #555; }
+
+  .bk__quote { break-inside: avoid; font-size: 10.5pt; border-left-width: 2pt; padding-left: 4mm; }
+  .bk__quote-cite { font-size: 7.6pt; }
+  .bk__log { break-inside: avoid; border-radius: 0; padding: 3mm; }
+  .bk__log-h { font-size: 7.6pt; }
+  .bk__log-k { flex-basis: 24mm; font-size: 7.6pt; }
+  .bk__log-v { font-size: 8.6pt; }
+
+  /* The short inline asides stay whole. The cost benchmark carries two tables
+     and must be allowed to break, for the same reason the waypoint tables are. */
+  .bk__archive { break-inside: avoid; border-radius: 0; padding: 4mm; }
+  .bk__archive--wide { break-inside: auto; }
+  .bk__archive-h { font-size: 7.6pt; }
+  .bk__archive-src { font-size: 7.6pt; }
+  .bk__body { font-size: 9.4pt; }
+  .bk__meta, .bk__part { font-size: 8.4pt; }
+  .bk__refs { break-inside: auto; }
+  .bk__refs li { font-size: 8pt; }
+  .bk__skip { display: none !important; }
+  /* Ticked off in the toolbar: leave the appendix out of the printed book. */
+  .bk--no-appendix .bk__research { display: none !important; }
+
   /* Without this the flipped tokens print as the browser's default black-on-white
      and the route line disappears. */
   * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
@@ -378,6 +504,9 @@ td .bk__todo { margin-top: 0; }
 <div class="bk__actions">
   <a class="bk__back" href="/">← THE RIDE</a>
   <span class="bk__spacer"></span>
+  <label class="bk__skip noprint" id="bk-skip" hidden>
+    <input type="checkbox" id="bk-skip-appendix"> LEAVE THE APPENDIX OUT OF THE PRINT
+  </label>
   <button type="button" class="bk__print noprint" id="bk-print">PRINT / SAVE AS PDF</button>
 </div>
 
@@ -464,6 +593,10 @@ td .bk__todo { margin-top: 0; }
     </p>
     <div id="bk-costs-table"></div>
     <p class="bk__caveat" id="bk-costs-caveat"></p>
+
+    <!-- The archive's own benchmark, beside the rates observed on this ride. It is
+         other people's money, from 2018, and it says so on every figure. -->
+    <div id="bk-costs-archive"></div>
   </section>
 
   <section class="bk__page" id="bk-season">
@@ -492,6 +625,10 @@ td .bk__todo { margin-top: 0; }
       The loop has no dates of its own. These are for yours.
     </p>
 
+    <!-- Two findings from the archive that change what a planner writes in these
+         boxes, so they belong above them rather than in the appendix. -->
+    <div id="bk-planning-research"></div>
+
     <h3 class="bk__h3">Sector planner</h3>
     <p class="bk__fine" style="margin-bottom:12px">
       Riding days are the projection from the costs page — riding time only, no rest
@@ -519,7 +656,12 @@ td .bk__todo { margin-top: 0; }
   <!-- ── APPENDIX ANCHOR ──────────────────────────────────────────────────
        Further sections belong here, between the planning pages and the closing
        page. Anything added as <section class="bk__page"> picks up the page break,
-       the palette flip and the print sizing with no other change. -->
+       the palette flip and the print sizing with no other change.
+
+       The field-research appendix is inserted immediately before this anchor at
+       runtime, one .bk__page per part, exactly the way the sector spreads go in
+       before theirs. Nothing above had to move to make room for it. -->
+  <div id="bk-research-anchor" hidden></div>
 
   <section class="bk__page" id="bk-fork">
     <p class="bk__eyebrow">THIS IS A TEMPLATE</p>
@@ -547,9 +689,10 @@ td .bk__todo { margin-top: 0; }
 (function () {
   'use strict';
 
-  var basemap = null, route = null, tpl = null, notes = null, costs = null;
+  var basemap = null, route = null, tpl = null, notes = null, costs = null, research = null;
 
   var el = {
+    book: document.getElementById('bk'),
     loading: document.getElementById('bk-loading'),
     error: document.getElementById('bk-error'),
     coverSub: document.getElementById('bk-cover-sub'),
@@ -568,9 +711,14 @@ td .bk__todo { margin-top: 0; }
     bike: document.getElementById('bk-bike'),
     check: document.getElementById('bk-check'),
     lines: document.getElementById('bk-lines'),
+    costsArchive: document.getElementById('bk-costs-archive'),
+    planningResearch: document.getElementById('bk-planning-research'),
+    researchAnchor: document.getElementById('bk-research-anchor'),
     files: document.getElementById('bk-files'),
     provenance: document.getElementById('bk-provenance'),
-    print: document.getElementById('bk-print')
+    print: document.getElementById('bk-print'),
+    skip: document.getElementById('bk-skip'),
+    skipToggle: document.getElementById('bk-skip-appendix')
   };
 
   var num = function (n) { return Math.round(n).toLocaleString('en-IN'); };
@@ -792,6 +940,14 @@ td .bk__todo { margin-top: 0; }
     spread.appendChild(tableCol);
 
     sec.appendChild(spread);
+
+    // Anything in the field research that bears on this sector specifically — for
+    // S3, the permit layer, which is the one thing on this loop that has to be
+    // arranged before you leave.
+    researchFor('sector:' + s.id).forEach(function (item) {
+      sec.appendChild(archiveBlock(item));
+    });
+
     // Atlas draws from the basemap and the viewBox, never from layout, so the SVG
     // does not have to be in the document yet — and drawing now rather than on a
     // timeout means a ⌘P a moment after load cannot catch an empty map.
@@ -804,12 +960,18 @@ td .bk__todo { margin-top: 0; }
     var note = (notes && notes.sectors && notes.sectors[s.id]) || {};
     box.appendChild(elem('div', 'bk__stage-h', 'SEASON & PERMITS'));
     if (written(note.season)) {
-      box.appendChild(elem('p', 'bk__note',
-        written(note.permits) ? note.season + ' ' + note.permits : note.season));
+      box.appendChild(elem('p', 'bk__note', note.season));
     } else {
       box.appendChild(todo('Not written yet — season window for this sector.'));
     }
-    if (written(note.season) && !written(note.permits)) {
+    // The permits note stands on its own. It used to be printed only as a tail on a
+    // written season, which meant a researched permit — the one genuinely
+    // non-improvisable thing on this loop — stayed invisible on the sector page for
+    // want of a season nobody has written yet. The gap for a missing permit note is
+    // still shown on the season calendar, for every sector, either way.
+    if (written(note.permits)) {
+      box.appendChild(elem('p', 'bk__note', note.permits));
+    } else if (written(note.season)) {
       box.appendChild(todo('Not written yet — permits for this sector.'));
     }
     if (written(note.note)) box.appendChild(elem('p', 'bk__fine', note.note));
@@ -856,6 +1018,309 @@ td .bk__todo { margin-top: 0; }
     tpl.sectors.forEach(function (s) {
       el.sectorsAnchor.parentNode.insertBefore(sectorPage(s), el.sectorsAnchor);
     });
+  }
+
+  /* ─── the field research ──────────────────────────────────────────────────
+   *
+   * research.json is a transcription of the site author's own desk research on
+   * the xBhp Tourer board. Two rules govern everything below.
+   *
+   * One: it is somebody else's evidence, so it is labelled as such wherever it
+   * appears and every rupee carries its year. It sits beside this book's own
+   * observed figures; it never replaces them, and it is never quietly merged
+   * with them.
+   *
+   * Two: it does not answer the season question, and nothing here pretends it
+   * does. The archive's finding is that Indian riders' timing is set by leave
+   * rather than by weather — a fact about riders, not a calendar — so the season
+   * rows stay empty and keep printing as gaps.
+   */
+
+  function researchFor(target) {
+    if (!research || !research.practical) return [];
+    return research.practical.filter(function (p) { return p.target === target; });
+  }
+
+  // The archive speaking, in a box that says so.
+  function archiveBlock(item, wide) {
+    var box = elem('div', wide ? 'bk__archive bk__archive--wide' : 'bk__archive');
+    box.appendChild(elem('div', 'bk__archive-h', 'FROM THE XBHP ARCHIVE'));
+    if (item.heading) box.appendChild(elem('h4', null, item.heading));
+    if (item.body) box.appendChild(elem('p', 'bk__body', item.body));
+    if (item.source) box.appendChild(elem('p', 'bk__archive-src', item.source));
+    return box;
+  }
+
+  // Every one of these photographs is another rider's work, reproduced with the
+  // watermark intact. The credit is emitted with the image or the image is not
+  // emitted at all — an uncredited plate is a defect, not a layout choice, so it
+  // is not left to the caller to remember.
+  function figureBlock(file) {
+    var found = null;
+    if (research && research.figures) {
+      research.figures.forEach(function (f) { if (f.file === file) found = f; });
+    }
+    if (!found || !found.credit) return null;
+
+    var fig = elem('figure', 'bk__fig');
+    var img = document.createElement('img');
+    img.setAttribute('src', found.file);
+    img.setAttribute('alt', found.alt || found.caption || '');
+    fig.appendChild(img);
+
+    // Caption as an explicit text node rather than via textContent, so appending the
+    // credit after it cannot displace it.
+    var cap = elem('figcaption');
+    cap.appendChild(document.createTextNode(found.caption));
+    cap.appendChild(elem('div', 'bk__credit', found.credit));
+    fig.appendChild(cap);
+    return fig;
+  }
+
+  function researchTable(b) {
+    var t = elem('table', 'bk__table');
+    if (b.caption) t.appendChild(elem('caption', null, b.caption));
+    head(t, b.columns);
+    var tb = document.createElement('tbody');
+    b.rows.forEach(function (r) {
+      var tr = document.createElement('tr');
+      r.forEach(function (cell, i) {
+        var col = b.columns[i] || {};
+        tr.appendChild(elem('td', col.num ? 'bk__num' : null, cell));
+      });
+      tb.appendChild(tr);
+    });
+    t.appendChild(tb);
+    return t;
+  }
+
+  function logBlock(b) {
+    var box = elem('div', 'bk__log');
+    box.appendChild(elem('div', 'bk__log-h', b.heading));
+    b.lines.forEach(function (ln) {
+      var row = elem('div', 'bk__log-row');
+      row.appendChild(elem('div', 'bk__log-k', ln.label));
+      row.appendChild(elem('div', 'bk__log-v', ln.value));
+      box.appendChild(row);
+    });
+    return box;
+  }
+
+  function appendBlock(parent, b) {
+    if (b.type === 'p') {
+      parent.appendChild(elem('p', 'bk__body', b.text));
+    } else if (b.type === 'h3') {
+      parent.appendChild(elem('h3', 'bk__h3', b.text));
+      if (b.meta) parent.appendChild(elem('p', 'bk__meta', b.meta));
+    } else if (b.type === 'figure') {
+      var fig = figureBlock(b.file);
+      if (fig) parent.appendChild(fig);
+    } else if (b.type === 'quote') {
+      var q = elem('blockquote', 'bk__quote');
+      q.appendChild(document.createTextNode(b.text));
+      q.appendChild(elem('cite', 'bk__quote-cite', b.cite));
+      parent.appendChild(q);
+    } else if (b.type === 'table') {
+      parent.appendChild(researchTable(b));
+    } else if (b.type === 'logbook') {
+      parent.appendChild(logBlock(b));
+    } else if (b.type === 'caveat') {
+      // The report's own qualifications on its own numbers. They print against the
+      // table they qualify, at body weight, for the same reason the cost caveat
+      // does: a reader who skips them reads the figures as harder than they are.
+      var c = research.caveats[b.ref];
+      if (c) parent.appendChild(elem('p', 'bk__caveat', c));
+    } else if (b.type === 'note') {
+      var n = elem('p', 'bk__caveat');
+      if (b.label) n.appendChild(elem('strong', null, b.label + ' — '));
+      n.appendChild(document.createTextNode(b.text));
+      parent.appendChild(n);
+    } else if (b.type === 'closing') {
+      var cl = research[b.ref];
+      if (cl) {
+        parent.appendChild(elem('h3', 'bk__h3', cl.heading));
+        parent.appendChild(elem('p', 'bk__body', cl.body));
+      }
+    }
+  }
+
+  function researchOpener() {
+    var sec = elem('section', 'bk__page bk__research');
+    sec.id = 'bk-research';
+    sec.appendChild(elem('p', 'bk__eyebrow', 'APPENDIX · FIELD RESEARCH'));
+    sec.appendChild(elem('h2', 'bk__h2', research.title));
+    sec.appendChild(elem('p', 'bk__lede', research.standfirst));
+
+    var c = research.corpus || {};
+    var glance = elem('div', 'bk__glance');
+    [[num(c.indexPages), 'index pages'], [num(c.threads), 'threads'],
+     [String(c.readInFull), 'reports read in full'], [c.crawled, 'crawled']
+    ].forEach(function (row) {
+      var d = document.createElement('div');
+      d.appendChild(elem('div', 'bk__glance-n', row[0]));
+      d.appendChild(elem('div', 'bk__glance-l', row[1]));
+      glance.appendChild(d);
+    });
+    sec.appendChild(glance);
+
+    sec.appendChild(elem('p', 'bk__note',
+      'The pages that follow are reference, not route. They are one reading of a ' +
+      'public forum archive, and they are separated from the book proper so you can ' +
+      'skip them, or leave them out of the print. Nothing in the route pages depends ' +
+      'on them; the practical findings that do bear on a plan have already been ' +
+      'printed beside the sector or the cost table they belong to.'));
+    sec.appendChild(elem('p', 'bk__fine',
+      'What this research does not contain is a riding calendar. Its finding on ' +
+      'timing is that Indian long rides are shaped by the working year rather than ' +
+      'by the weather, which is a fact about riders and not a season window — so the ' +
+      'season rows earlier in this book are still blank, and none of them was filled ' +
+      'in from anything here.'));
+
+    var toc = elem('table', 'bk__table');
+    head(toc, [{ label: 'Part', width: '12%' }, { label: 'What is in it' }]);
+    var tb = document.createElement('tbody');
+    research.appendix.forEach(function (part) {
+      var tr = document.createElement('tr');
+      tr.appendChild(elem('td', 'bk__mono', part.part));
+      tr.appendChild(elem('td', null, part.heading));
+      tb.appendChild(tr);
+    });
+    var refRow = document.createElement('tr');
+    refRow.appendChild(elem('td', 'bk__mono', '§'));
+    refRow.appendChild(elem('td', null, 'References'));
+    tb.appendChild(refRow);
+    toc.appendChild(tb);
+    sec.appendChild(toc);
+
+    return sec;
+  }
+
+  function researchPart(part) {
+    var sec = elem('section', 'bk__page bk__research');
+    sec.appendChild(elem('p', 'bk__eyebrow', 'APPENDIX · PART ' + part.part));
+    sec.appendChild(elem('h2', 'bk__h2', part.heading));
+    part.blocks.forEach(function (b) { appendBlock(sec, b); });
+    return sec;
+  }
+
+  function researchRefs() {
+    var sec = elem('section', 'bk__page bk__research');
+    sec.appendChild(elem('p', 'bk__eyebrow', 'APPENDIX · REFERENCES'));
+    sec.appendChild(elem('h2', 'bk__h2', 'Where all of it came from'));
+    if (research.referencesNote) {
+      sec.appendChild(elem('p', 'bk__note', research.referencesNote));
+    }
+    var wrap = elem('div', 'bk__refs');
+    research.references.forEach(function (g) {
+      wrap.appendChild(elem('h3', null, g.group));
+      var ol = document.createElement('ol');
+      g.items.forEach(function (item) { ol.appendChild(elem('li', null, item)); });
+      wrap.appendChild(ol);
+    });
+    sec.appendChild(wrap);
+    if (research.colophon) sec.appendChild(elem('p', 'bk__foot', research.colophon));
+    return sec;
+  }
+
+  function renderResearch() {
+    if (!research || !research.appendix) return;
+    var anchor = el.researchAnchor;
+    var parent = anchor.parentNode;
+    parent.insertBefore(researchOpener(), anchor);
+    research.appendix.forEach(function (part) {
+      parent.insertBefore(researchPart(part), anchor);
+    });
+    parent.insertBefore(researchRefs(), anchor);
+
+    el.skip.hidden = false;
+    el.skipToggle.addEventListener('change', function () {
+      el.book.className = el.skipToggle.checked ? 'bk bk--no-appendix' : 'bk';
+    });
+  }
+
+  // Inline, on the planning pages: the two findings that change what a planner
+  // writes in the boxes below them.
+  function renderPlanningResearch() {
+    var items = researchFor('planning');
+    if (!items.length) return;
+    el.planningResearch.replaceChildren();
+    items.forEach(function (item) {
+      el.planningResearch.appendChild(archiveBlock(item));
+    });
+  }
+
+  // Inline, on the cost page: the archive's own benchmark, next to this ride's
+  // observed rates. Different riders, different years, different currency — which
+  // is why the year is printed on the heading, on the captions and in the caveat,
+  // and why the two are never added together.
+  function renderCostsArchive() {
+    if (!research || !research.benchmarks) return;
+    var b = research.benchmarks;
+    var box = elem('div', 'bk__archive bk__archive--wide');
+    box.appendChild(elem('div', 'bk__archive-h',
+      'FROM THE XBHP ARCHIVE · ' + b.year + ' RUPEES'));
+    box.appendChild(elem('h4', null, 'What the same kind of ride cost somebody else'));
+
+    var ppd = b.perPersonPerDay;
+    box.appendChild(elem('p', 'bk__body',
+      'As a planning rule the archive supports something like ' + rupee(ppd.low) + '–' +
+      num(ppd.high) + ' per person per day, ' + ppd.basis + ', in ' + ppd.year +
+      ' money. ' + ppd.note));
+
+    var it = b.itemised;
+    var t1 = elem('table', 'bk__table');
+    t1.appendChild(elem('caption', null,
+      'The one fully itemised ride in the archive: ' + rupee(it.total) + ' for ' +
+      it.people + ' people over ' + it.days + ' days, ' + it.year + '. ' + it.ride + '.'));
+    head(t1, [{ label: 'What' }, { label: it.year + ' rupees', num: true }]);
+    var tb1 = document.createElement('tbody');
+    it.lines.forEach(function (ln) {
+      var tr = document.createElement('tr');
+      tr.appendChild(elem('td', null, ln.note ? ln.label + ' (' + ln.note + ')' : ln.label));
+      tr.appendChild(elem('td', 'bk__num', rupee(ln.amount)));
+      tb1.appendChild(tr);
+    });
+    var tot1 = document.createElement('tr');
+    tot1.className = 'bk__strong';
+    tot1.appendChild(elem('td', null, 'On the road, ' + it.days + ' days, two riders, ' + it.year));
+    tot1.appendChild(elem('td', 'bk__num', rupee(it.total)));
+    tb1.appendChild(tot1);
+    t1.appendChild(tb1);
+    box.appendChild(t1);
+
+    var pr = b.preparation;
+    var t2 = elem('table', 'bk__table');
+    t2.appendChild(elem('caption', null,
+      'Preparation, excluded from that total — about ' + rupee(pr.total) +
+      ' of parts before the ride, ' + pr.year + '. ' + pr.note));
+    head(t2, [{ label: 'What' }, { label: pr.year + ' rupees', num: true }]);
+    var tb2 = document.createElement('tbody');
+    pr.lines.forEach(function (ln) {
+      var tr = document.createElement('tr');
+      tr.appendChild(elem('td', null, ln.note ? ln.label + ' (' + ln.note + ')' : ln.label));
+      tr.appendChild(elem('td', 'bk__num', rupee(ln.amount)));
+      tb2.appendChild(tr);
+    });
+    var tot2 = document.createElement('tr');
+    tot2.className = 'bk__strong';
+    tot2.appendChild(elem('td', null, 'Before the ride, ' + pr.year));
+    tot2.appendChild(elem('td', 'bk__num', rupee(pr.total)));
+    tb2.appendChild(tot2);
+    t2.appendChild(tb2);
+    box.appendChild(t2);
+
+    researchFor('costs').forEach(function (item) {
+      if (item.body) box.appendChild(elem('p', 'bk__body', item.body));
+      if (item.source) box.appendChild(elem('p', 'bk__archive-src', item.source));
+    });
+
+    box.appendChild(elem('p', 'bk__caveat',
+      'These are ' + b.year + ' rupees and other people’s rides. They are printed here ' +
+      'as a check on the shape of a budget — how much of it is fuel, how much is a bed, ' +
+      'how little is paperwork — not as prices to plan against, and they are not ' +
+      'comparable with the rates above without adjusting for the years between them.'));
+
+    el.costsArchive.replaceChildren(box);
   }
 
   /* ─── costs ───────────────────────────────────────────────────────────── */
@@ -1053,7 +1518,8 @@ td .bk__todo { margin-top: 0; }
     ['template.json', 'The loop: sectors, stages, every leg with its coordinates, distance and hours.'],
     ['template-notes.json', 'The hand-written part: seasons, permits, points of interest. What is missing here is what prints as a dashed box.'],
     ['route.json', 'The ride that was actually run: stops, nights and spend. The cost projection is derived from this.'],
-    ['basemap.json', 'Country outlines, for the maps.']
+    ['basemap.json', 'Country outlines, for the maps.'],
+    ['research.json', 'The xBhp archive field research, transcribed: the corpus counts, the canonical routes, the itemised rides, the records and the reference list. The photographs it cites are under /media/research and belong to the riders credited beside them.']
   ];
 
   function renderFiles() {
@@ -1110,12 +1576,17 @@ td .bk__todo { margin-top: 0; }
     req('template.json'),
     req('route.json'),
     opt('template-notes.json'),
-    opt('basemap.json')
+    opt('basemap.json'),
+    // Optional on purpose: the route pages must print whole with or without the
+    // appendix, so a missing research.json costs the book its appendix and nothing
+    // else.
+    opt('research.json')
   ]).then(function (res) {
     tpl = res[0];
     route = res[1];
     notes = res[2] || {};
     basemap = res[3];
+    research = res[4];
 
     costs = Costs.project(route, tpl, notes.hoursPerDay || 6);
 
@@ -1127,12 +1598,15 @@ td .bk__todo { margin-top: 0; }
     if (basemap) { coverMap(el.mapCover); masterMap(el.mapMaster); }
     renderSectors();
     renderCosts();
+    renderCostsArchive();
     renderSeason();
+    renderPlanningResearch();
     renderPlanner();
     renderLog();
     renderBike();
     renderCheck();
     renderLines();
+    renderResearch();
     renderFiles();
   }).catch(function (err) {
     if (el.loading) el.loading.remove();
