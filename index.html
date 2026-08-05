@@ -268,6 +268,14 @@ button { font: inherit; color: inherit; }
 }
 .map__toggle:hover { border-color: var(--color-text); }
 .map__toggle[aria-pressed="true"] { background: var(--color-accent); border-color: var(--color-accent); color: #fff; }
+.map__toggle--alt { top: auto; bottom: 10px; }
+/* The planned loop, drawn under everything. Dashed and dimmed: it is the route that
+   was not ridden, and it must never read as equal in weight to the one that was. */
+.atlas .route--planned {
+  fill: none; stroke: var(--color-dim); stroke-width: 1.4;
+  stroke-dasharray: 5 4; opacity: 0.75;
+  stroke-linejoin: round; stroke-linecap: round;
+}
 
 .map__attr {
   font-size: 9px; color: var(--color-dim); margin-top: 2px; text-align: right;
@@ -663,6 +671,7 @@ button { font: inherit; color: inherit; }
         <svg class="atlas" id="atlas" data-mode="outline" role="img" aria-label="Map of the route across India, Nepal and Bhutan"></svg>
         <div class="map__badge" id="map-badge" hidden></div>
         <button type="button" class="map__toggle" id="map-toggle" aria-pressed="false">Real map</button>
+        <button type="button" class="map__toggle map__toggle--alt" id="plan-toggle" aria-pressed="false">Planned route</button>
         <div class="map__card" id="map-card" hidden>
           <button type="button" class="map__card-x" id="map-card-x" aria-label="Close">&times;</button>
           <div class="map__card-place" id="map-card-place"></div>
@@ -702,6 +711,13 @@ button { font: inherit; color: inherit; }
       <p class="tpl__source" id="tpl-source"></p>
 
       <div class="tpl__glance" id="tpl-glance"></div>
+
+      <h3 class="tpl__h3">What was planned, and what was ridden</h3>
+      <p class="tpl__note" id="tpl-diff"></p>
+      <p class="tpl__note">
+        Turn on <strong>Planned route</strong> on the map to see both: the loop as
+        drawn, dashed, under the line that was actually ridden.
+      </p>
 
       <h3 class="tpl__h3">The five sectors</h3>
       <p class="tpl__note">
@@ -793,6 +809,13 @@ button { font: inherit; color: inherit; }
   var mapMode = 'outline';
   try { mapMode = localStorage.getItem(MAP_KEY) === 'map' ? 'map' : 'outline'; } catch (e) { /* private mode */ }
 
+  // The planned-route overlay is a separate preference from the outline/real-map
+  // toggle above — it lives under its own key, so one never clobbers the other.
+  var PLAN_KEY = 'ride:planned';
+  var planned = false;
+  try { planned = localStorage.getItem(PLAN_KEY) === '1'; } catch (e) { /* private mode */ }
+  var plannedLine = null;
+
   var SOUND_KEY = 'ride:sound-on';
   // Sound on unless you've turned it off. Opening a clip is a deliberate click, so
   // there's a gesture to autoplay against; the fallback below covers the refusals.
@@ -825,6 +848,7 @@ button { font: inherit; color: inherit; }
     atlas: document.getElementById('atlas'),
     badge: document.getElementById('map-badge'),
     mapToggle: document.getElementById('map-toggle'),
+    planToggle: document.getElementById('plan-toggle'),
     mapAttr: document.getElementById('map-attr'),
     card: document.getElementById('map-card'),
     cardX: document.getElementById('map-card-x'),
@@ -844,6 +868,7 @@ button { font: inherit; color: inherit; }
     tplSource: document.getElementById('tpl-source'),
     tplGlance: document.getElementById('tpl-glance'),
     tplSectors: document.getElementById('tpl-sectors'),
+    tplDiff: document.getElementById('tpl-diff'),
     tplCosts: document.getElementById('tpl-costs'),
   };
 
@@ -1418,6 +1443,15 @@ button { font: inherit; color: inherit; }
       return { stop: o.stop, idx: o.idx, x: xy[0], y: xy[1] };
     });
 
+    // The planned loop, under the ridden one. Drawn from the template's hop list:
+    // the origin of the first hop, then every destination in order.
+    if (template && template.hops.length) {
+      var pts = [{ lat: template.hops[0].fromLat, lon: template.hops[0].fromLon }];
+      template.hops.forEach(function (h) { pts.push({ lat: h.toLat, lon: h.toLon }); });
+      plannedLine = atlas.drawRoute(pts, 'route--planned');
+      if (plannedLine) plannedLine.style.display = planned ? '' : 'none';
+    }
+
     atlas.drawRoute(matched.map(function (o) {
       return { lat: o.stop.lat, lon: o.stop.lon };
     }), 'route');
@@ -1447,6 +1481,14 @@ button { font: inherit; color: inherit; }
     el.mapToggle.textContent = mode === 'map' ? 'Outline' : 'Real map';
     el.mapAttr.hidden = mode !== 'map';
     if (atlas) atlas.setTiles(mode === 'map');
+  }
+
+  function setPlanned(on) {
+    planned = !!on;
+    try { localStorage.setItem(PLAN_KEY, planned ? '1' : '0'); } catch (e) { /* private mode */ }
+    el.planToggle.setAttribute('aria-pressed', String(planned));
+    el.planToggle.textContent = planned ? 'Hide planned' : 'Planned route';
+    if (plannedLine) plannedLine.style.display = planned ? '' : 'none';
   }
 
   // Which blocks sit on the same row as this one. Two-up rows start level, so a
@@ -1639,6 +1681,14 @@ button { font: inherit; color: inherit; }
       el.tplGlance.appendChild(d);
     });
 
+    var diff = notes.plannedVsRidden || '';
+    if (diff && diff.indexOf('TO WRITE') !== 0) {
+      el.tplDiff.textContent = diff;
+    } else {
+      el.tplDiff.className = 'tpl__todo';
+      el.tplDiff.textContent = 'Not written yet: which sections closed, and what was ridden instead.';
+    }
+
     el.tplSectors.replaceChildren();
     t.sectors.forEach(function (s) { el.tplSectors.appendChild(sectorBlock(s)); });
 
@@ -1659,7 +1709,7 @@ button { font: inherit; color: inherit; }
     cap.textContent =
       'What one rider paid, early 2025 — ' + rupee(c.observed.total) + ' across ' +
       c.nights + ' nights — applied to the template’s shape. Riding days are ' +
-      'estimated at ' + hpd + ' hours a day, riding days only, with no rest days ' +
+      'estimated at ' + hpd + ' hours a day, with no rest days ' +
       'built in — so this is a floor, not a forecast, and comes in lower than what ' +
       'was actually spent, which did include rest, weather and sightseeing days. ' +
       'These are rates that were actually paid, not a quote.';
@@ -1815,6 +1865,11 @@ button { font: inherit; color: inherit; }
     setMapMode(mapMode);
     el.mapToggle.addEventListener('click', function () {
       setMapMode(mapMode === 'map' ? 'outline' : 'map');
+    });
+
+    setPlanned(planned);
+    el.planToggle.addEventListener('click', function () {
+      setPlanned(!planned);
     });
 
     el.cardX.addEventListener('click', hideStop);
