@@ -97,7 +97,7 @@ button { font: inherit; color: inherit; }
 /* ─── hero, from design 4a ─────────────────────────────────────────────── */
 .hero {
   position: relative; isolation: isolate; background: #000;
-  min-height: clamp(460px, 74vh, 720px);
+  min-height: clamp(300px, 42vh, 480px);
   display: flex; flex-direction: column;
 }
 
@@ -165,9 +165,10 @@ button { font: inherit; color: inherit; }
 }
 
 @media (max-width: 700px) {
-  .hero__body { padding-top: clamp(70px, 22vh, 150px); }
+  .hero__body { padding-top: clamp(36px, 9vh, 80px); }
   .hero__cta { width: 100%; text-align: center; }
   .band { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .band > div { padding: var(--space-4) var(--space-4); }
   .band > div:nth-child(3), .band > div:nth-child(4) { border-top: var(--rule); }
   .band > div:nth-child(odd) { border-left: 0; }
 }
@@ -373,8 +374,9 @@ button { font: inherit; color: inherit; }
 
 .strip {
   position: sticky; top: 0; z-index: 20;
-  background: var(--color-bg); border-bottom: var(--rule);
-  margin: 0 -20px; padding: 0 12px;
+  background: var(--color-bg);
+  border-top: var(--rule); border-bottom: var(--rule);
+  margin: 16px -20px 0; padding: 0 12px;
   overflow-x: auto; scrollbar-width: none; display: flex; gap: 2px;
 }
 .strip::-webkit-scrollbar { display: none; }
@@ -388,7 +390,7 @@ button { font: inherit; color: inherit; }
 .strip__btn[aria-current="true"] { background: var(--color-accent); color: #fff; }
 
 
-.mapsection { margin-top: 32px; border-top: var(--rule); padding-top: 14px; }
+.mapsection { margin-top: 16px; }
 .mapsection__head { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-3); }
 .mapsection__head h2 { font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; margin: 0 0 10px; }
 .mapsection__hint { font-size: 11px; color: var(--color-dim); }
@@ -455,6 +457,27 @@ button { font: inherit; color: inherit; }
   }
   .strip { display: none; }                     /* the map itself is the desktop index */
 
+  /* The figures ride on the photo rather than banding the page under it, which
+     buys back the vertical space the map needs to clear the fold. Absolute
+     against .top so the mobile stack, where they sit on solid ground below the
+     photo, is untouched. */
+  .top { position: relative; }
+  .band {
+    position: absolute; right: var(--pad-x); bottom: clamp(28px, 5vh, 52px);
+    margin: 0; width: min(360px, 32vw);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    border: var(--rule); background: rgba(10, 10, 12, 0.55);
+  }
+  .band > div { padding: var(--space-4) var(--space-5); }
+  .band > div:nth-child(odd) { border-left: 0; }
+  .band > div:nth-child(3), .band > div:nth-child(4) { border-top: var(--rule); }
+  .band__n { font-size: 30px; }
+
+  /* Leave the photo's right third to the figures, and drop the CTA under the
+     blurb rather than across from it, where it would now collide. */
+  .hero__body { padding-right: calc(var(--pad-x) + min(360px, 32vw) + var(--space-8)); }
+  .hero__foot { flex-direction: column; align-items: flex-start; gap: var(--space-5); }
+
   .legs { min-width: 0; padding: 0 40px 80px; }
   .leg { margin-top: 40px; }
   .leg__head { padding: 26px 30px 28px; }
@@ -497,6 +520,7 @@ button { font: inherit; color: inherit; }
 </head>
 <body>
 
+<div class="top">
 <header class="hero" id="hero">
   <img class="hero__img" src="hero.jpg" alt="" aria-hidden="true">
   <div class="hero__veil"></div>
@@ -518,12 +542,11 @@ button { font: inherit; color: inherit; }
     <div><div class="band__n" id="stat-countries">3</div><div class="band__l">Countries</div></div>
   <div><div class="band__n" id="stat-clips">…</div><div class="band__l">Clips</div></div>
 </div>
+</div>
 
 <div class="shell">
 
   <aside class="pane">
-    <div class="strip" id="strip" role="group" aria-label="Jump to a region"></div>
-
     <section class="mapsection">
       <div class="mapsection__head">
         <h2>The whole route</h2>
@@ -543,6 +566,8 @@ button { font: inherit; color: inherit; }
       </div>
       <p class="map__attr" id="map-attr" hidden>© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors</p>
     </section>
+
+    <div class="strip" id="strip" role="group" aria-label="Jump to a region"></div>
 
     <div class="pane__foot">Click a stop for the night, the bill and the map link. The route follows your scroll.</div>
   </aside>
