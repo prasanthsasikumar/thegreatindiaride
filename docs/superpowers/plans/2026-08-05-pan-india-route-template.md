@@ -11,6 +11,7 @@
 ## Global Constraints
 
 - **No npm dependencies.** `package-lock.json` has an empty `packages` map and stays that way. Tests use Node 22's built-in `node:test` and `node:assert`. No jsdom, no bundler, no build step for the site itself.
+- **Run the tests as `node --test`, with no path argument.** On Node 22.23 a directory argument (`node --test test/`) is resolved as a module path and dies with `Cannot find module`. Bare `node --test` discovers `test/**` correctly.
 - **Source spreadsheets stay outside the repo.** Generators take a path argument. The itinerary CSV lives at `~/Downloads/Pan India Trip  - Itinerary.csv` (note the **two spaces** before the hyphen).
 - **House JS style in `index.html` / `atlas.js` / `booklet.html`:** `var` not `let`/`const`, `function () {}` not arrow functions, no template literals, no optional chaining. The existing file is uniform in this and new code must not stand out. Node `.cjs` scripts use `const` and modern syntax, matching `build-route.cjs`.
 - **Live palette tokens** (defined in `index.html:29`): `--color-bg: #0f0f0f`, `--color-surface: #17171b`, `--color-raise: #1e1e24`, `--color-text: #ffffff`, `--color-muted: #bcbcbc`, `--color-dim: #8a8a90`, `--color-accent: #8b5cf6`, `--color-accent-2: #ec4899`, `--font-heading`/`--font-body` Space Grotesk, `--font-mono` IBM Plex Mono. The README's "modernist / #f3f2f2 paper / Archivo" description is **stale** — ignore it and fix it in Task 9.
@@ -131,7 +132,7 @@ test('sector distances re-sum to the total', function () {
 - [ ] **Step 2: Run the test and watch it fail**
 
 ```bash
-node --test test/
+node --test
 ```
 
 Expected: FAIL — `Cannot find module '../build-template.cjs'`.
@@ -399,7 +400,7 @@ module.exports = { parseCsv, buildTemplate };
 - [ ] **Step 4: Run the tests and watch them pass**
 
 ```bash
-node --test test/
+node --test
 ```
 
 Expected: PASS, 4/4.
@@ -548,7 +549,7 @@ test('a cluster keeps the index of its first stop, so travel order survives', fu
 - [ ] **Step 2: Run it and watch it fail**
 
 ```bash
-node --test test/
+node --test
 ```
 
 Expected: FAIL — `ENOENT: no such file or directory, open 'atlas.js'`.
@@ -809,7 +810,7 @@ Move the code out of `index.html` **verbatim where possible**. The projection ma
 - [ ] **Step 4: Run the tests and watch them pass**
 
 ```bash
-node --test test/
+node --test
 ```
 
 Expected: PASS, 7/7 (4 from Task 1, 3 here).
@@ -1294,7 +1295,7 @@ test('projecting the whole template costs more than the ride actually did', func
 - [ ] **Step 2: Run it and watch it fail**
 
 ```bash
-node --test test/
+node --test
 ```
 
 Expected: FAIL — `ENOENT ... costs.js`.
@@ -1360,7 +1361,7 @@ Expected: FAIL — `ENOENT ... costs.js`.
 - [ ] **Step 4: Run the tests and watch them pass**
 
 ```bash
-node --test test/
+node --test
 ```
 
 Expected: PASS, 11/11.
@@ -1995,7 +1996,7 @@ Add a `## The template` section covering: what `template.json` is and how it dif
 Add a `## Tests` section:
 
 ```
-node --test test/
+node --test
 ```
 
 Zero dependencies — Node's built-in runner. Covers the generator's parsing and sector
