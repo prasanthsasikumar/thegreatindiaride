@@ -43,3 +43,12 @@ test('a cluster keeps the index of its first stop, so travel order survives', fu
   const clusters = A._cluster([{ x: 10, y: 10, idx: 7 }, { x: 11, y: 10, idx: 40 }], 3.5);
   assert.strictEqual(clusters[0].idx, 7);
 });
+
+test('a cluster opened by an unmatched stop inherits the first real index', function () {
+  const A = loadAtlas();
+  // idx -1 is a stop the caller could not match to a block. The marker still has to
+  // point somewhere, so the next member of the cluster supplies the index.
+  const clusters = A._cluster([{ x: 10, y: 10, idx: -1 }, { x: 11, y: 10, idx: 40 }], 3.5);
+  assert.strictEqual(clusters.length, 1);
+  assert.strictEqual(clusters[0].idx, 40);
+});

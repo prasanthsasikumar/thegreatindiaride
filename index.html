@@ -1282,6 +1282,10 @@ button { font: inherit; color: inherit; }
 
   function renderMap() {
     if (!basemap) return;
+    // The renderer is a second file now. If it didn't arrive, the map is simply absent —
+    // a bare reference would throw out of the boot chain and take the clips, the
+    // lightbox and the keys down with it.
+    if (typeof Atlas === 'undefined') return;
     atlas = Atlas.create(el.atlas, basemap, { width: 420, height: 470, pad: 10 });
     if (!atlas) return;
     atlas.drawBase();
