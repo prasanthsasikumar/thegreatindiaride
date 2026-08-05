@@ -1849,7 +1849,9 @@ appears when one does, and sound stays off until asked for."
 
 **Files:**
 - Create: `booklet.html`
-- Modify: `netlify.toml` — cache headers for `template.json`, `template-notes.json`, `atlas.js`, `costs.js`.
+- Modify: `netlify.toml`
+
+**Note:** Task 9 extends this file with the xBhp field research (practical findings inline per sector, the report proper as a skippable appendix). Build `booklet.html` so a later section can be appended without restructuring — in particular, do not assume the sector spreads are the last content before the closing page. — cache headers for `template.json`, `template-notes.json`, `atlas.js`, `costs.js`.
 
 **Interfaces:**
 - Consumes: `atlas.js` (Task 2), `costs.js` (Task 4), `template.json` + `template-notes.json` (Task 1), `route.json`, `basemap.json`.
@@ -2014,6 +2016,147 @@ The design-system paragraph described a light modernist palette the site
 hasn't used in some time; the live tokens are dark. And 'no external
 requests' was always about the map data — the page does load Google Fonts
 and, with the real-map toggle on, OSM tiles."
+```
+
+---
+
+## Task 9: The xBhp field research
+
+**Files:**
+- Create: `research.json` (structured transcription of the field report)
+- Create: `media/research/fig-01.jpg` … `fig-08.jpg` (already extracted; commit them)
+- Modify: `template-notes.json` — fill `sourcing` and the S3 permit note from the research
+- Modify: `booklet.html` — practical findings inline per sector, full research as a separate appendix
+
+**Interfaces:**
+- Consumes: `template-notes.json` (Task 1), `booklet.html` (Task 7).
+- Produces: `research.json`, read by `booklet.html` only.
+
+**SOURCE MATERIAL:** `.superpowers/sdd/2026-08-05-pan-india-route-template/field-report.txt`
+— the site author's own desk research, "All-India Motorcycle Rides — A Field Report from
+the xBhp Archive", compiled 5 Aug 2026 from a full crawl of the xBhp Tourer board (337
+index pages, 3,317 threads) plus close reading of 14 ride reports. Figure captions and
+credits are in `figures.json` beside it.
+
+**This is transcription and structuring, not authorship.** Do not add findings, round
+figures, or smooth over the report's own caveats. Two caveats in particular must survive
+into `research.json` and onto the page: that the corpus counts are keyword-derived from
+thread titles and are a picture of proportion rather than an exact census; and that the
+record table mixes private registries with Guinness and spans a 29-state/28-state
+boundary, so cross-year comparison does not hold.
+
+**Attribution is mandatory and was an explicit decision by the site author.** All eight
+photographs are other riders' work, reproduced with their watermarks intact. Every image
+must carry its credit line adjacent to it — `© Lokesh Shah ("dichkaun"), xBhp travelogue,
+2021` and `© "Nandy Photography" / "nb21", xBhp travelogue, 2018`. An image without its
+credit line beside it is a defect, not a layout choice. Do not crop or alter them.
+
+### What goes inline, per sector
+
+- **S3b (Bhutan & the Northeast)** gets the permit layer, which is the one genuinely
+  non-improvisable thing in the whole loop: Inner Line Permits for Arunachal Pradesh,
+  Nagaland, Mizoram and Manipur — around ₹100–200, typically 15 days, now available
+  online. Foreign nationals need a Protected Area Permit instead, a regime tightened for
+  Nagaland, Manipur and Mizoram by a December 2024 notification.
+- The cost pages get the archive's benchmark alongside the site's own observed rates:
+  roughly **₹2,000–2,200 per person per day** two-up in budget hotels, in 2018 money, and
+  the one fully itemised ride in the archive — ₹1,04,695 for two people over 26 days:
+  fuel ₹34,172, hotels ₹31,775 (16 hotels), food ₹19,352, taxi ₹6,800, misc ₹5,956,
+  service ₹4,240, guides ₹2,000, permits ₹200, bike wash ₹200. Preparation was a separate
+  ~₹50,000 (chain and sprockets ₹12,000, tyres ₹20,000, aux lights ₹9,000, brake pads
+  ₹9,000). State the year on every figure — these are 2018 rupees.
+- The planning pages get "plan the paperwork, not the route", and the consumables finding:
+  what fails on these rides is tyres, chain and sprockets, batteries and brake pads, not
+  displacement. The archive's pan-India rides were completed on everything from a
+  Hero Honda Splendor to a Versys 650.
+
+### What goes in the appendix
+
+The field report proper, clearly marked as a separate section the reader can skip or not
+print (`break-before: page`, and a `.noprint` toggle is acceptable): the corpus analysis
+and destination table, the four canonical routes (K2K, Golden Quadrilateral, the
+coastline, the North East loop), the three detailed rides, the endurance strand and record
+table, the Part V field notes, and the full reference list grouped as the report groups it.
+
+**Do not silently drop the report's closing observation**, which is directly about this
+project: the forum is a decaying archive, Photobucket and Picasa links in older threads
+are dead, and the threads that survive are the ones whose authors self-hosted their
+images. That is the argument for this booklet existing.
+
+### One gap the research does NOT fill
+
+The report does not give riding-season windows per region. Its finding is the opposite —
+"timing is set by leave, not by weather" — which is an observation about Indian riders,
+not a season calendar. **The `season` fields in `template-notes.json` therefore stay
+"TO WRITE" and keep rendering as visible gaps.** Do not fill them from this material, and
+do not infer a calendar from the ride dates in the case studies.
+
+- [ ] **Step 1: Commit the extracted images**
+
+They are already written to `media/research/`. Verify all eight are valid JPEGs and total
+about 1.4 MB, then stage them.
+
+- [ ] **Step 2: Build `research.json`**
+
+Transcribe `field-report.txt` into a structured file. Suggested shape — adjust if the
+material fits better another way, but keep figures, credits and references addressable:
+
+```jsonc
+{
+  "title": "All-India Motorcycle Rides — A Field Report from the xBhp Archive",
+  "compiled": "2026-08-05",
+  "corpus": { "indexPages": 337, "threads": 3317, "readInFull": 14 },
+  "caveats": { "counts": "…keyword-derived…", "records": "…private registries, 29 vs 28 states…" },
+  "practical": [ { "id": "permits", "heading": "…", "body": "…" } ],
+  "benchmarks": { "perPersonPerDay": { "low": 2000, "high": 2200, "year": 2018, "basis": "…" },
+                  "itemised": { "total": 104695, "people": 2, "days": 26, "year": 2018, "lines": [...] },
+                  "preparation": { "total": 50000, "lines": [...] } },
+  "appendix": [ { "part": "I", "heading": "…", "blocks": [...] } ],
+  "figures": [ { "file": "media/research/fig-01.jpg", "caption": "…", "credit": "…" } ],
+  "references": [ { "group": "Primary — xBhp forum threads", "items": ["…"] } ]
+}
+```
+
+- [ ] **Step 3: Fill the two answerable fields in `template-notes.json`**
+
+`sourcing` becomes a real sentence naming the xBhp Tourer board, the crawl scale and the
+date. The S3 sector note gains the ILP/PAP paragraph. `season` fields stay "TO WRITE".
+`plannedVsRidden` stays "TO WRITE" — the research corroborates that the Northeast is the
+hard part (the 2018 pair cut seven states to five after finding Tripura and Mizoram roads
+largely impassable) but it cannot say what THIS rider decided or why.
+
+- [ ] **Step 4: Wire it into `booklet.html`**
+
+Fetch `research.json` alongside the other data. Render the inline practical bits in their
+sectors and cost pages, and the appendix after the planning pages. Every figure renders
+with its credit line. Print rules from Task 7 apply — check the appendix paginates and
+that photographs are not clipped at page boundaries.
+
+- [ ] **Step 5: Verify**
+
+- `node --test` still passes.
+- All eight figures load and each shows its credit line adjacent.
+- The two caveats appear on the page, not just in the JSON.
+- `season` fields still render as "not written yet" gaps.
+- Print preview: appendix starts on a fresh page, no photograph is split across pages.
+
+- [ ] **Step 6: Commit**
+
+```bash
+git add research.json media/research template-notes.json booklet.html
+git commit -m "Fold the xBhp field research into the route book
+
+Twenty years of the Tourer board, crawled and read: the permit layer, the
+cost proportions, and what actually breaks on a pan-India ride. Practical
+findings sit with the sectors they bear on; the report proper is an
+appendix you can skip.
+
+Photographs are other riders' work, reproduced with watermarks and credit
+lines intact.
+
+The season fields stay unwritten. The archive's finding is that timing is
+set by leave rather than weather, which is a fact about riders, not a
+calendar -- inferring one from it would be inventing advice."
 ```
 
 ---
