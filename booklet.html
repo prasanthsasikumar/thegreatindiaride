@@ -195,6 +195,7 @@ td .bk__todo { margin-top: 0; }
 
 .bk__map { max-width: 340px; margin: var(--space-4) 0; }
 .bk__map--master { max-width: 460px; }
+.bk__map--cover { max-width: 300px; }
 .bk__legend {
   display: flex; flex-wrap: wrap; gap: var(--space-4);
   font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.06em;
@@ -232,10 +233,31 @@ td .bk__todo { margin-top: 0; }
   .bk__spread .bk__map { margin-top: 0; }
 }
 
+/* The sentence that stops a reader concluding the longer loop is cheaper. It sits
+   against the table it explains, at body weight — not as a footnote under it. */
+.bk__caveat {
+  font-size: 15px; line-height: 1.55; color: var(--color-text); max-width: 66ch;
+  border-left: 3px solid var(--color-accent);
+  padding: var(--space-2) 0 var(--space-2) var(--space-4);
+  margin-top: var(--space-4);
+}
+.bk__caveat strong { font-weight: var(--fw-bold); }
+
 /* ─── blank planning pages ─────────────────────────────────────────────── */
 .bk__blank td { height: 26px; }
 .bk__rule-lines { margin-top: var(--space-4); }
 .bk__rule-lines div { border-bottom: 1px solid var(--color-line); height: 26px; }
+
+.bk__check {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: var(--space-6); margin-top: var(--space-4);
+}
+.bk__check h4 {
+  font-family: var(--font-mono); font-weight: 500; font-size: 11px;
+  letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-dim);
+  border-bottom: 1px solid var(--color-line-strong); padding-bottom: 4px;
+}
+.bk__check-lines div { border-bottom: 1px solid var(--color-line); height: 26px; }
 
 .state-msg { font-size: 13px; color: var(--color-dim); }
 .state-msg[hidden] { display: none; }
@@ -269,7 +291,9 @@ td .bk__todo { margin-top: 0; }
        browsers keep the dark scheme's default canvas and form colours. */
     color-scheme: light;
   }
-  html, body { background: #fff; color: #111; }
+  /* overflow-x: clip on the root is fine on screen and has a long history of
+     truncating multi-page output at the printer. Let it overflow onto sheet two. */
+  html, body { background: #fff; color: #111; overflow: visible; }
   body { font-size: 9.6pt; line-height: 1.4; }
   .noprint, .bk__actions { display: none !important; }
 
@@ -296,8 +320,18 @@ td .bk__todo { margin-top: 0; }
   .bk__table caption { font-size: 8.6pt; }
   .bk__table th { font-size: 7pt; }
   .bk__num, .bk__table td.bk__num { font-size: 8pt; }
-  .bk__todo { font-size: 7.6pt; border-radius: 0; }
-  .bk__blank td, .bk__rule-lines div { height: 8mm; }
+  /* The gaps are the most consequential content in the book — they are where a
+     rider has to go and do their own homework. They must read as deliberate
+     absences, not as fine print, so they print darker and larger than the
+     surrounding table rather than fainter. */
+  .bk__todo { font-size: 8.5pt; color: #444; border-color: rgba(0,0,0,0.45); border-radius: 0; }
+  .bk__blank td, .bk__rule-lines div, .bk__check-lines div { height: 8mm; }
+  .bk__caveat {
+    font-size: 9.6pt; color: #111;
+    border-left: 2.5pt solid #b3300f; padding: 0 0 0 4mm;
+    break-before: avoid;   /* stays with the table it explains */
+  }
+  .bk__check { gap: 6mm; }
 
   /* Landmass fill is 40% of an A4 page in toner. Outline only. */
   .atlas .india { fill: none; stroke: #111; stroke-width: 1.1; }
@@ -311,16 +345,26 @@ td .bk__todo { margin-top: 0; }
      rather than whatever the viewport happened to be. 420:470 → ~87mm tall. */
   .bk__map { max-width: 78mm; margin: 4mm 0; }
   .bk__map--master { max-width: 118mm; }
+  .bk__map--cover { max-width: 92mm; }
   .bk__spread { display: block; }
 
-  table, .bk__card, .bk__stage { break-inside: avoid; }
-  h1, h2, h3 { break-after: avoid; }
+  /* Small tables stay whole and a row never splits down the middle. */
+  table { break-inside: avoid; }
   tr { break-inside: avoid; }
-  /* …except the waypoint tables. The long east is 51 legs; told to avoid a break
-     it would be pushed whole to the next sheet and overflow it anyway, leaving a
-     blank page in front of the spill. Let it break between rows, and repeat the
-     column heads on the sheet it breaks onto. */
+  h1, h2, h3 { break-after: avoid; }
+
+  /* …except the waypoint tables and the blank log, which have to be allowed to
+     break: the long east is 51 legs, and a table told to avoid a break is pushed
+     whole to the next sheet and overflows it anyway.
+     This exemption only works if NOTHING BETWEEN THE TABLE AND THE PAGE says
+     avoid — an ancestor's break-inside: avoid suppresses breaking anywhere inside
+     it, descendants included. So .bk__stage, the div wrapping each hop table, must
+     NOT carry avoid; keeping the stage together is done the other way round, by
+     asking its heading and column heads not to be left behind by the rows they
+     introduce. */
+  .bk__stage { break-inside: auto; }
   .bk__hops, .bk__blank { break-inside: auto; }
+  .bk__stage-h, .bk__hops thead, .bk__blank thead { break-after: avoid; }
   thead { display: table-header-group; }
 
   /* Without this the flipped tokens print as the browser's default black-on-white
@@ -343,10 +387,11 @@ td .bk__todo { margin-top: 0; }
     <p class="bk__eyebrow">ROUTE BOOK</p>
     <h1 class="bk__cover-title">The pan-India loop</h1>
     <p class="bk__cover-sub" id="bk-cover-sub">—</p>
+    <div class="bk__map bk__map--cover"><svg class="atlas" id="bk-map-cover" role="img" aria-label="The loop, drawn across India, Nepal and Bhutan"></svg></div>
     <p class="bk__lede">
       A loop from Trivandrum down to Kanyakumari, up the west coast into Kutch, over
       the Himalaya to Ladakh, east across the Gangetic plain into Nepal, Bhutan and
-      the Northeast, and home down the east coast. It returns to Bangalore and Delhi
+      the Northeast, and home down the east coast. It returns to Bengaluru and Delhi
       on the way, and those returns are where a rider can join it or leave it.
     </p>
     <hr class="bk__cover-rule">
@@ -418,7 +463,7 @@ td .bk__todo { margin-top: 0; }
       shape of the loop.
     </p>
     <div id="bk-costs-table"></div>
-    <p class="bk__fine" id="bk-costs-caveat" style="margin-top:16px"></p>
+    <p class="bk__caveat" id="bk-costs-caveat"></p>
   </section>
 
   <section class="bk__page" id="bk-season">
@@ -456,6 +501,16 @@ td .bk__todo { margin-top: 0; }
 
     <h3 class="bk__h3">Daily log</h3>
     <table class="bk__table bk__blank" id="bk-log"></table>
+
+    <h3 class="bk__h3">The bike</h3>
+    <table class="bk__table" id="bk-bike"></table>
+
+    <h3 class="bk__h3">Checklist</h3>
+    <p class="bk__fine" style="margin-bottom:12px">
+      Headings only. What goes under them depends on your bike, your season and where
+      you are starting from, and this book is not the place to guess at any of that.
+    </p>
+    <div class="bk__check" id="bk-check"></div>
 
     <h3 class="bk__h3">Notes</h3>
     <div class="bk__rule-lines" id="bk-lines"></div>
@@ -498,6 +553,7 @@ td .bk__todo { margin-top: 0; }
     loading: document.getElementById('bk-loading'),
     error: document.getElementById('bk-error'),
     coverSub: document.getElementById('bk-cover-sub'),
+    mapCover: document.getElementById('bk-map-cover'),
     glance: document.getElementById('bk-glance'),
     crossings: document.getElementById('bk-crossings'),
     sectorTable: document.getElementById('bk-sector-table'),
@@ -509,6 +565,8 @@ td .bk__todo { margin-top: 0; }
     seasonTable: document.getElementById('bk-season-table'),
     planner: document.getElementById('bk-planner'),
     log: document.getElementById('bk-log'),
+    bike: document.getElementById('bk-bike'),
+    check: document.getElementById('bk-check'),
     lines: document.getElementById('bk-lines'),
     files: document.getElementById('bk-files'),
     provenance: document.getElementById('bk-provenance'),
@@ -535,6 +593,20 @@ td .bk__todo { margin-top: 0; }
     return elem('span', 'bk__todo', text);
   }
 
+  // The two-line map key. On screen the difference between the dashed grey loop and
+  // the solid sector is obvious enough; on paper, with no colour to lean on, the
+  // reader needs telling — and the SVG's aria-label does not print.
+  function legend(items) {
+    var wrap = elem('div', 'bk__legend');
+    items.forEach(function (it) {
+      var span = document.createElement('span');
+      span.appendChild(elem('i', it.dim ? 'dim' : null, it.mark));
+      span.appendChild(document.createTextNode(' ' + it.label));
+      wrap.appendChild(span);
+    });
+    return wrap;
+  }
+
   function poiFor(place) {
     var p = notes && notes.pois && notes.pois[place];
     return p ? String(p) : '';
@@ -559,6 +631,13 @@ td .bk__todo { margin-top: 0; }
     var all = [{ lat: tpl.hops[0].fromLat, lon: tpl.hops[0].fromLon }];
     tpl.hops.forEach(function (h) { all.push({ lat: h.toLat, lon: h.toLon }); });
     return all;
+  }
+
+  function coverMap(svg) {
+    var a = Atlas.create(svg, basemap, { width: 420, height: 470, pad: 10 });
+    if (!a) return;
+    a.drawBase();
+    a.drawRoute(loopPoints(), 'route');
   }
 
   function masterMap(svg) {
@@ -699,6 +778,10 @@ td .bk__todo { margin-top: 0; }
       ', drawn solid against the rest of the loop');
     mapBox.appendChild(svg);
     mapCol.appendChild(mapBox);
+    mapCol.appendChild(legend([
+      { mark: '——', label: 'sector ' + s.id + ', ' + s.from + ' → ' + s.to },
+      { mark: '– – –', label: 'the rest of the loop', dim: true }
+    ]));
     mapCol.appendChild(seasonBlock(s));
     spread.appendChild(mapCol);
 
@@ -813,16 +896,20 @@ td .bk__todo { margin-top: 0; }
     table.appendChild(tb);
     el.costsTable.replaceChildren(table);
 
-    // The loop is longer than the ride and comes out cheaper. That needs saying on
-    // the same page, or the book reads as a promise it cannot keep.
-    el.costsCaveat.textContent =
-      'The ' + costs.days + '-day, ' + rupee(costs.total) + ' projection is riding time ' +
-      'only: days are estimated at ' + costs.hoursPerDay + ' hours a day with no rest ' +
-      'days built in. That is why the longer loop comes out below the ' +
-      rupee(costs.observed.total) + ' actually spent over ' + costs.nights + ' nights — ' +
-      'that ride included rest, weather and sightseeing days, and this figure has none. ' +
-      'Treat it as a floor, not a forecast. These are rates that were paid, not a quote, ' +
-      'and they carry no bike, no shipping, no flights and no repairs.';
+    // The loop is longer than the ride and comes out cheaper. That has to be said in
+    // the same weight of type as the numbers themselves, right against the table —
+    // as a footnote it would be read last or not at all, and the book would leave a
+    // reader believing the longer loop is the cheaper one.
+    el.costsCaveat.replaceChildren(
+      elem('strong', null, 'Those last two totals are not comparable. '),
+      document.createTextNode(
+        'The ' + costs.days + '-day, ' + rupee(costs.total) + ' projection is riding ' +
+        'time only: days are estimated at ' + costs.hoursPerDay + ' hours a day with no ' +
+        'rest days built in. That is why the longer loop comes out below the ' +
+        rupee(costs.observed.total) + ' actually spent over ' + costs.nights + ' nights — ' +
+        'that ride included rest, weather and sightseeing days, and this figure has ' +
+        'none. Treat it as a floor, not a forecast. These are rates that were paid, not ' +
+        'a quote, and they carry no bike, no shipping, no flights and no repairs.'));
   }
 
   /* ─── season calendar ─────────────────────────────────────────────────── */
@@ -912,6 +999,49 @@ td .bk__todo { margin-top: 0; }
     t.appendChild(tb);
   }
 
+  // Blanks to fill in about your own machine, not statements about anybody's. Every
+  // value here is a number only the rider knows.
+  var BIKE = [
+    'Bike', 'Odometer at the start', 'Tank range, km', 'Service interval, km',
+    'Last service, odo', 'Next service due, odo', 'Tyres, front / rear',
+    'Chain / final drive', 'Longest fuel gap on your legs, km', 'Cash carried'
+  ];
+
+  function renderBike() {
+    var t = el.bike;
+    t.replaceChildren();
+    head(t, [{ label: 'What', width: '45%' }, { label: 'Yours' }]);
+    var tb = document.createElement('tbody');
+    BIKE.forEach(function (label) {
+      var tr = document.createElement('tr');
+      tr.appendChild(elem('td', null, label));
+      tr.appendChild(elem('td', null, ''));
+      tb.appendChild(tr);
+    });
+    t.appendChild(tb);
+  }
+
+  // Headings and ruled space, nothing more. What belongs under each of these is a
+  // function of the bike, the season and the border you are crossing — none of which
+  // this book knows, and all of which it would be guessing at if it listed them.
+  var CHECKLIST = [
+    'Documents to carry', 'Spares', 'Tools', 'Tyre repair & inflation',
+    'Wet weather', 'Cold weather', 'Camp / sleep', 'Electronics & charging',
+    'Medical', 'Money & connectivity'
+  ];
+
+  function renderCheck() {
+    el.check.replaceChildren();
+    CHECKLIST.forEach(function (title) {
+      var box = document.createElement('div');
+      box.appendChild(elem('h4', null, title));
+      var lines = elem('div', 'bk__check-lines');
+      for (var i = 0; i < 5; i++) lines.appendChild(document.createElement('div'));
+      box.appendChild(lines);
+      el.check.appendChild(box);
+    });
+  }
+
   function renderLines() {
     el.lines.replaceChildren();
     for (var i = 0; i < 16; i++) el.lines.appendChild(document.createElement('div'));
@@ -994,12 +1124,14 @@ td .bk__todo { margin-top: 0; }
     renderGlance();
     renderSectorTable();
     renderDiff();
-    if (basemap) masterMap(el.mapMaster);
+    if (basemap) { coverMap(el.mapCover); masterMap(el.mapMaster); }
     renderSectors();
     renderCosts();
     renderSeason();
     renderPlanner();
     renderLog();
+    renderBike();
+    renderCheck();
     renderLines();
     renderFiles();
   }).catch(function (err) {
