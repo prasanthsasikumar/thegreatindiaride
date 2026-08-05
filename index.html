@@ -450,7 +450,11 @@ button { font: inherit; color: inherit; }
 @media (min-width: 1080px) {
   .shell {
     max-width: none; margin: 0; padding: 0;
-    display: grid; grid-template-columns: 460px minmax(0, 1fr);
+    /* The map is width-limited, not height-limited: India's aspect fixes its
+       height at ~1.12x whatever the column gives it, so a fixed 460px column
+       left ~440px of dead pane under the map at 1600x1000. Letting the column
+       grow with the window is the only thing that makes the map taller. */
+    display: grid; grid-template-columns: clamp(460px, 36vw, 640px) minmax(0, 1fr);
   }
 
   .pane {
