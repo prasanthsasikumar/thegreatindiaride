@@ -461,13 +461,12 @@ button { font: inherit; color: inherit; }
 }
 .close a:hover { background: var(--color-accent-soft); border-color: var(--color-accent); color: var(--color-text); }
 
-/* ─── the route book, and the K2K note beside it ───────────────────────────
+/* ─── the route book ────────────────────────────────────────────────────────
    This block used to dress the route book itself, printed into this page: a
    five-figure glance band, five expandable sectors with a waypoint table each,
    and a projected cost table. booklet.html carries every one of those in fuller
    form, and printing them here made the page a third longer than the story it
-   exists to tell, so what is left is the door to the book. The typography stays
-   because the K2K section, which is still prose, still uses it. */
+   exists to tell, so what is left is the door to the book. */
 .tpl { border-top: var(--rule); padding-top: var(--space-8); margin-top: var(--space-8); }
 .tpl[hidden] { display: none; }
 .tpl__eyebrow {
@@ -476,8 +475,6 @@ button { font: inherit; color: inherit; }
 }
 .tpl__h { margin: 0 0 var(--space-4); }
 .tpl__lede { font-size: 16px; line-height: 1.6; max-width: 62ch; color: var(--color-muted); }
-.tpl__source { font-size: 13px; color: var(--color-dim); max-width: 62ch; }
-.tpl__note { font-size: 14px; color: var(--color-muted); max-width: 62ch; margin: 0 0 var(--space-4); }
 
 /* One line of figures, read out of template.json rather than typed here, so the
    page can never advertise a loop the book does not contain. Hidden outright
@@ -793,20 +790,6 @@ button { font: inherit; color: inherit; }
       <h2>100 days.<br>One motorcycle.</h2>
       <p>Every clip above is served straight from this host, CORS enabled, with a machine-readable manifest.</p>
       <a href="https://www.instagram.com/thegreatindiaride/" target="_blank" rel="noopener">THE RIDE ON INSTAGRAM ↗</a>
-    </section>
-
-    <!-- K2K used to be nested inside the template section, which meant it was shown
-         by that section's render and would have gone out with it. It is its own
-         section now, and its own heading level, because it is its own subject. -->
-    <section class="tpl" id="tpl-k2k" hidden>
-      <p class="tpl__eyebrow">THE CLASSIC, INSIDE THIS ONE</p>
-      <h2 class="tpl__h">Kanyakumari to Kashmir, already half here</h2>
-      <div id="tpl-k2k-body"></div>
-      <p class="tpl__note">
-        Turn on <strong>K2K</strong> on the map to see both lines. The planned loop
-        steps out of the way while they are up, because the west-coast line is the
-        same set of legs.
-      </p>
     </section>
 
     <section class="tpl tpl--cta" id="routebook">
@@ -2032,8 +2015,11 @@ button { font: inherit; color: inherit; }
      template-notes.json is no longer read here. Nothing left on this page used
      it: the sourcing line, the planned-versus-ridden paragraph, the per-sector
      season and permit notes and the points of interest all went with the
-     section above, and renderK2k reads k2k.json alone. booklet.html fetches it
-     for itself, so the file stays and the fetch does not. */
+     section above. booklet.html fetches it for itself, so the file stays and
+     the fetch does not.
+
+     k2k.json is still read, but only by the map. The prose section that used to
+     explain the two K2K lines is gone; the overlay and its toggle are not. */
   var template = null, k2k = null;
 
   function renderRouteBook() {
@@ -2048,77 +2034,6 @@ button { font: inherit; color: inherit; }
     el.tplFigs.hidden = false;
   }
 
-  // Every figure in this block is read out of k2k.json rather than typed into the
-  // markup, and the two kinds of figure are kept apart in the prose as well as in
-  // the data: the highway length is quoted with its source and its variance, the
-  // west-coast total is this ride's own measured hops added up. The corridor line on
-  // the map is named as a sketch in the same paragraph that describes it, because a
-  // polyline through sixteen cities looks exactly like a route and is not one.
-  function renderK2k() {
-    // Gated on the map having drawn the overlay, not on k2k.json having loaded. Every
-    // paragraph below describes two lines on a map and tells the reader to turn them
-    // on with a button beside it. With basemap.json or atlas.js missing there is no
-    // map, no button and no lines, and this section used to appear anyway: an essay
-    // about a drawing that is not on the page, pointing at a control that is not
-    // either. It stays hidden instead, which is what the rest of the map's absence
-    // already does.
-    if (!k2kDrawn) return;
-    var n = k2k.north, s = k2k.south, rw = k2k.realWorld || {};
-    var body = document.getElementById('tpl-k2k-body');
-    if (!body) return;
-    var km = function (v) { return Math.round(v).toLocaleString('en-IN'); };
-
-    function para(cls, text) {
-      var p = document.createElement('p');
-      p.className = cls;
-      p.textContent = text;
-      body.appendChild(p);
-    }
-
-    body.replaceChildren();
-
-    para('tpl__note',
-      'K2K is the prestige pan-India route and the one most often attempted: the ' +
-      'length of the country, bottom to top, up NH-44. Its length is commonly given ' +
-      'as ' + km(n.citedKm) + ' km across ' + n.states + ' states, though sources ' +
-      'vary and some quote ' + km(n.citedKmAlt) + ' km. That is the published length ' +
-      'of the highway. Nothing on this site measured it.');
-
-    para('tpl__note',
-      'Almost nobody lives at either end, so the ride is always longer than the road. ' +
-      'Riders add the run to the start line and the run home, and a K2K routinely ' +
-      'totals ' + km(rw.low) + '–' + km(rw.high) + ' km rather than ' + km(n.citedKm) + ' km.');
-
-    para('tpl__note',
-      'It is drawn here as two lines, which is how it is ridden: up one side of the ' +
-      'country and down the other. The two do not meet. The northbound line ends at ' +
-      n.points[n.points.length - 1].name + ' and the southbound one picks up at ' +
-      s.points[0].name + ', because ' + s.points[0].name + ' is where this loop’s ' +
-      'measured west side begins. The northbound line runs through the ' +
-      n.points.length + ' cities NH-44 passes, so you can see where it goes. It is a ' +
-      'corridor sketch and its length on screen is a drawing, not a distance.');
-
-    para('tpl__note',
-      'The southbound line is not a sketch. It is ' + s.hops + ' legs of this loop, ' +
-      s.points[0].name + ' down to ' + s.points[s.points.length - 1].name + ', and ' +
-      'their road distances were measured for this route book: ' + km(s.measuredKm) +
-      ' km. Read that against NH-44 with one thing in front of you: ' +
-      km(s.spurKm) + ' km of it is ' + s.spurName + ', which is not on any K2K. The ' +
-      'line draws it because the figure includes it, and the figure includes it ' +
-      'because there is no measured ' + s.spurFrom + ' to ' + s.spurTo + ' road in ' +
-      'this book to put in its place. Skipping the spur makes the west-coast run ' +
-      'shorter. By how much is not a number this site has, and it is not going to ' +
-      'guess one.');
-
-    para('tpl__note',
-      'None of which takes away the useful part. A rider with three weeks does not ' +
-      'have to plan a K2K from nothing: most of one is already in this template, ' +
-      'spur and all, and the spur is the first thing to cut.');
-
-    if (n.cite) para('tpl__source', n.cite);
-    document.getElementById('tpl-k2k').hidden = false;
-  }
-
   /* ─── boot ──────────────────────────────────────────────────────────── */
   Promise.all([
     fetch('manifest.json', { cache: 'no-cache' }).then(function (r) {
@@ -2129,8 +2044,8 @@ button { font: inherit; color: inherit; }
     // toggle has nothing to show, and the route book's figures stay hidden. The
     // book itself is a static link, so it opens either way.
     fetch('template.json').then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; }),
-    // Optional too: without it the map keeps its two lines, the K2K section stays
-    // hidden, and the K2K toggle never appears.
+    // Optional too: without it the map keeps its two lines and the K2K toggle
+    // never appears.
     fetch('k2k.json').then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; }),
   ]).then(function (res) {
     manifest = res[0];
@@ -2151,10 +2066,6 @@ button { font: inherit; color: inherit; }
     render();
     renderStrip();
     renderMap();
-    // After renderMap and not before. The section is an explanation of an overlay on
-    // that map, so it cannot be shown until the map has actually drawn one; renderMap
-    // is what sets k2kDrawn.
-    renderK2k();
     syncStrip();
 
     setMapMode(mapMode);
