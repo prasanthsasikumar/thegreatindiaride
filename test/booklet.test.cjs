@@ -542,9 +542,9 @@ test('the section nav jumps to every top-level part of the book, and is screen-o
     'the nav is screen-only chrome, same as the rest of the toolbar');
 
   const links = nav.children.filter(function (n) { return n.tagName === 'a'; });
-  assert.strictEqual(links.length, 9,
+  assert.strictEqual(links.length, 10,
     'one entry per top-level part: cover, at a glance, the map, sectors, K2K, costs, ' +
-    'seasons, planning, the archive');
+    'seasons, planning, the archive, fork it');
 
   links.forEach(function (a) {
     const id = String(a.href || '').replace(/^#/, '');
@@ -552,6 +552,70 @@ test('the section nav jumps to every top-level part of the book, and is screen-o
     const target = byId[id] || main.collect(function (n) { return n.id === id; })[0];
     assert.ok(target, 'nav entry "' + a.textContent + '" points at #' + id + ', which does not exist');
   });
+});
+
+test('every top-level page in the book is reachable from the nav, or is a named exception', async function () {
+  // The brief's third nav assertion, tied to the DOM rather than left as a magic
+  // number: every top-level page has to land somewhere in the two lists below, or
+  // this test fails. That is not academic: the brief's own original 8-entry draft
+  // predated K2K (added by a later task) and would not have caught it arriving with
+  // no nav entry, and #bk-fork briefly did exactly that when this nav was first
+  // built. A page landing in neither list now (Task 8, say, adding another one) has
+  // to be a test failure, not a silent gap.
+  //
+  // NAV_TARGETS is what the nav in booklet.html actually points at. Most map to
+  // exactly one top-level page; 'bk-sectors' and 'bk-research' are the two entries
+  // that deliberately stand for more than one (the five sector spreads; the
+  // appendix's opener, its parts and its references page); GROUP_SIZE says how many.
+  const NAV_TARGETS = [
+    'bk-cover', 'bk-at-a-glance', 'bk-master', 'bk-sectors', 'bk-k2k',
+    'bk-costs', 'bk-season', 'bk-planning', 'bk-research', 'bk-fork'
+  ];
+  const GROUP_SIZE = {
+    'bk-sectors': TEMPLATE.sectors.length,
+    'bk-research': RESEARCH.appendix.length + 2   // opener + one per part + references
+  };
+
+  // Top-level pages deliberately left out of the nav, with why. Empty right now,
+  // since this task decided #bk-fork is worth its own entry rather than leaving it
+  // here, but the mechanism has to exist and be checked even when it has nothing in it.
+  const ALLOWLIST = {};
+
+  // Every top-level page declared straight in the markup: a literal
+  // <section class="bk__page ..."> with its own id. Checked against the raw source,
+  // not the render()-built stub, because the stub reconstructs every static id as a
+  // bare, classless placeholder div (see render(), above): real class attributes on
+  // statically-declared elements do not survive it, which is exactly why #bk-fork's
+  // absence from the nav went unnoticed the first time: nothing was checking the
+  // markup itself.
+  const html = fs.readFileSync(path.join(ROOT, 'booklet.html'), 'utf8');
+  const staticIds = (html.match(/<section class="bk__page[^"]*"[^>]*id="[a-z0-9-]+"/g) || [])
+    .map(function (tag) { return tag.match(/id="([a-z0-9-]+)"/)[1]; });
+  assert.ok(staticIds.length >= 7, 'sanity check: expected at least the seven static top-level pages');
+
+  staticIds.forEach(function (id) {
+    assert.ok(NAV_TARGETS.indexOf(id) >= 0 || ALLOWLIST[id],
+      'top-level page #' + id + ' is neither in the nav nor on the allow-list');
+  });
+
+  // And every page built at runtime (one per sector, K2K, and each research appendix
+  // page) really does belong to one of the nav's two grouped entries, or to K2K's
+  // own, so a new page-building function that forgets to join a group is caught the
+  // same way a new static page would be.
+  const { main } = await render();
+  const dynamicPages = main.collect(function (n) { return hasClass(n, 'bk__page'); });
+  const sectorPages = dynamicPages.filter(function (p) { return p.id && p.id.indexOf('sector-') === 0; });
+  const researchPages = dynamicPages.filter(function (p) { return hasClass(p, 'bk__research'); });
+  dynamicPages.forEach(function (p) {
+    const ok = p.id === 'bk-k2k' || sectorPages.indexOf(p) >= 0 || researchPages.indexOf(p) >= 0;
+    assert.ok(ok, 'a dynamically-built page (id="' + p.id + '") is not part of Sectors, K2K or The archive');
+  });
+
+  // And each group really does contain as many pages as the nav's own grouping
+  // (GROUP_SIZE, above) says it stands for: the number a reader would have to
+  // reconcile against "Sectors" or "The archive" being a single nav entry.
+  assert.strictEqual(sectorPages.length, GROUP_SIZE['bk-sectors']);
+  assert.strictEqual(researchPages.length, GROUP_SIZE['bk-research']);
 });
 
 test('no content section is hidden with display: none on screen', async function () {

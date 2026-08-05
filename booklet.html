@@ -128,10 +128,13 @@ button { font: inherit; color: inherit; }
 }
 
 /* Every element the nav above can land on. The value has to clear both bars
-   in .bk__topbar at once, now that they stack as one sticky unit; it is set
-   generously above their measured screen height rather than to the pixel,
-   because a little extra blank space above a heading costs nothing and a
-   target still hidden under the bar is a real defect. */
+   in .bk__topbar at once, now that they stack as one sticky unit. It is an
+   estimate from box-model arithmetic (padding, line-height, border), not a
+   number taken from a rendered page: worked through by hand it lands near
+   109-110px for the two stacked bars, so 118px leaves on the order of 8px of
+   slack above that estimate, not the wide margin the word "generous" would
+   suggest. Whoever checks this in a browser should confirm the real number
+   and adjust it if the heading still sits under the bars. */
 .bk__navtarget { scroll-margin-top: 118px; }
 
 /* Every top-level block of the book is a page. Print gives each one a fresh
@@ -736,7 +739,7 @@ td .bk__todo { margin-top: 0; }
        before theirs. Nothing above had to move to make room for it. -->
   <div id="bk-research-anchor" hidden></div>
 
-  <section class="bk__page" id="bk-fork">
+  <section class="bk__page bk__navtarget" id="bk-fork">
     <p class="bk__eyebrow">THIS IS A TEMPLATE</p>
     <h2 class="bk__h2">Take it and change it</h2>
     <p class="bk__lede">
@@ -1826,7 +1829,8 @@ td .bk__todo { margin-top: 0; }
     { id: 'bk-costs', label: 'Costs' },
     { id: 'bk-season', label: 'Seasons' },
     { id: 'bk-planning', label: 'Planning' },
-    { id: 'bk-research', label: 'The archive', watch: 'bk__research' }
+    { id: 'bk-research', label: 'The archive', watch: 'bk__research' },
+    { id: 'bk-fork', label: 'Fork it' }
   ];
 
   // Runs immediately, not from the boot chain below: the nav names no route
