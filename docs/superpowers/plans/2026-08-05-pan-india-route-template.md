@@ -2161,6 +2161,163 @@ calendar -- inferring one from it would be inventing advice."
 
 ---
 
+## Task 10: K2K — the two-line classic
+
+**Files:**
+- Create: `build-k2k.cjs`, `k2k.json`, `.k2kcache.json` (gitignored)
+- Create: `test/k2k.test.cjs`
+- Modify: `index.html` (draw it, and a toggle), `booklet.html` (a K2K page), `.gitignore`
+
+**Interfaces:**
+- Consumes: `template.json` (Task 1) for coordinates and real road distances; `Atlas.drawRoute` (Task 2).
+- Produces: `k2k.json`, read by `index.html` and `booklet.html`.
+
+**WHY:** Kanyakumari to Kashmir is the prestige pan-India route and, per the author's
+own research, the single most-attempted. It is worth naming on this site because the
+template already touches both ends. The author asked for it as **two lines: up one side,
+down the other** — which is what fig-01 in the research shows.
+
+### The honesty problem, and how to avoid it
+
+There is no K2K itinerary spreadsheet in this repo. **Do not invent road distances, and
+do not invent waypoint coordinates.** Two sources are legitimate and both are already
+here:
+
+1. **The southbound line is already in `template.json`.** The template's west-coast
+   run — Delhi → Jaipur → Ajmer → Udaipur → Rajkot → Surat → Mumbai → Ratnagiri → Goa →
+   Hubballi → Chitradurga → Bengaluru → Coimbatore → Kochi → Trivandrum → Kanyakumari —
+   is a complete west-side line with REAL per-hop road distances already measured. Reuse
+   those hops and sum their actual `km`. Do not re-measure or estimate.
+2. **The northbound line is NH-44**, a documented public highway. `template.json`
+   already carries coordinates for Kanniyakumari, Bengaluru, Kurnool, Hyderabad,
+   Gwalior, Delhi, Kurukshetra, Jammu, Udhampur and Srinagar. The corridor cities it
+   lacks — Madurai, Salem, Nagpur, Jhansi, Agra, Ambala — must be geocoded, not guessed:
+   use Nominatim exactly as `tag-media.cjs` already does (descriptive UA, 1 req/sec,
+   results cached to `.k2kcache.json`, which is gitignored like the other caches).
+
+**For the northbound distance, cite; do not compute.** The research gives NH-44 as
+commonly 3,745 km across 11 states, and notes some sources quote 4,112 km. State the
+common figure, note the variance, and attribute it. A polyline through ten cities is a
+corridor sketch, not a measured route, and its pixel length must never be presented as a
+distance. Label it as the corridor it is.
+
+**Also carry the research's caveat** that because almost nobody lives at either end,
+riders add the run to the start and the run home, so a K2K routinely totals 6,000–11,000
+km rather than 3,745.
+
+### `k2k.json` shape
+
+```jsonc
+{
+  "generated": "…", "source": "NH-44 corridor + template.json west-coast hops",
+  "north": { "name": "Up the spine — NH-44",
+             "citedKm": 3745, "citedKmAlt": 4112, "states": 11,
+             "measured": false,
+             "note": "Corridor through the cities NH-44 runs by; the distance is the published highway length, not a sum of these points.",
+             "points": [ { "name": "Kanniyakumari", "lat": …, "lon": …, "source": "template" } ] },
+  "south": { "name": "Down the west coast",
+             "measuredKm": 0, "measured": true,
+             "note": "Summed from this ride's own measured hops.",
+             "points": [ … ] },
+  "realWorld": { "low": 6000, "high": 11000, "why": "riders add the run to the start line and the run home" }
+}
+```
+
+Every point carries `source: "template" | "nominatim"` so provenance survives into the data.
+
+- [ ] **Step 1: Write `test/k2k.test.cjs` first, and watch it fail**
+
+Assert: both lines exist; every point has finite coordinates; the south line's
+`measuredKm` equals the sum of the template hops it reuses (recompute independently from
+`template.json`); the north line has `measured: false` and does NOT carry a computed
+distance field; the north line's endpoints are Kanyakumari and Srinagar; the south line's
+endpoints are Delhi and Kanyakumari; and no point lacks a `source`.
+
+Run bare `node --test`, confirm it fails for the expected reason.
+
+- [ ] **Step 2: Write `build-k2k.cjs`**
+
+Declare the two waypoint lists at the top of the file as named constants, the way
+`build-route.cjs` declares `SKIP_NIGHTS` and `ORIGIN`. Resolve each name against
+`template.json` first; geocode only what is missing; cache. Assert the invariants above
+and fail loudly rather than writing a bad file.
+
+- [ ] **Step 3: Generate and verify**
+
+```bash
+node build-k2k.cjs
+```
+Confirm the six geocoded cities landed in plausible places (Madurai ~9.9N 78.1E, Salem
+~11.7N 78.2E, Nagpur ~21.1N 79.1E, Jhansi ~25.4N 78.6E, Agra ~27.2N 78.0E, Ambala
+~30.4N 76.8E). If any is wildly off, stop — a bad geocode puts a line through the sea.
+
+- [ ] **Step 4: Draw it on `index.html`**
+
+A third map toggle, independent of the existing outline/real-map and planned-route
+toggles, with its own `localStorage` key. Two lines, visually distinct from each other
+AND from both existing routes — the map already carries a solid ridden line and a dashed
+planned one, so a third and fourth must not muddy it. Consider drawing K2K only when its
+toggle is on and dimming the others while it is. Judge what stays legible.
+
+The K2K section names the route, gives the cited distance with its variance and
+attribution, the 6,000–11,000 km real-world figure, and says plainly that the template
+already contains most of it — a rider with three weeks can lift a K2K out of this loop.
+
+- [ ] **Step 5: A K2K page in `booklet.html`**
+
+One page, appended using the same additive pattern the research appendix used. Map with
+both lines, the two waypoint lists, the cited and measured distances clearly
+distinguished, and the real-world total. Print rules apply.
+
+- [ ] **Step 6: Verify and commit**
+
+Bare `node --test`. Confirm existing counts unchanged, cost/totals parity intact, and the
+15 rendered gaps still 15.
+
+---
+
+## Task 11: A section nav for the booklet's web view
+
+**Files:** Modify `booklet.html`, `test/booklet.test.cjs`
+
+**WHY:** The author has now read the booklet in a browser: *"looks great! it is a very
+long page — which is fine for pdf, but for web viewing we can make it into sections or
+tabs so that users don't have to scroll so much."* They chose a sticky section nav over
+tabs.
+
+**THE TRAP, and why the nav was chosen:** this page exists to be printed. Any screen-side
+scheme that hides panels with `display: none` must be completely reversed in
+`@media print`, or the PDF silently loses whole sections — a failure nobody notices until
+someone prints it. **A sticky nav hides nothing**, so print stays correct by
+construction. Keep it that way: do not introduce hidden panels as an "improvement".
+
+- [ ] **Step 1: Add the nav**
+
+A thin sticky bar under the top of the page listing: Cover · At a glance · The map ·
+Sectors · Costs · Seasons · Planning · The archive. Each entry jumps to its section.
+Give every target a stable `id` and `scroll-margin-top` clearing the sticky bar.
+
+Highlight the current section as the reader scrolls. Use `IntersectionObserver`, matching
+the pattern `index.html` already uses for its clip grid; fall back silently where it is
+unavailable. Keep it `var`/`function () {}` house style.
+
+The nav must be `.noprint`, and the existing `break-before: page` rules must be
+untouched. Deep links (`#bk-costs`) and in-page browser search must keep working —
+that is the main advantage over tabs and must not be lost.
+
+- [ ] **Step 2: Test it**
+
+Extend `test/booklet.test.cjs`: every nav entry resolves to an element that exists; the
+count of nav entries matches the count of top-level sections; the nav carries `noprint`.
+Mutation-check by pointing one entry at a missing id and confirming the test fails.
+
+- [ ] **Step 3: Verify and commit**
+
+Bare `node --test`. Section and page counts unchanged; the 15 gaps still 15; cost parity
+intact.
+
+---
+
 ## Self-Review
 
 **Spec coverage:**
