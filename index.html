@@ -1659,8 +1659,10 @@ button { font: inherit; color: inherit; }
     cap.textContent =
       'What one rider paid, early 2025 — ' + rupee(c.observed.total) + ' across ' +
       c.nights + ' nights — applied to the template’s shape. Riding days are ' +
-      'estimated at ' + hpd + ' hours a day. These are rates that were actually paid, ' +
-      'not a quote.';
+      'estimated at ' + hpd + ' hours a day, riding days only, with no rest days ' +
+      'built in — so this is a floor, not a forecast, and comes in lower than what ' +
+      'was actually spent, which did include rest, weather and sightseeing days. ' +
+      'These are rates that were actually paid, not a quote.';
     table.appendChild(cap);
 
     var body = document.createElement('tbody');

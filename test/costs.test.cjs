@@ -39,9 +39,18 @@ test('a sector estimate is its days times the observed nightly rate', function (
   assert.strictEqual(c.sectors[0].total, Math.round(4 * c.perNight.total));
 });
 
-test('projecting the whole template costs more than the ride actually did', function () {
-  // The template is longer than what was ridden. If this ever inverts, the
-  // projection is wrong.
+test('the loop day count is exactly the sum of each sector\'s riding days', function () {
   const c = loadCosts().project(ROUTE, TPL, 6);
-  assert.ok(c.total > 0);
+  const expected = TPL.sectors.reduce(function (a, s) { return a + Math.ceil(s.hours / 6); }, 0);
+  assert.strictEqual(c.days, expected);
+});
+
+test('a longer assumed riding day yields fewer days and a lower total, never more', function () {
+  // This is the inversion actually worth guarding: days and total are monotonic
+  // *decreasing* in hoursPerDay. A sign flip or rounding bug in that relationship
+  // is what would silently produce a wrong projection.
+  const fast = loadCosts().project(ROUTE, TPL, 10);
+  const slow = loadCosts().project(ROUTE, TPL, 6);
+  assert.ok(fast.days < slow.days);
+  assert.ok(fast.total < slow.total);
 });
