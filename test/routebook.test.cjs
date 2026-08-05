@@ -5,12 +5,22 @@ const path = require('path');
 const vm = require('node:vm');
 
 const ROOT = path.join(__dirname, '..');
+const SEO = require(path.join(ROOT, 'build-seo.cjs'));
 const PAGE = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
 const TEMPLATE = JSON.parse(fs.readFileSync(path.join(ROOT, 'template.json'), 'utf8'));
 
 // index.html is one page-sized IIFE behind a fetch, so there is nothing to require.
 // Same cut-and-run approach the K2K tests use: lift a named function out by its
 // signature and its closing brace, and run the real source rather than a paraphrase.
+// The page with its generated ld+json block removed: what a human actually typed.
+function hand(html) {
+  const a = html.indexOf(SEO.BEGIN);
+  if (a < 0) return html;
+  const b = html.indexOf(SEO.END, a);
+  assert.ok(b >= 0, 'the ld+json block was opened and never closed');
+  return html.slice(0, a) + html.slice(b + SEO.END.length);
+}
+
 function cut(from, to) {
   const a = PAGE.indexOf(from);
   assert.ok(a >= 0, 'could not find ' + JSON.stringify(from) + ' in index.html');
@@ -63,7 +73,14 @@ test('the hero offers the route book alongside the overview', function () {
 test('the route book figures are read from template.json, never typed into the page', function () {
   // A number written into the markup is a number that will disagree with the book it
   // advertises the first time the sheet is rebuilt.
-  assert.ok(PAGE.indexOf('18,181') < 0, 'index.html hard-codes the loop distance');
+  //
+  // The ld+json block is exempt because it is not written by hand: build-seo.cjs
+  // generates it from template.json, and crawlers do not run the fetch this renderer
+  // depends on, so those figures have to be in the markup. What keeps them honest is
+  // test/seo.test.cjs, which rebuilds the block from the data files and requires the
+  // embedded copy to match it exactly. Everything OUTSIDE the markers is still hand
+  // written and still banned from carrying a figure.
+  assert.ok(hand(PAGE).indexOf('18,181') < 0, 'index.html hard-codes the loop distance');
 
   const src = cut('function renderRouteBook() {', '\n  }');
   const figs = { textContent: '', hidden: true };

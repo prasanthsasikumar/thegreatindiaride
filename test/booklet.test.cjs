@@ -579,15 +579,20 @@ test('the closing observation about the decaying archive survives onto the page'
   assert.match(main.textContent, /self-hosted their images/);
 });
 
-test('the sourcing line names the board, the crawl and the date it was crawled', async function () {
+test('the sourcing line names the board, the crawl and the year it was crawled', async function () {
   // The counts themselves are printed once, in the appendix opener's stat block. This
   // line names the source and the date and sends the reader there; it used to repeat
   // all four numbers, which is the third of five places they appeared.
+  //
+  // The year is 2025 and it is written by hand. It used to sit beside a build stamp
+  // that said 2026, because the stamp dated the generator run rather than the reading;
+  // the stamp is gone, and no date on this line moves when a script is re-run.
   const { byId, main } = await render();
   const text = byId['bk-provenance'].textContent;
   assert.match(text, /The Tourer/);
   assert.match(text, /full crawl/);
-  assert.match(text, /5 August 2026/);
+  assert.match(text, /2025/);
+  assert.doesNotMatch(text, /2026/, 'no build stamp, and no date the research did not have');
   assert.match(text, /field research appendix/);
 
   const opener = main.collect(function (n) { return n.id === 'bk-research'; })[0];

@@ -88,6 +88,29 @@
   [headers.values]
     Cache-Control = "public, max-age=3600"
 
+# --- the crawler-facing front door: robots.txt, the sitemap, and llms.txt.
+# Written by build-seo.cjs from the same data files as the pages, so they move when
+# the data does and get the same short life. llms.txt is served as markdown rather
+# than as text/plain: the convention at llmstxt.org is a markdown document, and a
+# client that respects the type gets the headings and the links as structure. ---
+
+[[headers]]
+  for = "/llms.txt"
+  [headers.values]
+    Content-Type = "text/markdown; charset=utf-8"
+    Cache-Control = "public, max-age=300"
+
+[[headers]]
+  for = "/robots.txt"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
+
+[[headers]]
+  for = "/sitemap.xml"
+  [headers.values]
+    Content-Type = "application/xml; charset=utf-8"
+    Cache-Control = "public, max-age=3600"
+
 # --- media: filenames are immutable Instagram IDs, so cache them for a year.
 # This is the rule that matters for bandwidth: ~800MB of video on a 100GB/month
 # allowance. At max-age=3600 every repeat visitor re-downloaded everything. ---

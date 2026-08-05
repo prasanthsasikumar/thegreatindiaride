@@ -48,6 +48,13 @@ const RENAME = { Thiruvananthapuram: 'Trivandrum' };
 // sheet routing the long way round. Warn rather than silently absorbing it.
 const LONG_HOP_KM = 800;
 
+// What the published colophon calls this loop's origin. It used to be the CSV's own
+// basename, which is a Google Sheets export name ("Pan India Trip  - Itinerary.csv",
+// two spaces and all) and told a reader nothing except that a file existed on someone
+// else's disk. The sheet is not published; naming the planning document and the year
+// it was drawn is the part a reader can actually use.
+const SOURCE_LABEL = 'Pan India Trip prasanth 2025';
+
 function splitCsvLine(line) {
   const out = [];
   let cur = '';
@@ -219,7 +226,7 @@ function main() {
   }
 
   const rows = parseCsv(fs.readFileSync(csv, 'utf8'));
-  const t = buildTemplate(rows, require('path').basename(csv));
+  const t = buildTemplate(rows, SOURCE_LABEL);
 
   // Invariants. These are the numbers the site states in copy; if the sheet changes
   // under us, fail here rather than publishing a page that contradicts itself.

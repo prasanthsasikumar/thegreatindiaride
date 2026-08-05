@@ -1,0 +1,71 @@
+# The Great India Ride
+
+> An 18,181.3 km motorcycle loop of India, published as a reusable route
+> template and not only as a travelogue: 97 hops, 94 waypoints, 5 sectors, 3 countries, with
+> every coordinate, distance and riding hour in machine-readable JSON on a
+> CORS-open host. It was ridden over 93 nights across 29 regions of India, Nepal and Bhutan.
+
+Two things are published here and they are not the same thing. `route.json` is what
+happened. `template.json` is the loop as it was drawn, and it is the one to fork:
+the sector boundaries fall at the two cities the loop returns to (Bengaluru and
+Delhi), which are exactly the places a rider can join the loop or leave it. Take a
+sector, take two, or take the whole thing.
+
+## The loop
+
+- **S0, Southern opener** (Trivandrum to Bengaluru): 1,130.1 km, 22 riding hours.
+- **S1, West coast & Kutch** (Bengaluru to Delhi): 3,643 km, 74 riding hours.
+- **S2, Himalayan out-and-back** (Delhi to Delhi): 2,742 km, 62 riding hours.
+- **S3, The long east** (Delhi to Bengaluru): 9,955.2 km, 237 riding hours.
+- **S4, Closing run** (Bengaluru to Trivandrum): 711 km, 16 riding hours.
+
+Totals: 18,181.3 km, 411.93 riding hours, 97 hops. The two figures a reader is most likely to question are disclosed on the
+page rather than smoothed: the sheet's own total row says 18,039.2 km against the
+18,181.3 km its rows sum to, and one hop (Agartala to Kolkata, 1,523 km) is the
+sheet routing around the Bangladesh border and is not a rideable day.
+
+## Pages
+
+- [The ride](https://thegreatindiaride.prasanthsasikumar.com/): the journey told in the order it happened, with the
+  map, the media library, and the planned loop drawn under the ridden one.
+- [The route book](https://thegreatindiaride.prasanthsasikumar.com/booklet.html): the printable version. Sector maps,
+  waypoint tables, the cost projection, the season and permit calendar, blank
+  planning pages, and the field research appendix.
+
+## Data
+
+All files are served from https://thegreatindiaride.prasanthsasikumar.com with CORS enabled. Fetch them directly.
+
+- [template.json](https://thegreatindiaride.prasanthsasikumar.com/template.json): The planned loop: five sectors, 97 hops, every waypoint with coordinates, distance and riding hours. This is the file to fork if you want to plan your own route.
+- [template-notes.json](https://thegreatindiaride.prasanthsasikumar.com/template-notes.json): The hand-written guidance: riding seasons, permits, points of interest. Entries reading TO WRITE are unwritten and render as a visible gap.
+- [route.json](https://thegreatindiaride.prasanthsasikumar.com/route.json): The ride as actually run: 93 nights, every place slept, and what was spent.
+- [research.json](https://thegreatindiaride.prasanthsasikumar.com/research.json): Field research into the xBhp "The Tourer" archive, India's oldest motorcycling forum, transcribed with its own caveats attached.
+- [k2k.json](https://thegreatindiaride.prasanthsasikumar.com/k2k.json): Kanyakumari to Kashmir as two lines, one cited and one measured, with the provenance of every coordinate.
+- [basemap.json](https://thegreatindiaride.prasanthsasikumar.com/basemap.json): Country outlines for the maps, from Natural Earth's India point-of-view file.
+- [manifest.json](https://thegreatindiaride.prasanthsasikumar.com/manifest.json): The media library: 222 clips from the ride, with capture time, region and caption.
+
+## What this material does not claim
+
+- **The seasons and most of the permits are unwritten.** 10 guidance
+  notes in `template-notes.json` are empty, and every one of them renders on the
+  page as a dashed box reading "Not written yet", never as filler text.
+  A route book is acted on, so an admitted hole is better than invented advice.
+  The field research found that pan-India riders time their trips by leave rather
+  than by weather, so nothing in that archive could be used to fill them in.
+- **The cost projection is a floor, not a forecast.** It applies rates observed on
+  the real ride to the template's shape, budgets no rest days, and carries no bike,
+  no shipping, no flights and no repairs.
+- **Permits change.** The Inner Line Permit note for the Northeast reflects sources
+  read in 2025. Check the current rules before you ride.
+- **The forum counts are keyword-derived.** 337 index pages and 3,317 threads were crawled, of
+  which 14 pan-India ride reports were read end to
+  end. The aggregate counts come from matching URL slugs and are a picture of
+  proportion, not a census. The report's own caveats travel with the figures.
+
+## Reuse
+
+The route data, the build scripts and the pages are free to fork and adapt; the
+source is at https://github.com/prasanthsasikumar/thegreatindiaride. The eight
+photographs under `/media/research/` are other riders' work, reproduced with their
+watermarks intact and a per-image credit, and are not covered by that. Ride media
+under `/media/` is Prasanth Sasikumar's.

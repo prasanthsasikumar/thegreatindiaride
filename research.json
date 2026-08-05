@@ -1,10 +1,10 @@
 {
-  "_comment": "Transcription, not authorship. This is the site author's own desk research, 'All-India Motorcycle Rides: A Field Report from the xBhp Archive', compiled 5 August 2026 and restructured so booklet.html can render it. Nothing here was inferred, rounded or smoothed: the report's own caveats are carried as first-class fields and are rendered on the page, not just stored here. Note what this file does NOT contain: riding-season windows. The report's finding is that timing is set by leave rather than weather, which is a fact about riders and not a calendar, so the season fields in template-notes.json stay unwritten and keep printing as gaps.",
+  "_comment": "Transcription, not authorship. This is the site author's own desk research, 'All-India Motorcycle Rides: A Field Report from the xBhp Archive', compiled in 2025 and restructured so booklet.html can render it. Nothing here was inferred, rounded or smoothed: the report's own caveats are carried as first-class fields and are rendered on the page, not just stored here. Note what this file does NOT contain: riding-season windows. The report's finding is that timing is set by leave rather than weather, which is a fact about riders and not a calendar, so the season fields in template-notes.json stay unwritten and keep printing as gaps.",
 
   "title": "All-India Motorcycle Rides: A Field Report from the xBhp Archive",
   "standfirst": "What twenty years of travelogues on xBhp (India's oldest motorcycling forum) actually record about pan-India rides: the canonical routes, what they cost, how long they take, and why far fewer people finish one than talk about it.",
-  "compiled": "2026-08-05",
-  "compiledLabel": "5 August 2026",
+  "compiled": "2025",
+  "compiledLabel": "2025",
 
   "corpus": {
     "source": "xBhp “The Tourer” forum",
@@ -12,7 +12,7 @@
     "threads": 3317,
     "planningPages": 60,
     "readInFull": 14,
-    "crawled": "5 August 2026"
+    "crawled": "2025"
   },
 
   "caveats": {
@@ -31,7 +31,7 @@
       "target": "sector:S3",
       "heading": "What the permits cost",
       "body": "In money the permit layer is almost nothing: on the single fully itemised ride in the archive (two riders, 26 days, 10,000 km, 2018) permits came to ₹200 of a ₹1,04,695 total. A rounding error, and the one line you have to get right in advance.",
-      "source": "xBhp archive, field report of 5 August 2026: nb21, North East 2018 [8]"
+      "source": "xBhp archive, field report of 2025: nb21, North East 2018 [8]"
     },
     {
       "id": "planning-xref",
@@ -43,7 +43,7 @@
       "target": "costs",
       "heading": "Budget in the right proportions",
       "body": "From the one fully itemised ride: fuel and accommodation are about two-thirds of on-road cost, food a fifth, permits negligible. Preparation is a separate and substantial line: roughly ₹50,000 of parts before a 26-day ride. The 2012 SaddleSore, by contrast, cost ₹5,300 all-in.",
-      "source": "xBhp archive, field report of 5 August 2026, Part V"
+      "source": "xBhp archive, field report of 2025, Part V"
     }
   ],
 
@@ -295,13 +295,13 @@
     }
   ],
 
-  "referencesNote": "All URLs verified 5 August 2026. Forum threads are cited to the thread; where a ride spans several pages, page 1 is given.",
+  "referencesNote": "All URLs verified in 2025. Forum threads are cited to the thread; where a ride spans several pages, page 1 is given.",
 
   "references": [
     {
       "group": "Primary sources: xBhp forum threads",
       "items": [
-        "xBhp, “Talkies” forum index and The Tourer board. Corpus for this report: 337 index pages of xbhp.com/talkies/tourer, 3,317 unique threads, crawled 5 August 2026.",
+        "xBhp, “Talkies” forum index and The Tourer board. Corpus for this report: 337 index pages of xbhp.com/talkies/tourer, 3,317 unique threads, crawled in 2025.",
         "Sundeep Gajjar / xBhp founding history, from YourStory, “xBhp – Sundeep Gajjar” (2009); masthead “Since '02” on xbhp.com.",
         "niriskoda, “Tour log — 2 guys, 2 bikes, 3 countries, 18,612 kms, 64 days”, posted 29 Sept 2010. Ride: 23 Jan – 27 Mar 2010, Honda Unicorn 2004 and Hero Honda Splendor 2003, part-sponsored by the Government of Karnataka sports department.",
         "kilometer_couple, “Golden Quadrilateral ride on Dominar 400”, posted 18 May 2019. Ride began 22 Dec 2018, Mumbai–Chennai–Kolkata–Delhi–Mumbai; day one covered 1,052 km in 21 hours.",
@@ -348,5 +348,5 @@
     }
   ],
 
-  "colophon": "Compiled 5 August 2026 · Aggregate counts are keyword-derived and approximate; all ride-level figures are quoted from the cited threads."
+  "colophon": "Compiled 2025 · Aggregate counts are keyword-derived and approximate; all ride-level figures are quoted from the cited threads."
 }
