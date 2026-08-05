@@ -1,0 +1,269 @@
+{
+ "generated": "2026-08-05T18:27:29.214Z",
+ "source": "NH-44 corridor + template.json west-coast hops",
+ "north": {
+  "name": "Up the spine: NH-44",
+  "citedKm": 3745,
+  "citedKmAlt": 4112,
+  "states": 11,
+  "measured": false,
+  "cite": "Length as published for National Highway 44: commonly 3,745 km across 11 states, with some sources quoting 4,112 km. Roadory, NH-44 route guide; see also Vajiram & Ravi, \"Longest Highway in India\". Both are in the field research reference list.",
+  "note": "Corridor through the cities NH-44 runs by; the distance is the published highway length, not a sum of these points.",
+  "points": [
+   {
+    "name": "Kanniyakumari",
+    "lat": 8.0843512,
+    "lon": 77.5495019,
+    "source": "template"
+   },
+   {
+    "name": "Madurai",
+    "lat": 9.9261153,
+    "lon": 78.1140983,
+    "source": "nominatim"
+   },
+   {
+    "name": "Salem",
+    "lat": 11.6469616,
+    "lon": 78.2106958,
+    "source": "nominatim"
+   },
+   {
+    "name": "Bengaluru",
+    "lat": 12.9715987,
+    "lon": 77.5945627,
+    "source": "template"
+   },
+   {
+    "name": "Kurnool",
+    "lat": 15.8281257,
+    "lon": 78.0372792,
+    "source": "template"
+   },
+   {
+    "name": "Hyderabad",
+    "lat": 17.406498,
+    "lon": 78.4772439,
+    "source": "template"
+   },
+   {
+    "name": "Nagpur",
+    "lat": 21.1498134,
+    "lon": 79.0820556,
+    "source": "nominatim"
+   },
+   {
+    "name": "Jhansi",
+    "lat": 25.529855,
+    "lon": 78.6527802,
+    "source": "nominatim"
+   },
+   {
+    "name": "Gwalior",
+    "lat": 26.2124007,
+    "lon": 78.1772053,
+    "source": "template"
+   },
+   {
+    "name": "Agra",
+    "lat": 27.1752554,
+    "lon": 78.0098161,
+    "source": "nominatim"
+   },
+   {
+    "name": "Delhi",
+    "lat": 28.6139298,
+    "lon": 77.2088282,
+    "source": "template"
+   },
+   {
+    "name": "Kurukshetra",
+    "lat": 29.9695121,
+    "lon": 76.878282,
+    "source": "template"
+   },
+   {
+    "name": "Ambala",
+    "lat": 30.3843674,
+    "lon": 76.770421,
+    "source": "nominatim"
+   },
+   {
+    "name": "Jammu",
+    "lat": 32.7266016,
+    "lon": 74.8570259,
+    "source": "template"
+   },
+   {
+    "name": "Udhampur",
+    "lat": 32.9159847,
+    "lon": 75.1416173,
+    "source": "template"
+   },
+   {
+    "name": "Srinagar",
+    "lat": 34.0836708,
+    "lon": 74.7972825,
+    "source": "template"
+   }
+  ]
+ },
+ "south": {
+  "name": "Down the west coast",
+  "measuredKm": 4449.1,
+  "measured": true,
+  "hops": 23,
+  "note": "Summed from this ride’s own measured hops, 23 of them, and drawn through every stop those hops pass: the Kutch spur out to Narayan Sarovar is inside the figure, so it is inside the line.",
+  "points": [
+   {
+    "name": "Delhi",
+    "lat": 28.6139298,
+    "lon": 77.2088282,
+    "source": "template"
+   },
+   {
+    "name": "Jaipur",
+    "lat": 26.9124336,
+    "lon": 75.7872709,
+    "source": "template"
+   },
+   {
+    "name": "Ajmer",
+    "lat": 26.4498954,
+    "lon": 74.6399163,
+    "source": "template"
+   },
+   {
+    "name": "Udaipur",
+    "lat": 24.585445,
+    "lon": 73.712479,
+    "source": "template"
+   },
+   {
+    "name": "Palanpur",
+    "lat": 24.1724338,
+    "lon": 72.434581,
+    "source": "template"
+   },
+   {
+    "name": "Dholavira",
+    "lat": 23.8808877,
+    "lon": 70.2140444,
+    "source": "template"
+   },
+   {
+    "name": "Dhordo",
+    "lat": 23.7872556,
+    "lon": 69.512717,
+    "source": "template"
+   },
+   {
+    "name": "Narayan Sarovar",
+    "lat": 23.6758205,
+    "lon": 68.5393692,
+    "source": "template"
+   },
+   {
+    "name": "Bhuj",
+    "lat": 23.2419997,
+    "lon": 69.6669324,
+    "source": "template"
+   },
+   {
+    "name": "Rajkot",
+    "lat": 22.3038945,
+    "lon": 70.8021599,
+    "source": "template"
+   },
+   {
+    "name": "Bhavnagar",
+    "lat": 21.7644725,
+    "lon": 72.1519304,
+    "source": "template"
+   },
+   {
+    "name": "Surat",
+    "lat": 21.1702401,
+    "lon": 72.8310607,
+    "source": "template"
+   },
+   {
+    "name": "Daman",
+    "lat": 20.3973736,
+    "lon": 72.8327991,
+    "source": "template"
+   },
+   {
+    "name": "Mumbai",
+    "lat": 19.0759837,
+    "lon": 72.8776559,
+    "source": "template"
+   },
+   {
+    "name": "Alibag",
+    "lat": 18.6583989,
+    "lon": 72.8773346,
+    "source": "template"
+   },
+   {
+    "name": "Ratnagiri",
+    "lat": 16.990215,
+    "lon": 73.3120233,
+    "source": "template"
+   },
+   {
+    "name": "Goa",
+    "lat": 15.2993265,
+    "lon": 74.123996,
+    "source": "template"
+   },
+   {
+    "name": "Hubballi",
+    "lat": 15.3647083,
+    "lon": 75.1239547,
+    "source": "template"
+   },
+   {
+    "name": "Chitradurga",
+    "lat": 14.2250932,
+    "lon": 76.3980464,
+    "source": "template"
+   },
+   {
+    "name": "Bengaluru",
+    "lat": 12.9715987,
+    "lon": 77.5945627,
+    "source": "template"
+   },
+   {
+    "name": "Coimbatore",
+    "lat": 11.0168445,
+    "lon": 76.9558321,
+    "source": "template"
+   },
+   {
+    "name": "Kochi",
+    "lat": 9.9312328,
+    "lon": 76.2673041,
+    "source": "template"
+   },
+   {
+    "name": "Thiruvananthapuram",
+    "lat": 8.5241391,
+    "lon": 76.9366376,
+    "source": "template"
+   },
+   {
+    "name": "Kanniyakumari",
+    "lat": 8.0843512,
+    "lon": 77.5495019,
+    "source": "template"
+   }
+  ]
+ },
+ "realWorld": {
+  "low": 6000,
+  "high": 11000,
+  "why": "riders add the run to the start line and the run home"
+ }
+}

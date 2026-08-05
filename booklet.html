@@ -193,6 +193,13 @@ td .bk__todo { margin-top: 0; }
 .atlas .stop { fill: #10101a; stroke: rgba(255,255,255,0.75); stroke-width: 1.1; }
 .atlas .hit { fill: transparent; }
 
+/* The two K2K lines. One hue, because they are one route; two dash patterns,
+   because they are its two directions and on paper dash is all a reader gets. */
+.atlas .route--k2k { fill: none; stroke: var(--color-accent); stroke-width: 2; }
+.atlas .route--k2k-n { stroke-linejoin: round; stroke-linecap: round; }
+.atlas .route--k2k-s { stroke-dasharray: 8 5; stroke-linejoin: round; stroke-linecap: round; }
+.bk__legend i.k2k { color: var(--color-accent); }
+
 .bk__map { max-width: 340px; margin: var(--space-4) 0; }
 .bk__map--master { max-width: 460px; }
 .bk__map--cover { max-width: 300px; }
@@ -432,6 +439,10 @@ td .bk__todo { margin-top: 0; }
   .atlas .neighbour { stroke: rgba(0,0,0,0.25); }
   .atlas .route { stroke: #b3300f; stroke-width: 1.6; }
   .atlas .route--planned { stroke: #777; stroke-dasharray: 4 3; opacity: 1; }
+  /* In toner the accent is a mid grey indistinguishable from the loop, so both K2K
+     lines go to full black and are told apart by their dash alone. */
+  .atlas .route--k2k { stroke: #111; stroke-width: 1.6; }
+  .atlas .route--k2k-s { stroke-dasharray: 7 2 1.5 2; }
   .atlas .stop { fill: #fff; stroke: #111; }
   .atlas .tiles { display: none; }   /* tiles never print usefully */
 
@@ -659,6 +670,13 @@ td .bk__todo { margin-top: 0; }
     <div class="bk__rule-lines" id="bk-lines"></div>
   </section>
 
+  <!-- ── K2K ANCHOR ───────────────────────────────────────────────────────
+       The Kanyakumari-to-Kashmir page goes in here at runtime, before the
+       appendix, the same way the sector spreads go in before theirs. It is route
+       content rather than reference, so it is NOT a .bk__research page and does
+       not disappear when the appendix is left out of the print. -->
+  <div id="bk-k2k-anchor" hidden></div>
+
   <!-- ── APPENDIX ANCHOR ──────────────────────────────────────────────────
        Further sections belong here, between the planning pages and the closing
        page. Anything added as <section class="bk__page"> picks up the page break,
@@ -696,6 +714,7 @@ td .bk__todo { margin-top: 0; }
   'use strict';
 
   var basemap = null, route = null, tpl = null, notes = null, costs = null, research = null;
+  var k2k = null;
 
   var el = {
     book: document.getElementById('bk'),
@@ -719,6 +738,7 @@ td .bk__todo { margin-top: 0; }
     lines: document.getElementById('bk-lines'),
     costsArchive: document.getElementById('bk-costs-archive'),
     planningResearch: document.getElementById('bk-planning-research'),
+    k2kAnchor: document.getElementById('bk-k2k-anchor'),
     researchAnchor: document.getElementById('bk-research-anchor'),
     files: document.getElementById('bk-files'),
     provenance: document.getElementById('bk-provenance'),
@@ -754,7 +774,7 @@ td .bk__todo { margin-top: 0; }
     var wrap = elem('div', 'bk__legend');
     items.forEach(function (it) {
       var span = document.createElement('span');
-      span.appendChild(elem('i', it.dim ? 'dim' : null, it.mark));
+      span.appendChild(elem('i', it.dim ? 'dim' : (it.cls || null), it.mark));
       span.appendChild(document.createTextNode(' ' + it.label));
       wrap.appendChild(span);
     });
@@ -1151,6 +1171,152 @@ td .bk__todo { margin-top: 0; }
     }
   }
 
+  /* ─── the K2K page ────────────────────────────────────────────────────── */
+
+  function k2kMap(svg) {
+    var a = Atlas.create(svg, basemap, { width: 420, height: 470, pad: 10 });
+    if (!a) return;
+    a.drawBase();
+    // The loop first and dimmed, the two K2K lines over it, exactly the order the
+    // sector spreads use: context underneath, subject on top.
+    a.drawRoute(loopPoints(), 'route--planned');
+    a.drawRoute(k2k.south.points, 'route--k2k route--k2k-s');
+    a.drawRoute(k2k.north.points, 'route--k2k route--k2k-n');
+    a.drawMarkers([
+      k2k.north.points[0],
+      k2k.north.points[k2k.north.points.length - 1],
+      k2k.south.points[0]
+    ]);
+  }
+
+  // The measured half, leg by leg, out of template.json's own hops. The lookup is
+  // by name pair in either direction because a K2K runs this side of the loop
+  // backwards, and it is a lookup rather than a stored copy so the printed legs can
+  // never disagree with the itinerary they came from.
+  function southLegs() {
+    var byPair = {};
+    tpl.hops.forEach(function (h) {
+      byPair[h.from + ' ' + h.to] = h;
+      byPair[h.to + ' ' + h.from] = h;
+    });
+    var pts = k2k.south.points;
+    var out = [];
+    for (var i = 0; i < pts.length - 1; i++) {
+      var hop = byPair[pts[i].name + ' ' + pts[i + 1].name];
+      if (!hop) return null;
+      out.push({ to: pts[i + 1].name, km: hop.km, hours: hop.hours });
+    }
+    return out;
+  }
+
+  function k2kPage() {
+    var n = k2k.north, s = k2k.south, rw = k2k.realWorld || {};
+    var sec = elem('section', 'bk__page bk__k2k');
+    sec.id = 'bk-k2k';
+
+    sec.appendChild(elem('p', 'bk__eyebrow', 'THE CLASSIC, AND HOW MUCH OF IT IS HERE'));
+    sec.appendChild(elem('h2', 'bk__h2', 'Kanyakumari to Kashmir'));
+    sec.appendChild(elem('p', 'bk__lede',
+      'The length of the country, bottom to top, up NH-44: the prestige pan-India ' +
+      'route and the one most often attempted. It is ridden as two lines, up one ' +
+      'side and down the other, and this loop already contains the second of them.'));
+
+    var spread = elem('div', 'bk__spread');
+
+    var mapCol = document.createElement('div');
+    var mapBox = elem('div', 'bk__map');
+    var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('class', 'atlas');
+    svg.setAttribute('role', 'img');
+    svg.setAttribute('aria-label',
+      'Kanyakumari to Kashmir drawn as two lines against the rest of the loop: up ' +
+      'the NH-44 corridor and down the west coast');
+    mapBox.appendChild(svg);
+    mapCol.appendChild(mapBox);
+    mapCol.appendChild(legend([
+      { mark: '———', label: 'up the spine, the NH-44 corridor', cls: 'k2k' },
+      { mark: '– – –', label: 'down the west coast, measured', cls: 'k2k' },
+      { mark: '· · ·', label: 'the rest of the loop', dim: true }
+    ]));
+    mapCol.appendChild(elem('p', 'bk__caveat',
+      'The northbound line is a corridor sketch: it joins the cities NH-44 runs by ' +
+      'so you can see where the highway goes. Its length on this page is a drawing ' +
+      'and not a distance, and nothing here measures it.'));
+    spread.appendChild(mapCol);
+
+    var col = document.createElement('div');
+
+    col.appendChild(elem('h3', 'bk__h3', n.name + ', cited'));
+    col.appendChild(elem('p', 'bk__body',
+      'Commonly given as ' + num(n.citedKm) + ' km across ' + n.states +
+      ' states, though sources vary and some quote ' + num(n.citedKmAlt) + ' km. ' +
+      'That is the published length of the highway, not a figure from this book.'));
+    col.appendChild(elem('p', 'bk__mono',
+      n.points.map(function (p) { return p.name; }).join(' · ')));
+    var fromTemplate = n.points.filter(function (p) { return p.source === 'template'; }).length;
+    col.appendChild(elem('p', 'bk__fine',
+      'Coordinates: ' + fromTemplate + ' of these ' + n.points.length +
+      ' are waypoints of this loop; the other ' + (n.points.length - fromTemplate) +
+      ' were geocoded from OpenStreetMap. No distance is claimed between any two of them.'));
+
+    col.appendChild(elem('h3', 'bk__h3', s.name + ', measured'));
+    col.appendChild(elem('p', 'bk__body',
+      s.hops + ' legs of this loop, ' + s.points[0].name + ' down to ' +
+      s.points[s.points.length - 1].name + ', at ' + num(s.measuredKm) +
+      ' km. These are the itinerary’s own road distances, added up and not ' +
+      're-measured. The Kutch spur out to Narayan Sarovar is inside the figure, ' +
+      'which is why it is inside the line: a route book may not draw one road and ' +
+      'charge for another.'));
+
+    var legs = southLegs();
+    if (legs) {
+      // Deliberately not .bk__hops: that class marks the tables that between them
+      // print every leg of the loop exactly once, and these legs are printed twice.
+      var t = elem('table', 'bk__table bk__k2k-legs');
+      head(t, [{ label: 'To' }, { label: 'km', num: true }, { label: 'h', num: true }]);
+      var tb = document.createElement('tbody');
+      legs.forEach(function (leg) {
+        var tr = document.createElement('tr');
+        tr.appendChild(elem('td', null, leg.to));
+        tr.appendChild(elem('td', 'bk__num', num(leg.km)));
+        tr.appendChild(elem('td', 'bk__num', leg.hours.toFixed(1)));
+        tb.appendChild(tr);
+      });
+      var tot = document.createElement('tr');
+      tot.appendChild(elem('td', null, 'Measured total'));
+      tot.appendChild(elem('td', 'bk__num', num(s.measuredKm)));
+      tot.appendChild(elem('td', 'bk__num', ''));
+      tb.appendChild(tot);
+      t.appendChild(tb);
+      col.appendChild(t);
+    }
+
+    spread.appendChild(col);
+    sec.appendChild(spread);
+
+    sec.appendChild(elem('h3', 'bk__h3', 'What a K2K actually costs in kilometres'));
+    sec.appendChild(elem('p', 'bk__body',
+      'Almost nobody lives at either end, so the ride is always longer than the ' +
+      'road. Riders add the run to the start line and the run home, and a K2K ' +
+      'routinely totals ' + num(rw.low) + '–' + num(rw.high) + ' km rather ' +
+      'than ' + num(n.citedKm) + '. Plan for the bigger number.'));
+    sec.appendChild(elem('p', 'bk__body',
+      'The practical point of this page: a rider with three weeks does not have to ' +
+      'plan a K2K from nothing. The west-coast half is already drawn, already ' +
+      'measured and already broken into legs above. Take it, ride NH-44 the other ' +
+      'way, and the rest of this book still applies.'));
+    if (n.cite) sec.appendChild(elem('p', 'bk__fine', n.cite));
+
+    if (basemap) k2kMap(svg);
+    return sec;
+  }
+
+  function renderK2k() {
+    if (!k2k || !k2k.north || !k2k.south) return;
+    var anchor = el.k2kAnchor;
+    anchor.parentNode.insertBefore(k2kPage(), anchor);
+  }
+
   function researchOpener() {
     var sec = elem('section', 'bk__page bk__research');
     sec.id = 'bk-research';
@@ -1528,6 +1694,7 @@ td .bk__todo { margin-top: 0; }
     ['template-notes.json', 'The hand-written part: seasons, permits, points of interest. What is missing here is what prints as a dashed box.'],
     ['route.json', 'The ride that was actually run: stops, nights and spend. The cost projection is derived from this.'],
     ['basemap.json', 'Country outlines, for the maps.'],
+    ['k2k.json', 'Kanyakumari to Kashmir as two lines. The northbound one is a corridor of cities NH-44 runs by, with the highway’s published length quoted beside it; the southbound one is this loop’s own measured west-side hops. Every point says where its coordinate came from.'],
     ['research.json', 'The xBhp archive field research, transcribed: the corpus counts, the canonical routes, the itemised rides, the records and the reference list. The photographs it cites are under /media/research and belong to the riders credited beside them.']
   ];
 
@@ -1589,13 +1756,17 @@ td .bk__todo { margin-top: 0; }
     // Optional on purpose: the route pages must print whole with or without the
     // appendix, so a missing research.json costs the book its appendix and nothing
     // else.
-    opt('research.json')
+    opt('research.json'),
+    // Optional for the same reason: without it the book loses one page and nothing
+    // else moves.
+    opt('k2k.json')
   ]).then(function (res) {
     tpl = res[0];
     route = res[1];
     notes = res[2] || {};
     basemap = res[3];
     research = res[4];
+    k2k = res[5];
 
     costs = Costs.project(route, tpl, notes.hoursPerDay || 6);
 
@@ -1615,6 +1786,7 @@ td .bk__todo { margin-top: 0; }
     renderBike();
     renderCheck();
     renderLines();
+    renderK2k();
     renderResearch();
     renderFiles();
   }).catch(function (err) {

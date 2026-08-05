@@ -17,3 +17,8 @@ __pycache__/
 # Reverse-geocode cache. Holds ~1km coordinates, i.e. a movement trail — and
 # publish = "." would serve it. tags.json carries the coarse state names instead.
 .geocache.json
+
+# Forward-geocode cache for build-k2k.cjs. City centroids for the NH-44 corridor:
+# nothing private in it, but it is Nominatim's answers rather than this project's
+# data, and the coordinates that matter are written into k2k.json.
+.k2kcache.json

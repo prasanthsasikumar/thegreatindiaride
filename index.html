@@ -280,6 +280,8 @@ button { font: inherit; color: inherit; }
 .map__toggle:hover { border-color: var(--color-text); }
 .map__toggle[aria-pressed="true"] { background: var(--color-accent); border-color: var(--color-accent); color: #fff; }
 .map__toggle--alt { top: auto; bottom: 10px; }
+.map__toggle--k2k { top: auto; bottom: 40px; }
+.map__toggle[hidden] { display: none; }
 /* The planned loop, drawn under everything. Dashed and dimmed: it is the route that
    was not ridden, and it must never read as equal in weight to the one that was. */
 .atlas .route--planned {
@@ -287,6 +289,35 @@ button { font: inherit; color: inherit; }
   stroke-dasharray: 5 4; opacity: 0.75;
   stroke-linejoin: round; stroke-linecap: round;
 }
+
+/* ─── K2K ──────────────────────────────────────────────────────────────────
+   Two more lines on a 420px map that already carries a solid ridden route and a
+   dashed planned loop. Four at once is a tangle, so K2K is off until asked for and
+   the other two step back while it is on:
+
+     - the planned loop goes out entirely, because the K2K west-coast line traces
+       the same template hops. Drawing both would be one route drawn twice.
+     - the ridden route dims to a ghost. It stays visible, because "the loop
+       already contains most of a K2K" is the whole point of the overlay and you
+       cannot see that if one of the two lines is gone.
+
+   Both K2K lines share one hue so they read as one route, and differ in dash so
+   the two directions stay apart from each other. Neither is the ridden pink. */
+.atlas .route--k2k { display: none; fill: none; stroke: var(--color-accent); stroke-width: 2.2; }
+.atlas .route--k2k-n { stroke-linejoin: round; stroke-linecap: round; }
+.atlas .route--k2k-s { stroke-dasharray: 8 5; stroke-linejoin: round; stroke-linecap: round; }
+.atlas[data-k2k="on"] .route--k2k { display: inline; }
+.atlas[data-k2k="on"] .route { opacity: 0.22; }
+.atlas[data-k2k="on"] .route--planned { display: none !important; }
+.atlas[data-k2k="on"] .stop { opacity: 0.45; }
+
+/* And when something else is driving the map, K2K stands down the same way the
+   planned loop does. The overview moves the viewBox a chapter at a time and a
+   country-length overlay it does not control would ride along on top of every
+   frame. These rules come after the ones above so they win the tie. */
+.atlas[data-busy="yes"] .route--k2k { display: none; }
+.atlas[data-busy="yes"] .route { opacity: 1; }
+.atlas[data-busy="yes"] .stop { opacity: 1; }
 
 .map__attr {
   font-size: 9px; color: var(--color-dim); margin-top: 2px; text-align: right;
@@ -721,6 +752,7 @@ button { font: inherit; color: inherit; }
         <div class="map__badge" id="map-badge" hidden></div>
         <button type="button" class="map__toggle" id="map-toggle" aria-pressed="false">Real map</button>
         <button type="button" class="map__toggle map__toggle--alt" id="plan-toggle" aria-pressed="false">Planned route</button>
+        <button type="button" class="map__toggle map__toggle--k2k" id="k2k-toggle" aria-pressed="false" hidden>K2K</button>
         <div class="map__card" id="map-card" hidden>
           <button type="button" class="map__card-x" id="map-card-x" aria-label="Close">&times;</button>
           <div class="map__card-place" id="map-card-place"></div>
@@ -792,6 +824,16 @@ button { font: inherit; color: inherit; }
 
       <h3 class="tpl__h3">What it cost</h3>
       <div class="tpl__costs" id="tpl-costs"></div>
+
+      <section id="tpl-k2k" hidden>
+        <h3 class="tpl__h3">Kanyakumari to Kashmir, already half here</h3>
+        <div id="tpl-k2k-body"></div>
+        <p class="tpl__note">
+          Turn on <strong>K2K</strong> on the map to see both lines. The planned loop
+          steps out of the way while they are up, because the west-coast line is the
+          same set of legs.
+        </p>
+      </section>
 
       <div class="tpl__acts">
         <a class="tpl__cta" href="booklet.html">DOWNLOAD THE ROUTE BOOK →</a>
@@ -887,6 +929,14 @@ button { font: inherit; color: inherit; }
   // Set while something else is using the map — see syncPlannedLine(). Never stored.
   var plannedSuppressed = false;
 
+  // K2K is a third overlay, with a fourth and fifth line. Its own key again, so
+  // turning it on can never rewrite either choice above. What it draws, and what it
+  // dims while it is drawn, is CSS keyed off data-k2k on the <svg>: see the map
+  // block in the stylesheet.
+  var K2K_KEY = 'ride:k2k';
+  var k2kOn = false;
+  try { k2kOn = localStorage.getItem(K2K_KEY) === '1'; } catch (e) { /* private mode */ }
+
   var SOUND_KEY = 'ride:sound-on';
   // Sound on unless you've turned it off. Opening a clip is a deliberate click, so
   // there's a gesture to autoplay against; the fallback below covers the refusals.
@@ -920,6 +970,7 @@ button { font: inherit; color: inherit; }
     badge: document.getElementById('map-badge'),
     mapToggle: document.getElementById('map-toggle'),
     planToggle: document.getElementById('plan-toggle'),
+    k2kToggle: document.getElementById('k2k-toggle'),
     mapAttr: document.getElementById('map-attr'),
     card: document.getElementById('map-card'),
     cardX: document.getElementById('map-card-x'),
@@ -1540,6 +1591,16 @@ button { font: inherit; color: inherit; }
       return { lat: o.stop.lat, lon: o.stop.lon };
     }), 'route');
 
+    // K2K on top of the ridden line, because while it is showing the ridden line is
+    // the dimmed one. Both lines are drawn once and left in the SVG; the toggle only
+    // ever changes an attribute, so there is nothing to rebuild and nothing to
+    // re-project when a reader flicks it on and off.
+    if (k2k && k2k.north && k2k.south) {
+      atlas.drawRoute(k2k.south.points, 'route--k2k route--k2k-s');
+      atlas.drawRoute(k2k.north.points, 'route--k2k route--k2k-n');
+      el.k2kToggle.hidden = false;
+    }
+
     // Home starts the line but wasn't a paid night, so it gets no marker — and it sits
     // on the same coordinates as the homecoming stop, which it would otherwise absorb.
     mapClusters = atlas.drawMarkers(matched.filter(function (o) {
@@ -1574,6 +1635,11 @@ button { font: inherit; color: inherit; }
   // planned-route choice quietly rewritten.
   function syncPlannedLine() {
     if (plannedLine) plannedLine.style.display = (planned && !plannedSuppressed) ? '' : 'none';
+    // "Something is borrowing the map" is not only the planned loop's business: the
+    // K2K overlay has to stand down for the same reason. Written once, here, onto the
+    // element, so the stylesheet can act on it and there is no second copy of the
+    // rule in JS to drift out of step.
+    if (el.atlas) el.atlas.dataset.busy = plannedSuppressed ? 'yes' : 'no';
   }
 
   function setPlanned(on) {
@@ -1582,6 +1648,19 @@ button { font: inherit; color: inherit; }
     el.planToggle.setAttribute('aria-pressed', String(planned));
     el.planToggle.textContent = planned ? 'Hide planned' : 'Planned route';
     syncPlannedLine();
+  }
+
+  function syncK2k() {
+    if (!el.atlas || !el.k2kToggle) return;
+    el.atlas.dataset.k2k = k2kOn ? 'on' : 'off';
+    el.k2kToggle.setAttribute('aria-pressed', String(k2kOn));
+    el.k2kToggle.textContent = k2kOn ? 'Hide K2K' : 'K2K';
+  }
+
+  function setK2k(on) {
+    k2kOn = !!on;
+    try { localStorage.setItem(K2K_KEY, k2kOn ? '1' : '0'); } catch (e) { /* private mode */ }
+    syncK2k();
   }
 
   // Which blocks sit on the same row as this one. Two-up rows start level, so a
@@ -1933,7 +2012,7 @@ button { font: inherit; color: inherit; }
   });
 
   /* ─── the template ──────────────────────────────────────────────────── */
-  var template = null, templateNotes = null;
+  var template = null, templateNotes = null, k2k = null;
 
   function tplPoi(place) {
     var p = templateNotes && templateNotes.pois && templateNotes.pois[place];
@@ -1978,6 +2057,7 @@ button { font: inherit; color: inherit; }
     t.sectors.forEach(function (s) { el.tplSectors.appendChild(sectorBlock(s)); });
 
     renderCosts();
+    renderK2k();
   }
 
   // No invented rates: every figure here comes from Costs.project(), which derives
@@ -2022,6 +2102,59 @@ button { font: inherit; color: inherit; }
 
     table.appendChild(body);
     el.tplCosts.replaceChildren(table);
+  }
+
+  // Every figure in this block is read out of k2k.json rather than typed into the
+  // markup, and the two kinds of figure are kept apart in the prose as well as in
+  // the data: the highway length is quoted with its source and its variance, the
+  // west-coast total is this ride's own measured hops added up. The corridor line on
+  // the map is named as a sketch in the same paragraph that describes it, because a
+  // polyline through sixteen cities looks exactly like a route and is not one.
+  function renderK2k() {
+    if (!k2k || !k2k.north || !k2k.south) return;
+    var n = k2k.north, s = k2k.south, rw = k2k.realWorld || {};
+    var body = document.getElementById('tpl-k2k-body');
+    if (!body) return;
+    var km = function (v) { return Math.round(v).toLocaleString('en-IN'); };
+
+    function para(cls, text) {
+      var p = document.createElement('p');
+      p.className = cls;
+      p.textContent = text;
+      body.appendChild(p);
+    }
+
+    body.replaceChildren();
+
+    para('tpl__note',
+      'K2K is the prestige pan-India route and the one most often attempted: the ' +
+      'length of the country, bottom to top, up NH-44. Its length is commonly given ' +
+      'as ' + km(n.citedKm) + ' km across ' + n.states + ' states, though sources ' +
+      'vary and some quote ' + km(n.citedKmAlt) + ' km. That is the published length ' +
+      'of the highway. Nothing on this site measured it.');
+
+    para('tpl__note',
+      'Almost nobody lives at either end, so the ride is always longer than the road. ' +
+      'Riders add the run to the start line and the run home, and a K2K routinely ' +
+      'totals ' + km(rw.low) + '–' + km(rw.high) + ' km rather than ' + km(n.citedKm) + ' km.');
+
+    para('tpl__note',
+      'It is drawn here as two lines, which is how it is ridden: up one side of the ' +
+      'country and down the other. The northbound line runs through the ' +
+      n.points.length + ' cities NH-44 passes, so you can see where it goes. It is a ' +
+      'corridor sketch and its length on screen is a drawing, not a distance.');
+
+    para('tpl__note',
+      'The southbound line is not a sketch. It is ' + s.hops + ' legs of this loop, ' +
+      s.points[0].name + ' down to ' + s.points[s.points.length - 1].name + ', and ' +
+      'their road distances were measured for this route book: ' + km(s.measuredKm) +
+      ' km, the Kutch spur out to Narayan Sarovar included, because the line has to ' +
+      'draw every kilometre it charges for. Which is the useful part. A rider with ' +
+      'three weeks does not have to plan a K2K from nothing; most of one is already ' +
+      'in this template.');
+
+    if (n.cite) para('tpl__source', n.cite);
+    document.getElementById('tpl-k2k').hidden = false;
   }
 
   function sectorBlock(s) {
@@ -2126,11 +2259,15 @@ button { font: inherit; color: inherit; }
     fetch('basemap.json').then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; }),
     fetch('template.json').then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; }),
     fetch('template-notes.json').then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; }),
+    // Optional, like the two above: without it the map keeps its two lines, the
+    // template section keeps its sectors, and the K2K toggle never appears.
+    fetch('k2k.json').then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; }),
   ]).then(function (res) {
     manifest = res[0];
     basemap = res[1];
     template = res[2];
     templateNotes = res[3] || {};
+    k2k = res[4];
     renderTemplate();
 
     var totals = build(manifest);
@@ -2155,6 +2292,15 @@ button { font: inherit; color: inherit; }
     setPlanned(planned);
     el.planToggle.addEventListener('click', function () {
       setPlanned(!planned);
+    });
+
+    // A remembered "on" with no k2k.json would dim the ridden route and hide the
+    // planned loop in favour of two lines that were never drawn, behind a toggle
+    // that is not on the page to undo it with.
+    if (!k2k) k2kOn = false;
+    syncK2k();
+    el.k2kToggle.addEventListener('click', function () {
+      setK2k(!k2kOn);
     });
 
     el.cardX.addEventListener('click', hideStop);

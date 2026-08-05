@@ -413,6 +413,40 @@ test('the archive money is printed with its year and kept apart from this ride\'
   assert.strictEqual(sum(RESEARCH.benchmarks.preparation.lines), RESEARCH.benchmarks.preparation.total);
 });
 
+test('the K2K page keeps the cited highway apart from the measured half', async function () {
+  // The one page in this book that prints two distances from two different kinds of
+  // source. If the corridor sketch ever loses its caveat, or the west-coast total
+  // ever stops naming itself as measured, the page reads as though somebody
+  // measured NH-44 here. Nobody did.
+  const { main } = await render();
+  const K2K = JSON.parse(fs.readFileSync(path.join(ROOT, 'k2k.json'), 'utf8'));
+  const page = main.collect(function (n) { return n.id === 'bk-k2k'; })[0];
+  assert.ok(page, 'the K2K page was rendered');
+  assert.ok(hasClass(page, 'bk__page'), 'and it is a book page');
+  assert.ok(!hasClass(page, 'bk__research'),
+    'it is route content, so leaving the appendix out must not take it away');
+
+  const text = page.textContent;
+  assert.match(text, /3,745 km/);
+  assert.match(text, /4,112 km/);
+  assert.match(text, /6,000–11,000 km/);
+  assert.match(text, /corridor sketch/);
+  assert.match(text, /a drawing and not a distance/);
+  assert.match(text, /Nagpur/);
+
+  // The measured half is printed leg by leg and the legs add up to the stored total.
+  const rows = rowsOf(page.collect(function (n) { return hasClass(n, 'bk__k2k-legs'); })[0]);
+  assert.strictEqual(rows.length, K2K.south.hops + 2);   // head, 23 legs, total
+  assert.deepStrictEqual(rows[rows.length - 1],
+    ['Measured total', Math.round(K2K.south.measuredKm).toLocaleString('en-IN'), '']);
+
+  // Three lines on its map, drawn context-first the way the sector spreads are.
+  const lines = page.collect(function (n) { return n.tagName === 'polyline'; });
+  assert.deepStrictEqual(lines.map(function (l) { return l.className; }), [
+    'route--planned', 'route--k2k route--k2k-s', 'route--k2k route--k2k-n',
+  ]);
+});
+
 test('the appendix is appended as its own pages and can be left out of the print', async function () {
   const { main } = await render();
   const pages = main.collect(function (n) { return hasClass(n, 'bk__research'); });
