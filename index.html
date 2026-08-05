@@ -154,9 +154,18 @@ button { font: inherit; color: inherit; }
   font-family: var(--font-heading); font-weight: var(--fw-bold);
   font-size: 13px; letter-spacing: 0.08em; color: var(--color-bg);
   padding: 14px 26px; border-radius: 999px;
+  /* The border is invisible on the filled pill and load-bearing on the ghost one
+     below. Both carry it so the two sit at exactly the same height. */
+  border: 1px solid var(--color-text);
   background: var(--color-text);
 }
-.hero__cta:hover { color: var(--color-bg); background: var(--color-muted); }
+.hero__cta:hover { color: var(--color-bg); background: var(--color-muted); border-color: var(--color-muted); }
+/* The route book is a second destination, not a lesser one, so it takes the same
+   pill rather than a shape invented for it. Outlined instead of filled, because
+   two solid pills side by side read as one wide slab and neither leads. */
+.hero__cta--ghost { color: var(--color-text); background: transparent; border-color: var(--color-line-strong); }
+.hero__cta--ghost:hover { color: var(--color-bg); background: var(--color-text); border-color: var(--color-text); }
+.hero__cta + .hero__cta { margin-left: var(--space-3); }
 /* The CTA and its escape hatch travel together, or space-between in .hero__foot
    would throw the quiet link to the far edge of the hero. */
 .hero__acts { flex: 0 0 auto; display: flex; align-items: baseline; flex-wrap: wrap; }
@@ -188,7 +197,10 @@ button { font: inherit; color: inherit; }
 @media (max-width: 700px) {
   .hero__body { padding-top: clamp(36px, 9vh, 80px); }
   .hero__acts { width: 100%; }
-  .hero__cta { width: 100%; text-align: center; }
+  .hero__cta { width: 100%; text-align: center; justify-content: center; }
+  /* Stacked, not side by side: two full-width pills cannot share a row, and a
+     left margin on the second one would push it off the right edge. */
+  .hero__cta + .hero__cta { margin: var(--space-3) 0 0; }
   .hero__alt { margin: var(--space-3) auto 0; }
   .band { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .band > div { padding: var(--space-4) var(--space-4); }
@@ -336,6 +348,13 @@ button { font: inherit; color: inherit; }
 }
 .map__attr[hidden] { display: none; }
 
+/* "Planned route" is a two-word label for a distinction that needs a sentence,
+   and the sentence used to live in a long section below the clips that is now a
+   single link to the route book. It sits under the map instead, beside the
+   button it explains, which is where a reader who presses that button is
+   looking anyway. */
+.map__note { font-size: 11px; line-height: 1.5; color: var(--color-dim); margin-top: 6px; }
+
 /* Over tiles the fills would hide the map, so the countries become outlines only.
    India keeps its full stroke: OSM draws the Line of Control, and the official
    boundary sitting on top is the point. */
@@ -431,90 +450,44 @@ button { font: inherit; color: inherit; }
 }
 .close a:hover { background: var(--color-accent-soft); border-color: var(--color-accent); color: var(--color-text); }
 
-/* ─── the template ─────────────────────────────────────────────────────── */
+/* ─── the route book, and the K2K note beside it ───────────────────────────
+   This block used to dress the route book itself, printed into this page: a
+   five-figure glance band, five expandable sectors with a waypoint table each,
+   and a projected cost table. booklet.html carries every one of those in fuller
+   form, and printing them here made the page a third longer than the story it
+   exists to tell, so what is left is the door to the book. The typography stays
+   because the K2K section, which is still prose, still uses it. */
 .tpl { border-top: var(--rule); padding-top: var(--space-8); margin-top: var(--space-8); }
 .tpl[hidden] { display: none; }
 .tpl__eyebrow {
   font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.12em;
   color: var(--color-accent-2); margin: 0 0 var(--space-3);
 }
+.tpl__h { margin: 0 0 var(--space-4); }
 .tpl__lede { font-size: 16px; line-height: 1.6; max-width: 62ch; color: var(--color-muted); }
 .tpl__source { font-size: 13px; color: var(--color-dim); max-width: 62ch; }
-.tpl__source[hidden] { display: none; }
-.tpl__h3 { margin: var(--space-8) 0 var(--space-2); }
 .tpl__note { font-size: 14px; color: var(--color-muted); max-width: 62ch; margin: 0 0 var(--space-4); }
 
-.tpl__glance {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
-  border: var(--rule); border-radius: var(--radius); margin: var(--space-6) 0;
+/* One line of figures, read out of template.json rather than typed here, so the
+   page can never advertise a loop the book does not contain. Hidden outright
+   when template.json is missing: the door still opens, it just stops quoting. */
+.tpl__figs {
+  font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--color-dim);
+  font-variant-numeric: tabular-nums; margin-top: var(--space-4);
 }
-.tpl__glance > div { padding: var(--space-4); }
-.tpl__glance > div + div { border-left: var(--rule); }
-.tpl__glance-n {
-  font-family: var(--font-heading); font-weight: var(--fw-bold); font-size: 24px;
-  font-variant-numeric: tabular-nums;
-}
-.tpl__glance-l { font-size: 11px; letter-spacing: 0.08em; color: var(--color-dim); margin-top: 2px; }
+.tpl__figs[hidden] { display: none; }
 
-.tpl__sector { border: var(--rule); border-radius: var(--radius); margin-bottom: var(--space-3); }
-.tpl__sector-bar {
-  display: flex; align-items: baseline; gap: var(--space-3); width: 100%;
-  padding: var(--space-4); background: none; border: 0; color: inherit;
-  font: inherit; text-align: left; cursor: pointer;
-}
-.tpl__sector-id {
-  font-family: var(--font-mono); font-size: 12px; color: var(--color-accent);
-  min-width: 30px;
-}
-.tpl__sector-title { font-family: var(--font-heading); font-weight: var(--fw-bold); flex: 1; }
-.tpl__sector-meta {
-  font-family: var(--font-mono); font-size: 12px; color: var(--color-dim);
-  font-variant-numeric: tabular-nums; text-align: right;
-}
-.tpl__sector-sign { font-weight: var(--fw-bold); width: 18px; text-align: center; color: var(--color-muted); }
-.tpl__sector[data-open="false"] .tpl__sector-body { display: none; }
-.tpl__sector-body { padding: 0 var(--space-4) var(--space-4); }
-.tpl__join {
-  display: inline-block; font-family: var(--font-mono); font-size: 11px;
-  letter-spacing: 0.08em; color: var(--color-accent-2);
-  border: 1px solid var(--color-accent-2); border-radius: var(--radius);
-  padding: 2px 8px; margin-bottom: var(--space-3);
-}
-.tpl__stage { margin-top: var(--space-4); }
-.tpl__stage-h {
-  font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.06em;
-  color: var(--color-muted); margin-bottom: var(--space-2);
-}
-.tpl__hops { width: 100%; border-collapse: collapse; font-size: 13px; }
-.tpl__hops td { padding: 4px 0; border-bottom: 1px solid var(--color-line); }
-.tpl__hops td:last-child, .tpl__hops td:nth-last-child(2) {
-  text-align: right; font-family: var(--font-mono); font-size: 12px;
-  color: var(--color-dim); font-variant-numeric: tabular-nums; white-space: nowrap;
-  padding-left: var(--space-3);
-}
-.tpl__poi { color: var(--color-accent); }
-.tpl__todo {
-  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.06em;
-  color: var(--color-faint); border: 1px dashed var(--color-line-strong);
-  border-radius: var(--radius); padding: 6px 10px; margin-top: var(--space-3);
-}
-
-.tpl__costs table { width: 100%; border-collapse: collapse; font-size: 14px; max-width: 62ch; }
-.tpl__costs td { padding: 6px 0; border-bottom: 1px solid var(--color-line); }
-.tpl__costs td + td {
-  text-align: right; font-family: var(--font-mono);
-  font-variant-numeric: tabular-nums; white-space: nowrap;
-}
-.tpl__costs caption { text-align: left; font-size: 13px; color: var(--color-dim); padding-bottom: var(--space-3); }
-
-.tpl__acts { margin-top: var(--space-8); }
+.tpl--cta .tpl__h { font-size: clamp(30px, 5vw, 46px); line-height: 1.02; }
 .tpl__cta {
-  display: inline-block; font-family: var(--font-heading); font-weight: var(--fw-bold);
-  font-size: 13px; letter-spacing: 0.08em; text-decoration: none;
-  color: var(--color-text); border: 1px solid var(--color-accent);
-  border-radius: var(--radius); padding: 12px 20px;
+  display: inline-flex; align-items: center; margin-top: var(--space-6);
+  font-family: var(--font-heading); font-weight: var(--fw-bold);
+  font-size: 15px; letter-spacing: 0.08em; text-decoration: none;
+  color: var(--color-bg); background: var(--color-text);
+  border: 1px solid var(--color-text); border-radius: 999px;
+  padding: 16px 30px;
 }
-.tpl__cta:hover { background: var(--color-accent); color: #fff; }
+.tpl__cta:hover { background: var(--color-accent); border-color: var(--color-accent); color: #fff; }
 
 .state-msg { font-size: 13px; color: var(--color-dim); }
 .state-msg[hidden] { display: none; }
@@ -736,6 +709,7 @@ button { font: inherit; color: inherit; }
       <p class="hero__blurb">Home in Trivandrum to Kanyakumari, up to Ladakh, across to the Arunachal border, and back down the east coast, told in the order it happened.</p>
       <div class="hero__acts">
         <a class="hero__cta" href="#overview" id="overview-cta">SEE THE OVERVIEW ▸</a>
+        <a class="hero__cta hero__cta--ghost" href="booklet.html">THE ROUTE BOOK ▸</a>
         <a class="hero__alt" href="#region-0">or go straight to the clips</a>
       </div>
     </div>
@@ -788,6 +762,8 @@ button { font: inherit; color: inherit; }
         </div>
       </div>
 
+      <p class="map__note"><strong>Planned route</strong> lays the loop as it was drawn, dashed, under the line that was actually ridden.</p>
+
       <p class="map__attr" id="map-attr" hidden>© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors</p>
     </section>
 
@@ -808,48 +784,31 @@ button { font: inherit; color: inherit; }
       <a href="https://www.instagram.com/thegreatindiaride/" target="_blank" rel="noopener">THE RIDE ON INSTAGRAM ↗</a>
     </section>
 
-    <section class="tpl" id="template" hidden>
-      <p class="tpl__eyebrow">THE TEMPLATE</p>
-      <h2>A loop anyone can run</h2>
+    <!-- K2K used to be nested inside the template section, which meant it was shown
+         by that section's render and would have gone out with it. It is its own
+         section now, and its own heading level, because it is its own subject. -->
+    <section class="tpl" id="tpl-k2k" hidden>
+      <p class="tpl__eyebrow">THE CLASSIC, INSIDE THIS ONE</p>
+      <h2 class="tpl__h">Kanyakumari to Kashmir, already half here</h2>
+      <div id="tpl-k2k-body"></div>
+      <p class="tpl__note">
+        Turn on <strong>K2K</strong> on the map to see both lines. The planned loop
+        steps out of the way while they are up, because the west-coast line is the
+        same set of legs.
+      </p>
+    </section>
+
+    <section class="tpl tpl--cta" id="routebook">
+      <p class="tpl__eyebrow">THE ROUTE BOOK</p>
+      <h2 class="tpl__h">Ride it yourself</h2>
       <p class="tpl__lede">
-        This ride was not improvised. It was drawn first: a loop with fixed waypoints
-        and two crossing points, Bangalore and Delhi, where a rider can join or leave.
-        What follows is that route book, not a diary of this one running of it.
+        The ride was drawn before it was ridden, and the drawing is a loop anyone can
+        run: five sectors, every waypoint with its distance and hours, and two join
+        points at Bangalore and Delhi where you can start, stop, or go home from
+        where you began. Free to fork.
       </p>
-      <p class="tpl__source" id="tpl-source"></p>
-
-      <div class="tpl__glance" id="tpl-glance"></div>
-
-      <h3 class="tpl__h3">What was planned, and what was ridden</h3>
-      <p class="tpl__note" id="tpl-diff"></p>
-      <p class="tpl__note">
-        Turn on <strong>Planned route</strong> on the map to see both: the loop as
-        drawn, dashed, under the line that was actually ridden.
-      </p>
-
-      <h3 class="tpl__h3">The five sectors</h3>
-      <p class="tpl__note">
-        The loop returns to Bangalore and Delhi. Those returns are the joins: ride the
-        whole thing, or take one sector and go home from where you started.
-      </p>
-      <div class="tpl__sectors" id="tpl-sectors"></div>
-
-      <h3 class="tpl__h3">What it cost</h3>
-      <div class="tpl__costs" id="tpl-costs"></div>
-
-      <section id="tpl-k2k" hidden>
-        <h3 class="tpl__h3">Kanyakumari to Kashmir, already half here</h3>
-        <div id="tpl-k2k-body"></div>
-        <p class="tpl__note">
-          Turn on <strong>K2K</strong> on the map to see both lines. The planned loop
-          steps out of the way while they are up, because the west-coast line is the
-          same set of legs.
-        </p>
-      </section>
-
-      <div class="tpl__acts">
-        <a class="tpl__cta" href="booklet.html">DOWNLOAD THE ROUTE BOOK →</a>
-      </div>
+      <p class="tpl__figs" id="tpl-figs" hidden></p>
+      <a class="tpl__cta" href="booklet.html">OPEN THE ROUTE BOOK →</a>
     </section>
 
     <footer class="pagefoot">
@@ -883,7 +842,9 @@ button { font: inherit; color: inherit; }
 <p class="sr-only" role="status" aria-live="polite" id="live"></p>
 
 <script src="atlas.js"></script>
-<script src="costs.js"></script>
+<!-- costs.js is not loaded here any more. Its only caller on this page was the
+     cost table inside the old template section. The module itself is untouched
+     and booklet.html, which still prints that table, still loads it. -->
 <script>
 (function () {
   'use strict';
@@ -998,12 +959,7 @@ button { font: inherit; color: inherit; }
     lbNext: document.getElementById('lb-next'),
     lbClose: document.getElementById('lb-close'),
     live: document.getElementById('live'),
-    template: document.getElementById('template'),
-    tplSource: document.getElementById('tpl-source'),
-    tplGlance: document.getElementById('tpl-glance'),
-    tplSectors: document.getElementById('tpl-sectors'),
-    tplDiff: document.getElementById('tpl-diff'),
-    tplCosts: document.getElementById('tpl-costs'),
+    tplFigs: document.getElementById('tpl-figs'),
     overview: document.getElementById('overview'),
     ovCaption: document.getElementById('ov-caption'),
     ovLeg: document.getElementById('ov-leg'),
@@ -2044,97 +2000,34 @@ button { font: inherit; color: inherit; }
     if (btn) openLb(+btn.dataset.pos);
   });
 
-  /* ─── the template ──────────────────────────────────────────────────── */
-  var template = null, templateNotes = null, k2k = null;
+  /* ─── the route book ────────────────────────────────────────────────────
+     What stood here rendered the book into the page: a glance band, five
+     expandable sectors with a waypoint table each, and a cost table projected
+     from Costs.project(). All of it is in booklet.html in fuller form, so the
+     page now offers one line of figures and a door.
 
-  function tplPoi(place) {
-    var p = templateNotes && templateNotes.pois && templateNotes.pois[place];
-    return p ? String(p) : '';
-  }
+     template.json is still read, and for two reasons. The planned loop on the
+     map is drawn from its hops, and the figures below are taken from its totals
+     rather than typed into the markup, which is the only arrangement in which
+     the page cannot end up advertising a loop the book does not contain.
 
-  function renderTemplate() {
-    if (!template) return;
-    var t = template, notes = templateNotes || {};
-    el.template.hidden = false;
+     template-notes.json is no longer read here. Nothing left on this page used
+     it: the sourcing line, the planned-versus-ridden paragraph, the per-sector
+     season and permit notes and the points of interest all went with the
+     section above, and renderK2k reads k2k.json alone. booklet.html fetches it
+     for itself, so the file stays and the fetch does not. */
+  var template = null, k2k = null;
 
-    if (notes.sourcing && notes.sourcing.indexOf('TO WRITE') !== 0) {
-      el.tplSource.textContent = notes.sourcing;
-      el.tplSource.hidden = false;
-    }
-
-    var glance = [
-      [Math.round(t.totals.km).toLocaleString('en-IN'), 'km'],
-      [String(t.totals.hops), 'legs'],
-      [String(Math.round(t.totals.hours)), 'riding hours'],
-      [String(t.totals.countries), 'countries'],
-      [String(t.crossings.length), 'crossings'],
-    ];
-    el.tplGlance.replaceChildren();
-    glance.forEach(function (g) {
-      var d = document.createElement('div');
-      var n = document.createElement('div'); n.className = 'tpl__glance-n'; n.textContent = g[0];
-      var l = document.createElement('div'); l.className = 'tpl__glance-l'; l.textContent = g[1];
-      d.appendChild(n); d.appendChild(l);
-      el.tplGlance.appendChild(d);
-    });
-
-    var diff = notes.plannedVsRidden || '';
-    if (diff && diff.indexOf('TO WRITE') !== 0) {
-      el.tplDiff.textContent = diff;
-    } else {
-      el.tplDiff.className = 'tpl__todo';
-      el.tplDiff.textContent = 'Not written yet: which sections closed, and what was ridden instead.';
-    }
-
-    el.tplSectors.replaceChildren();
-    t.sectors.forEach(function (s) { el.tplSectors.appendChild(sectorBlock(s)); });
-
-    renderCosts();
-    renderK2k();
-  }
-
-  // No invented rates: every figure here comes from Costs.project(), which derives
-  // per-night rates from route.json's published totals (this ride, not the template;
-  // the template has no nights of its own). The hours-per-day assumption behind the
-  // sector day-counts is stated in the caption, not just used silently.
-  function renderCosts() {
-    if (!template || !manifest.route) return;
-    var hpd = (templateNotes && templateNotes.hoursPerDay) || 6;
-    var c = Costs.project(manifest.route, template, hpd);
-
-    var table = document.createElement('table');
-    var cap = document.createElement('caption');
-    cap.textContent =
-      'What one rider paid, early 2025: ' + rupee(c.observed.total) + ' across ' +
-      c.nights + ' nights, applied to the template’s shape. Riding days are ' +
-      'estimated at ' + hpd + ' hours a day, with no rest days ' +
-      'built in, so this is a floor, not a forecast, and comes in lower than what ' +
-      'was actually spent, which did include rest, weather and sightseeing days. ' +
-      'These are rates that were actually paid, not a quote.';
-    table.appendChild(cap);
-
-    var body = document.createElement('tbody');
-    function row(label, value, strong) {
-      var tr = document.createElement('tr');
-      var a = document.createElement('td'); a.textContent = label;
-      var b = document.createElement('td'); b.textContent = value;
-      if (strong) { a.style.fontWeight = '700'; b.style.fontWeight = '700'; }
-      tr.appendChild(a); tr.appendChild(b);
-      body.appendChild(tr);
-    }
-
-    row('A bed, per night', rupee(c.perNight.stay));
-    row('Fuel, food, everything else, per night', rupee(c.perNight.other));
-    row('Per night, all in', rupee(c.perNight.total), true);
-
-    c.sectors.forEach(function (s) {
-      var sec = template.sectors.filter(function (x) { return x.id === s.id; })[0];
-      row(s.id + ' · ' + sec.title + ' · ' + s.days + ' days', rupee(s.total));
-    });
-    row('The whole loop · ' + c.days + ' riding days', rupee(c.total), true);
-
-    table.appendChild(body);
-    el.tplCosts.replaceChildren(table);
+  function renderRouteBook() {
+    if (!template || !el.tplFigs) return;
+    var t = template;
+    el.tplFigs.textContent = [
+      Math.round(t.totals.km).toLocaleString('en-IN') + ' km',
+      t.totals.hops + ' legs',
+      t.sectors.length + ' sectors',
+      t.crossings.length + ' join points',
+    ].join(' · ');
+    el.tplFigs.hidden = false;
   }
 
   // Every figure in this block is read out of k2k.json rather than typed into the
@@ -2201,118 +2094,26 @@ button { font: inherit; color: inherit; }
     document.getElementById('tpl-k2k').hidden = false;
   }
 
-  function sectorBlock(s) {
-    var wrap = document.createElement('div');
-    wrap.className = 'tpl__sector';
-    wrap.dataset.open = 'false';
-    wrap.id = 'sector-' + s.id;
-
-    var bar = document.createElement('button');
-    bar.type = 'button';
-    bar.className = 'tpl__sector-bar';
-    bar.setAttribute('aria-expanded', 'false');
-
-    var id = document.createElement('span'); id.className = 'tpl__sector-id'; id.textContent = s.id;
-    var ti = document.createElement('span'); ti.className = 'tpl__sector-title';
-    ti.textContent = s.title + ' · ' + s.from + ' → ' + s.to;
-    var me = document.createElement('span'); me.className = 'tpl__sector-meta';
-    me.textContent = Math.round(s.km).toLocaleString('en-IN') + ' km · ' + Math.round(s.hours) + ' h';
-    var sg = document.createElement('span'); sg.className = 'tpl__sector-sign'; sg.textContent = '+';
-
-    bar.appendChild(id); bar.appendChild(ti); bar.appendChild(me); bar.appendChild(sg);
-    bar.addEventListener('click', function () {
-      var open = wrap.dataset.open === 'true';
-      wrap.dataset.open = open ? 'false' : 'true';
-      bar.setAttribute('aria-expanded', open ? 'false' : 'true');
-      sg.textContent = open ? '+' : '−';
-    });
-    wrap.appendChild(bar);
-
-    var body = document.createElement('div');
-    body.className = 'tpl__sector-body';
-
-    if (s.opensAt || s.closesAt) {
-      var join = document.createElement('span');
-      join.className = 'tpl__join';
-      join.textContent = s.opensAt && s.closesAt
-        ? 'JOIN AT ' + s.opensAt.toUpperCase() + ' · LEAVE AT ' + s.closesAt.toUpperCase()
-        : (s.opensAt ? 'JOIN AT ' + s.opensAt.toUpperCase() : 'LEAVE AT ' + s.closesAt.toUpperCase());
-      body.appendChild(join);
-    }
-
-    var notes = templateNotes || {};
-    var note = (notes.sectors || {})[s.id] || {};
-    if (note.season && note.season.indexOf('TO WRITE') === 0) {
-      var todo = document.createElement('p');
-      todo.className = 'tpl__todo';
-      todo.textContent = 'Season and permit notes for this sector are not written yet.';
-      body.appendChild(todo);
-    } else if (note.season) {
-      var p = document.createElement('p');
-      p.className = 'tpl__note';
-      p.textContent = note.permits ? note.season + ' ' + note.permits : note.season;
-      body.appendChild(p);
-    }
-
-    s.stages.forEach(function (st) {
-      var box = document.createElement('div');
-      box.className = 'tpl__stage';
-      if (s.stages.length > 1) {
-        var h = document.createElement('div');
-        h.className = 'tpl__stage-h';
-        h.textContent = st.id + ' · ' + st.title + ' · ' +
-          Math.round(st.km).toLocaleString('en-IN') + ' km';
-        box.appendChild(h);
-      }
-      var table = document.createElement('table');
-      table.className = 'tpl__hops';
-      var tbody = document.createElement('tbody');
-      for (var i = st.hopFrom; i <= st.hopTo; i++) {
-        var hop = template.hops[i];
-        var tr = document.createElement('tr');
-        var to = document.createElement('td');
-        to.textContent = hop.to;
-        var poi = tplPoi(hop.to);
-        if (poi) {
-          var sp = document.createElement('span');
-          sp.className = 'tpl__poi';
-          sp.textContent = ' · ' + poi;
-          to.appendChild(sp);
-        }
-        var km = document.createElement('td');
-        km.textContent = Math.round(hop.km) + ' km';
-        var hr = document.createElement('td');
-        hr.textContent = hop.hours.toFixed(1) + ' h';
-        tr.appendChild(to); tr.appendChild(km); tr.appendChild(hr);
-        tbody.appendChild(tr);
-      }
-      table.appendChild(tbody);
-      box.appendChild(table);
-      body.appendChild(box);
-    });
-    wrap.appendChild(body);
-
-    return wrap;
-  }
-
   /* ─── boot ──────────────────────────────────────────────────────────── */
   Promise.all([
     fetch('manifest.json', { cache: 'no-cache' }).then(function (r) {
       if (!r.ok) throw new Error('HTTP ' + r.status); return r.json();
     }),
     fetch('basemap.json').then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; }),
+    // Optional: without it the map draws the ridden line only, the planned-route
+    // toggle has nothing to show, and the route book's figures stay hidden. The
+    // book itself is a static link, so it opens either way.
     fetch('template.json').then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; }),
-    fetch('template-notes.json').then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; }),
-    // Optional, like the two above: without it the map keeps its two lines, the
-    // template section keeps its sectors, and the K2K toggle never appears.
+    // Optional too: without it the map keeps its two lines, the K2K section stays
+    // hidden, and the K2K toggle never appears.
     fetch('k2k.json').then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; }),
   ]).then(function (res) {
     manifest = res[0];
     basemap = res[1];
     template = res[2];
-    templateNotes = res[3] || {};
-    k2k = res[4];
-    renderTemplate();
+    k2k = res[3];
+    renderRouteBook();
+    renderK2k();
 
     var totals = build(manifest);
     el.statRegions.textContent = String(totals.totalRegions);
