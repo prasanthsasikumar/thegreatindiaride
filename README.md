@@ -537,19 +537,22 @@ those too, so a separate test pins every distinct en-dash-joined token in
 The list moves when the transcription legitimately does, which is deliberate: these
 are somebody else's words, so a range changing shape should cost a look.
 
-## Known issues
+## Caching the research plates
 
 `netlify.toml` serves `/media/*` as `immutable, max-age=31536000`. That is right for
 the Instagram filenames, which are content-addressed IDs and never change, and it is
-the rule that keeps ~800MB of video inside a 100GB/month allowance. It is **wrong for
-`media/research/fig-0N.jpg`**, which are replaceable: those names are ours, and a
-re-extracted plate under the same name would be served stale for a year to anyone who
-had already loaded the page. It has not bitten yet because no plate has been replaced.
+the rule that keeps ~800MB of video inside a 100GB/month allowance. It is wrong for
+`media/research/fig-0N.jpg`, which are replaceable: those names are ours, and a
+re-extracted plate under the same name would otherwise be served stale for a year to
+anyone who had already loaded the page. Since these are other riders' photographs used
+with credit, a correction or a takedown has to be able to reach people who have already
+visited.
 
-The trap for whoever fixes it is in that file's own comment: when several `[[headers]]`
-blocks match one request, Netlify applies them in file order and **the last matching
-block wins**. A narrower `/media/research/*` rule must therefore go **after**
-`/media/*`, not before it. Put it before, as ordering intuition suggests, and the
+So `/media/research/*` carries its own `max-age=3600`. Where that rule sits in the file
+is load-bearing, and the trap is in `netlify.toml`'s own comment: when several
+`[[headers]]` blocks match one request, Netlify applies them in file order and the last
+matching block wins. The narrower `/media/research/*` rule therefore sits **after**
+`/media/*`, not before it. Move it above, as ordering intuition suggests, and the
 catch-all silently overrides it and nothing appears to change.
 
 ## Correcting region tags
