@@ -37,6 +37,16 @@
     Cache-Control = "public, max-age=300"
 
 [[headers]]
+  for = "/template.json"
+  [headers.values]
+    Cache-Control = "public, max-age=300"
+
+[[headers]]
+  for = "/template-notes.json"
+  [headers.values]
+    Cache-Control = "public, max-age=300"
+
+[[headers]]
   for = "/api.json"
   [headers.values]
     Cache-Control = "public, max-age=300"
@@ -56,6 +66,20 @@
   for = "/basemap.json"
   [headers.values]
     Cache-Control = "public, max-age=604800"
+
+# --- shared page scripts: loaded by both index.html and booklet.html, so a fix to
+# either one has to reach two pages. Short-lived like the data they render, rather
+# than left on the catch-all's hour. ---
+
+[[headers]]
+  for = "/atlas.js"
+  [headers.values]
+    Cache-Control = "public, max-age=300"
+
+[[headers]]
+  for = "/costs.js"
+  [headers.values]
+    Cache-Control = "public, max-age=300"
 
 # --- pages ---
 

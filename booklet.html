@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The route book — the pan-India loop</title>
+<meta name="description" content="A printable route book for the pan-India loop: 18,181 km, 97 legs, five sectors. Sector maps, waypoint tables, what it costs, and blank pages to plan on.">
+<meta name="color-scheme" content="dark">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* booklet.html — the route book.
+ *
+ * Same tokens, same fonts, same atlas as index.html. The one thing that is not
+ * shared is the palette under print: the site is #0f0f0f and A4 is not, so the
+ * print block at the foot of this stylesheet flips the tokens to paper and ink
+ * rather than restyling every rule.
+ */
+
+/* ─── tokens, from index.html ──────────────────────────────────────────── */
+:root {
+  --color-bg:       #0f0f0f;
+  --color-surface:  #17171b;
+  --color-raise:    #1e1e24;
+  --color-text:     #ffffff;
+  --color-muted:    #bcbcbc;
+  --color-dim:      #8a8a90;
+  --color-faint:    #6a6a70;
+
+  --color-line:        rgba(255, 255, 255, 0.10);
+  --color-line-strong: rgba(255, 255, 255, 0.22);
+
+  --color-accent:      #8b5cf6;
+  --color-accent-2:    #ec4899;
+  --color-accent-soft: rgba(139, 92, 246, 0.18);
+
+  --font-heading: "Space Grotesk", system-ui, sans-serif;
+  --font-body:    "Space Grotesk", system-ui, sans-serif;
+  --font-mono:    "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --fw-bold: 700;
+
+  --pad-x: clamp(20px, 5.6vw, 72px);
+
+  --space-1: 4px;  --space-2: 8px;  --space-3: 12px;
+  --space-4: 16px; --space-6: 24px; --space-8: 32px;
+
+  --radius: 14px;
+  --radius-sm: 6px;
+  --rule: 1px solid var(--color-line);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; overflow-x: clip; }
+
+body {
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-heading); font-weight: var(--fw-bold);
+  line-height: 1.12; letter-spacing: -0.015em; margin: 0;
+  overflow-wrap: anywhere; min-width: 0;
+}
+p { margin: 0; }
+a { color: var(--color-text); text-underline-offset: 3px; }
+a:hover { color: var(--color-accent); }
+button { font: inherit; color: inherit; }
+:focus { outline: none; }
+:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+
+/* ─── shell ────────────────────────────────────────────────────────────── */
+.bk {
+  max-width: 900px; margin: 0 auto; padding: var(--space-8) var(--pad-x) 96px;
+}
+
+.bk__actions {
+  position: sticky; top: 0; z-index: 5;
+  display: flex; align-items: center; gap: var(--space-3);
+  padding: var(--space-3) var(--pad-x);
+  background: var(--color-bg); border-bottom: var(--rule);
+}
+.bk__back {
+  font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.06em;
+  text-decoration: none; color: var(--color-muted);
+}
+.bk__spacer { flex: 1; }
+.bk__print {
+  font-family: var(--font-heading); font-weight: var(--fw-bold);
+  font-size: 12px; letter-spacing: 0.08em;
+  background: transparent; color: var(--color-text);
+  border: 1px solid var(--color-accent); border-radius: var(--radius);
+  padding: 10px 16px; cursor: pointer;
+}
+.bk__print:hover { background: var(--color-accent); color: #fff; }
+
+/* Every top-level block of the book is a page. Print gives each one a fresh
+   sheet; on screen they are just sections with a rule between them. Keeping the
+   rule on the class rather than on named sections is what lets a later section
+   — the field research appendix — be appended without touching any of this. */
+.bk__page { border-top: var(--rule); padding-top: var(--space-8); margin-top: var(--space-8); }
+.bk__page:first-child { border-top: 0; padding-top: 0; margin-top: var(--space-6); }
+
+.bk__eyebrow {
+  font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.12em;
+  color: var(--color-accent-2); margin: 0 0 var(--space-3);
+}
+.bk__h2 { font-size: clamp(24px, 3.4vw, 34px); margin-bottom: var(--space-3); }
+.bk__h3 { margin: var(--space-6) 0 var(--space-2); }
+.bk__lede { font-size: 16px; line-height: 1.6; max-width: 62ch; color: var(--color-muted); }
+.bk__note { font-size: 14px; color: var(--color-muted); max-width: 62ch; margin: 0 0 var(--space-4); }
+.bk__fine { font-size: 13px; color: var(--color-dim); max-width: 62ch; }
+.bk__mono {
+  font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.06em;
+  color: var(--color-dim); font-variant-numeric: tabular-nums;
+}
+
+/* ─── cover ────────────────────────────────────────────────────────────── */
+.bk__cover-title { font-size: clamp(34px, 7vw, 64px); }
+.bk__cover-sub {
+  font-family: var(--font-mono); font-size: 14px; letter-spacing: 0.08em;
+  color: var(--color-accent); margin: var(--space-4) 0 var(--space-6);
+  font-variant-numeric: tabular-nums;
+}
+.bk__cover-rule { border: 0; border-top: 1px solid var(--color-line-strong); margin: var(--space-8) 0; }
+
+/* ─── at a glance ──────────────────────────────────────────────────────── */
+.bk__glance {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  border: var(--rule); border-radius: var(--radius); margin: var(--space-6) 0;
+}
+.bk__glance > div { padding: var(--space-4); }
+.bk__glance > div + div { border-left: var(--rule); }
+.bk__glance-n {
+  font-family: var(--font-heading); font-weight: var(--fw-bold); font-size: 24px;
+  font-variant-numeric: tabular-nums;
+}
+.bk__glance-l { font-size: 11px; letter-spacing: 0.08em; color: var(--color-dim); margin-top: 2px; }
+
+/* ─── tables ───────────────────────────────────────────────────────────── */
+.bk__table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.bk__table caption {
+  text-align: left; font-size: 13px; color: var(--color-dim);
+  padding-bottom: var(--space-3); max-width: 62ch;
+}
+.bk__table th {
+  text-align: left; font-family: var(--font-mono); font-weight: 500;
+  font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--color-dim); padding: 0 var(--space-3) 4px 0;
+  border-bottom: 1px solid var(--color-line-strong);
+}
+.bk__table td {
+  padding: 4px var(--space-3) 4px 0; border-bottom: 1px solid var(--color-line);
+  vertical-align: top;
+}
+.bk__table td:last-child, .bk__table th:last-child { padding-right: 0; }
+.bk__num, th.bk__num {
+  text-align: right; font-family: var(--font-mono); font-size: 12px;
+  color: var(--color-dim); font-variant-numeric: tabular-nums; white-space: nowrap;
+}
+.bk__strong td { font-weight: var(--fw-bold); color: var(--color-text); }
+.bk__poi { color: var(--color-accent); }
+
+/* A gap the author has not filled in. Never fill one of these with a guess: a
+   reader plans dates and permits off this page. */
+.bk__todo {
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.06em;
+  color: var(--color-faint); border: 1px dashed var(--color-line-strong);
+  border-radius: var(--radius); padding: 6px 10px; margin-top: var(--space-3);
+  display: block;
+}
+td .bk__todo { margin-top: 0; }
+
+/* ─── maps ─────────────────────────────────────────────────────────────── */
+.atlas { display: block; width: 100%; height: auto; }
+.atlas .neighbour { fill: none; stroke: rgba(255,255,255,0.20); stroke-width: 1; }
+.atlas .india { fill: #34343f; stroke: rgba(255,255,255,0.92); stroke-width: 1.4; }
+.atlas .route { fill: none; stroke: var(--color-accent-2); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+/* The whole loop, under the sector being shown: dimmed and dashed, so the sector
+   reads as the subject and the rest as context. */
+.atlas .route--planned {
+  fill: none; stroke: var(--color-dim); stroke-width: 1.4;
+  stroke-dasharray: 5 4; opacity: 0.75;
+  stroke-linejoin: round; stroke-linecap: round;
+}
+.atlas .stop { fill: #10101a; stroke: rgba(255,255,255,0.75); stroke-width: 1.1; }
+.atlas .hit { fill: transparent; }
+
+.bk__map { max-width: 340px; margin: var(--space-4) 0; }
+.bk__map--master { max-width: 460px; }
+.bk__legend {
+  display: flex; flex-wrap: wrap; gap: var(--space-4);
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.06em;
+  color: var(--color-dim); margin-top: var(--space-2);
+}
+.bk__legend i { font-style: normal; color: var(--color-accent-2); }
+.bk__legend i.dim { color: var(--color-dim); }
+
+/* ─── sector spread ────────────────────────────────────────────────────── */
+.bk__sector-id {
+  font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.12em;
+  color: var(--color-accent-2); margin: 0 0 var(--space-2);
+}
+.bk__sector-meta {
+  font-family: var(--font-mono); font-size: 12px; color: var(--color-dim);
+  font-variant-numeric: tabular-nums; margin-top: var(--space-2);
+}
+.bk__join {
+  display: inline-block; font-family: var(--font-mono); font-size: 11px;
+  letter-spacing: 0.08em; color: var(--color-accent-2);
+  border: 1px solid var(--color-accent-2); border-radius: var(--radius);
+  padding: 2px 8px; margin-top: var(--space-3);
+}
+.bk__stage { margin-top: var(--space-6); }
+.bk__stage-h {
+  font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.06em;
+  color: var(--color-muted); margin-bottom: var(--space-2);
+}
+/* Map beside the tables while there is room for it; stacked below that, and
+   stacked again in print, where a tall table next to a short map would leave
+   half a sheet empty. */
+.bk__spread { display: block; }
+@media (min-width: 780px) {
+  .bk__spread { display: grid; grid-template-columns: 320px minmax(0, 1fr); gap: var(--space-8); align-items: start; }
+  .bk__spread .bk__map { margin-top: 0; }
+}
+
+/* ─── blank planning pages ─────────────────────────────────────────────── */
+.bk__blank td { height: 26px; }
+.bk__rule-lines { margin-top: var(--space-4); }
+.bk__rule-lines div { border-bottom: 1px solid var(--color-line); height: 26px; }
+
+.state-msg { font-size: 13px; color: var(--color-dim); }
+.state-msg[hidden] { display: none; }
+
+.bk__foot {
+  margin-top: var(--space-8); padding-top: var(--space-4); border-top: var(--rule);
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.06em; color: var(--color-dim);
+}
+
+/* ─── print ────────────────────────────────────────────────────────────── */
+@page { size: A4; margin: 16mm 14mm; }
+
+@media print {
+  /* The site is dark. Paper is not. Flip the tokens rather than restyling every
+     rule — everything downstream reads from these. */
+  :root {
+    --color-bg: #ffffff;
+    --color-surface: #ffffff;
+    --color-raise: #f4f4f4;
+    --color-text: #111111;
+    --color-muted: #333333;
+    --color-dim: #555555;
+    --color-faint: #777777;
+    --color-line: rgba(0, 0, 0, 0.16);
+    --color-line-strong: rgba(0, 0, 0, 0.34);
+    /* Vermilion survives a mono printer as a mid grey; the violet does not. */
+    --color-accent: #b3300f;
+    --color-accent-2: #b3300f;
+    --color-accent-soft: transparent;
+    /* The document declares itself dark; on paper it is not. Without this some
+       browsers keep the dark scheme's default canvas and form colours. */
+    color-scheme: light;
+  }
+  html, body { background: #fff; color: #111; }
+  body { font-size: 9.6pt; line-height: 1.4; }
+  .noprint, .bk__actions { display: none !important; }
+
+  .bk { max-width: none; margin: 0; padding: 0; }
+  /* Nothing here is painted with a background: with "background graphics" off —
+     the default in some browsers — backgrounds simply are not printed, and a
+     layout that needed one would come out as text on nothing. Rules, borders,
+     strokes and ink are what carry this document. */
+  .bk__page {
+    break-before: page; border-top: 0; padding-top: 0; margin-top: 0;
+  }
+  .bk__page:first-child { break-before: auto; }
+  .bk__sector { break-before: page; }
+
+  .bk__h2 { font-size: 17pt; }
+  .bk__h3 { font-size: 11.5pt; margin: 14pt 0 4pt; }
+  .bk__cover-title { font-size: 30pt; }
+  .bk__lede { font-size: 10.5pt; }
+  .bk__note { font-size: 9.4pt; }
+  .bk__fine, .bk__mono { font-size: 8.4pt; }
+  .bk__glance { border-radius: 0; }
+  .bk__glance-n { font-size: 15pt; }
+  .bk__table { font-size: 8.6pt; }
+  .bk__table caption { font-size: 8.6pt; }
+  .bk__table th { font-size: 7pt; }
+  .bk__num, .bk__table td.bk__num { font-size: 8pt; }
+  .bk__todo { font-size: 7.6pt; border-radius: 0; }
+  .bk__blank td, .bk__rule-lines div { height: 8mm; }
+
+  /* Landmass fill is 40% of an A4 page in toner. Outline only. */
+  .atlas .india { fill: none; stroke: #111; stroke-width: 1.1; }
+  .atlas .neighbour { stroke: rgba(0,0,0,0.25); }
+  .atlas .route { stroke: #b3300f; stroke-width: 1.6; }
+  .atlas .route--planned { stroke: #777; stroke-dasharray: 4 3; opacity: 1; }
+  .atlas .stop { fill: #fff; stroke: #111; }
+  .atlas .tiles { display: none; }   /* tiles never print usefully */
+
+  /* Fixed in millimetres so a sector map is a known fraction of the sheet
+     rather than whatever the viewport happened to be. 420:470 → ~87mm tall. */
+  .bk__map { max-width: 78mm; margin: 4mm 0; }
+  .bk__map--master { max-width: 118mm; }
+  .bk__spread { display: block; }
+
+  table, .bk__card, .bk__stage { break-inside: avoid; }
+  h1, h2, h3 { break-after: avoid; }
+  tr { break-inside: avoid; }
+  /* …except the waypoint tables. The long east is 51 legs; told to avoid a break
+     it would be pushed whole to the next sheet and overflow it anyway, leaving a
+     blank page in front of the spill. Let it break between rows, and repeat the
+     column heads on the sheet it breaks onto. */
+  .bk__hops, .bk__blank { break-inside: auto; }
+  thead { display: table-header-group; }
+
+  /* Without this the flipped tokens print as the browser's default black-on-white
+     and the route line disappears. */
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+</style>
+</head>
+<body>
+
+<div class="bk__actions">
+  <a class="bk__back" href="/">← THE RIDE</a>
+  <span class="bk__spacer"></span>
+  <button type="button" class="bk__print noprint" id="bk-print">PRINT / SAVE AS PDF</button>
+</div>
+
+<main class="bk" id="bk">
+
+  <section class="bk__page bk__cover">
+    <p class="bk__eyebrow">ROUTE BOOK</p>
+    <h1 class="bk__cover-title">The pan-India loop</h1>
+    <p class="bk__cover-sub" id="bk-cover-sub">—</p>
+    <p class="bk__lede">
+      A loop from Trivandrum down to Kanyakumari, up the west coast into Kutch, over
+      the Himalaya to Ladakh, east across the Gangetic plain into Nepal, Bhutan and
+      the Northeast, and home down the east coast. It returns to Bangalore and Delhi
+      on the way, and those returns are where a rider can join it or leave it.
+    </p>
+    <hr class="bk__cover-rule">
+    <p class="bk__note">
+      This is the route as <em>drawn</em>, not a diary of the one running of it. Every
+      distance and every hour on these pages comes out of the plan file that generated
+      the loop; every rupee comes out of what that ride actually cost.
+    </p>
+    <p class="bk__fine">
+      Where this book has nothing to tell you — riding seasons, permits — it says so in
+      a dashed box and stops. None of it is guessed. Print it, carry it, and fill the
+      blanks in yourself.
+    </p>
+    <p class="state-msg" id="bk-loading" style="margin-top:24px">Loading the route…</p>
+    <p class="state-msg" id="bk-error" hidden style="margin-top:24px">
+      The route data could not be loaded. Reload, or read the loop on the
+      <a href="/">main page</a>.
+    </p>
+  </section>
+
+  <section class="bk__page" id="bk-at-a-glance">
+    <p class="bk__eyebrow">AT A GLANCE</p>
+    <h2 class="bk__h2">The shape of it</h2>
+    <div class="bk__glance" id="bk-glance"></div>
+    <p class="bk__note" id="bk-crossings"></p>
+
+    <h3 class="bk__h3">The five sectors</h3>
+    <p class="bk__note">
+      Each sector is a self-contained run between two points on the loop. Ride the
+      whole thing, or take one sector and go home from where you started.
+    </p>
+    <table class="bk__table" id="bk-sector-table"></table>
+  </section>
+
+  <section class="bk__page" id="bk-master">
+    <p class="bk__eyebrow">THE WHOLE LOOP</p>
+    <h2 class="bk__h2">Master map</h2>
+    <div class="bk__map bk__map--master"><svg class="atlas" id="bk-map-master" role="img" aria-label="The planned loop across India, Nepal and Bhutan"></svg></div>
+    <div class="bk__legend">
+      <span><i>——</i> the loop</span>
+      <span><i class="dim">○</i> sector ends and crossings</span>
+    </div>
+    <p class="bk__fine" style="margin-top:12px">
+      Straight lines between waypoints, not the road itself — the road is longer and
+      bendier than anything drawn at this scale can show. Distances and hours in the
+      tables are road figures, not the lengths of these lines.
+    </p>
+
+    <h3 class="bk__h3">Planned, and ridden</h3>
+    <p class="bk__note">
+      This is the loop as drawn, and it has been ridden once. A drawn line and a ridden
+      one are never quite the same thing, and where this one diverged is worth knowing
+      before you plan around it.
+    </p>
+    <div id="bk-diff"></div>
+  </section>
+
+  <!-- Sector spreads are inserted here at runtime, immediately before this anchor,
+       so they stay siblings of every other page and the print rules can key off
+       .bk__page rather than off any particular section being first or last. -->
+  <div id="bk-sectors-anchor" hidden></div>
+
+  <section class="bk__page" id="bk-costs">
+    <p class="bk__eyebrow">MONEY</p>
+    <h2 class="bk__h2">What it costs</h2>
+    <p class="bk__note">
+      There are no invented rates here. One rider's actual spend across this ride is
+      divided by the nights it took, and those per-night rates are applied to the
+      shape of the loop.
+    </p>
+    <div id="bk-costs-table"></div>
+    <p class="bk__fine" id="bk-costs-caveat" style="margin-top:16px"></p>
+  </section>
+
+  <section class="bk__page" id="bk-season">
+    <p class="bk__eyebrow">WHEN TO RIDE</p>
+    <h2 class="bk__h2">Season calendar</h2>
+    <p class="bk__note">
+      A loop this long has no single riding season. It crosses several, and they do not
+      agree with each other — which months work for which sector is a question of
+      research rather than of arithmetic, and nothing in the plan file answers it. The
+      rows below are filled in only where that research has been done and written down.
+    </p>
+    <table class="bk__table" id="bk-season-table"></table>
+    <p class="bk__fine" style="margin-top:16px">
+      A dashed box means this book has nothing to tell you about that sector. It does
+      not mean the sector is open, and it is not a shrug — dates and permits are the
+      part of a route book a rider acts on, so a gap is shown as a gap rather than
+      filled with something plausible. Find that information elsewhere, from a source
+      that is current, before you commit to dates.
+    </p>
+  </section>
+
+  <section class="bk__page" id="bk-planning">
+    <p class="bk__eyebrow">PLANNING</p>
+    <h2 class="bk__h2">Pages to write on</h2>
+    <p class="bk__note">
+      The loop has no dates of its own. These are for yours.
+    </p>
+
+    <h3 class="bk__h3">Sector planner</h3>
+    <p class="bk__fine" style="margin-bottom:12px">
+      Riding days are the projection from the costs page — riding time only, no rest
+      days. Add your own.
+    </p>
+    <table class="bk__table" id="bk-planner"></table>
+
+    <h3 class="bk__h3">Daily log</h3>
+    <table class="bk__table bk__blank" id="bk-log"></table>
+
+    <h3 class="bk__h3">Notes</h3>
+    <div class="bk__rule-lines" id="bk-lines"></div>
+  </section>
+
+  <!-- ── APPENDIX ANCHOR ──────────────────────────────────────────────────
+       Further sections belong here, between the planning pages and the closing
+       page. Anything added as <section class="bk__page"> picks up the page break,
+       the palette flip and the print sizing with no other change. -->
+
+  <section class="bk__page" id="bk-fork">
+    <p class="bk__eyebrow">THIS IS A TEMPLATE</p>
+    <h2 class="bk__h2">Take it and change it</h2>
+    <p class="bk__lede">
+      Nothing on these pages is proprietary and nothing about the loop is fixed. It is
+      a shape that works: two crossings, five sectors, three countries, and a set of
+      waypoints that can be cut, re-ordered or replaced.
+    </p>
+    <h3 class="bk__h3">The data behind this book</h3>
+    <p class="bk__note">
+      Every figure printed here is read at load time out of four files served from
+      this host, CORS enabled. Fetch them and build your own version.
+    </p>
+    <table class="bk__table" id="bk-files"></table>
+    <p class="bk__fine" id="bk-provenance" style="margin-top:16px"></p>
+    <p class="bk__foot">thegreatindiaride.prasanthsasikumar.com · route book</p>
+  </section>
+
+</main>
+
+<script src="atlas.js"></script>
+<script src="costs.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  var basemap = null, route = null, tpl = null, notes = null, costs = null;
+
+  var el = {
+    loading: document.getElementById('bk-loading'),
+    error: document.getElementById('bk-error'),
+    coverSub: document.getElementById('bk-cover-sub'),
+    glance: document.getElementById('bk-glance'),
+    crossings: document.getElementById('bk-crossings'),
+    sectorTable: document.getElementById('bk-sector-table'),
+    mapMaster: document.getElementById('bk-map-master'),
+    diff: document.getElementById('bk-diff'),
+    sectorsAnchor: document.getElementById('bk-sectors-anchor'),
+    costsTable: document.getElementById('bk-costs-table'),
+    costsCaveat: document.getElementById('bk-costs-caveat'),
+    seasonTable: document.getElementById('bk-season-table'),
+    planner: document.getElementById('bk-planner'),
+    log: document.getElementById('bk-log'),
+    lines: document.getElementById('bk-lines'),
+    files: document.getElementById('bk-files'),
+    provenance: document.getElementById('bk-provenance'),
+    print: document.getElementById('bk-print')
+  };
+
+  var num = function (n) { return Math.round(n).toLocaleString('en-IN'); };
+  var rupee = function (n) { return '₹' + Math.round(n).toLocaleString('en-IN'); };
+
+  // A note entry counts as written only when the author has written it. Empty and
+  // "TO WRITE ..." both mean the same thing: show the gap, print nothing else.
+  function written(s) {
+    return !!s && String(s).indexOf('TO WRITE') !== 0;
+  }
+
+  function elem(tag, cls, text) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text != null) e.textContent = text;
+    return e;
+  }
+
+  function todo(text) {
+    return elem('span', 'bk__todo', text);
+  }
+
+  function poiFor(place) {
+    var p = notes && notes.pois && notes.pois[place];
+    return p ? String(p) : '';
+  }
+
+  function head(table, cols) {
+    var thead = document.createElement('thead');
+    var tr = document.createElement('tr');
+    cols.forEach(function (c) {
+      var th = elem('th', c.num ? 'bk__num' : null, c.label);
+      if (c.width) th.style.width = c.width;
+      tr.appendChild(th);
+    });
+    thead.appendChild(tr);
+    table.appendChild(thead);
+    return thead;
+  }
+
+  /* ─── the maps ────────────────────────────────────────────────────────── */
+
+  function loopPoints() {
+    var all = [{ lat: tpl.hops[0].fromLat, lon: tpl.hops[0].fromLon }];
+    tpl.hops.forEach(function (h) { all.push({ lat: h.toLat, lon: h.toLon }); });
+    return all;
+  }
+
+  function masterMap(svg) {
+    var a = Atlas.create(svg, basemap, { width: 420, height: 470, pad: 10 });
+    if (!a) return;
+    a.drawBase();
+    a.drawRoute(loopPoints(), 'route');
+    // Only the sector ends: 94 waypoints as dots would read as a smudge on paper.
+    var marks = [{ lat: tpl.hops[0].fromLat, lon: tpl.hops[0].fromLon }];
+    tpl.sectors.forEach(function (s) {
+      var h = tpl.hops[s.hopTo];
+      marks.push({ lat: h.toLat, lon: h.toLon });
+    });
+    a.drawMarkers(marks);
+  }
+
+  function sectorMap(svg, sector) {
+    var a = Atlas.create(svg, basemap, { width: 420, height: 470, pad: 10 });
+    if (!a) return;
+    a.drawBase();
+    a.drawRoute(loopPoints(), 'route--planned');
+
+    var seg = [{ lat: tpl.hops[sector.hopFrom].fromLat, lon: tpl.hops[sector.hopFrom].fromLon }];
+    for (var i = sector.hopFrom; i <= sector.hopTo; i++) {
+      seg.push({ lat: tpl.hops[i].toLat, lon: tpl.hops[i].toLon });
+    }
+    a.drawRoute(seg, 'route');
+    a.drawMarkers([seg[0], seg[seg.length - 1]]);
+  }
+
+  /* ─── cover and glance ────────────────────────────────────────────────── */
+
+  function renderCover() {
+    el.coverSub.textContent =
+      num(tpl.totals.km) + ' KM · ' + tpl.totals.hops + ' LEGS · ' +
+      tpl.sectors.length + ' SECTORS · ' + tpl.totals.countries + ' COUNTRIES';
+  }
+
+  function renderGlance() {
+    var g = [
+      [num(tpl.totals.km), 'km'],
+      [String(tpl.totals.hops), 'legs'],
+      [num(tpl.totals.hours), 'riding hours'],
+      [String(tpl.totals.countries), 'countries'],
+      [String(tpl.crossings.length), 'crossings']
+    ];
+    el.glance.replaceChildren();
+    g.forEach(function (row) {
+      var d = document.createElement('div');
+      d.appendChild(elem('div', 'bk__glance-n', row[0]));
+      d.appendChild(elem('div', 'bk__glance-l', row[1]));
+      el.glance.appendChild(d);
+    });
+
+    var names = tpl.crossings.map(function (c) { return c.name; });
+    el.crossings.textContent = names.length
+      ? 'The loop passes through ' + names.join(' and ') +
+        ' twice. Those are the joins: start there, or stop there.'
+      : '';
+  }
+
+  function renderDiff() {
+    var d = notes && notes.plannedVsRidden;
+    el.diff.replaceChildren(written(d)
+      ? elem('p', 'bk__note', d)
+      : todo('Not written yet — which sections closed, and what was ridden instead.'));
+  }
+
+  function renderSectorTable() {
+    var t = el.sectorTable;
+    t.replaceChildren();
+    head(t, [
+      { label: 'Sector' }, { label: 'From → to' },
+      { label: 'Legs', num: true }, { label: 'km', num: true },
+      { label: 'Hours', num: true }, { label: 'Days', num: true }
+    ]);
+    var tb = document.createElement('tbody');
+    tpl.sectors.forEach(function (s) {
+      var tr = document.createElement('tr');
+      tr.appendChild(elem('td', null, s.id + ' · ' + s.title));
+      tr.appendChild(elem('td', null, s.from + ' → ' + s.to));
+      tr.appendChild(elem('td', 'bk__num', String(s.hopTo - s.hopFrom + 1)));
+      tr.appendChild(elem('td', 'bk__num', num(s.km)));
+      tr.appendChild(elem('td', 'bk__num', num(s.hours)));
+      tr.appendChild(elem('td', 'bk__num', costs ? String(daysFor(s.id)) : '—'));
+      tb.appendChild(tr);
+    });
+    var tot = document.createElement('tr');
+    tot.className = 'bk__strong';
+    tot.appendChild(elem('td', null, 'The whole loop'));
+    tot.appendChild(elem('td', null, tpl.sectors[0].from + ' → ' +
+      tpl.sectors[tpl.sectors.length - 1].to));
+    tot.appendChild(elem('td', 'bk__num', String(tpl.totals.hops)));
+    tot.appendChild(elem('td', 'bk__num', num(tpl.totals.km)));
+    tot.appendChild(elem('td', 'bk__num', num(tpl.totals.hours)));
+    tot.appendChild(elem('td', 'bk__num', costs ? String(costs.days) : '—'));
+    tb.appendChild(tot);
+    t.appendChild(tb);
+  }
+
+  function daysFor(id) {
+    var s = costs.sectors.filter(function (x) { return x.id === id; })[0];
+    return s ? s.days : 0;
+  }
+
+  /* ─── sector spreads ──────────────────────────────────────────────────── */
+
+  function sectorPage(s) {
+    var sec = elem('section', 'bk__page bk__sector');
+    sec.id = 'sector-' + s.id;
+
+    sec.appendChild(elem('p', 'bk__sector-id', 'SECTOR ' + s.id));
+    sec.appendChild(elem('h2', 'bk__h2', s.title));
+    sec.appendChild(elem('p', 'bk__mono', s.from + ' → ' + s.to));
+
+    var meta = elem('p', 'bk__sector-meta',
+      num(s.km) + ' km · ' + num(s.hours) + ' riding hours · ' +
+      (s.hopTo - s.hopFrom + 1) + ' legs' +
+      (costs ? ' · ' + daysFor(s.id) + ' riding days at ' + costs.hoursPerDay + ' h/day' : ''));
+    sec.appendChild(meta);
+
+    if (s.opensAt || s.closesAt) {
+      sec.appendChild(elem('span', 'bk__join',
+        s.opensAt && s.closesAt
+          ? 'JOIN AT ' + s.opensAt.toUpperCase() + ' · LEAVE AT ' + s.closesAt.toUpperCase()
+          : (s.opensAt ? 'JOIN AT ' + s.opensAt.toUpperCase()
+                       : 'LEAVE AT ' + s.closesAt.toUpperCase())));
+    }
+
+    var spread = elem('div', 'bk__spread');
+
+    var mapCol = document.createElement('div');
+    var mapBox = elem('div', 'bk__map');
+    var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('class', 'atlas');
+    svg.setAttribute('role', 'img');
+    svg.setAttribute('aria-label', 'Sector ' + s.id + ', ' + s.from + ' to ' + s.to +
+      ', drawn solid against the rest of the loop');
+    mapBox.appendChild(svg);
+    mapCol.appendChild(mapBox);
+    mapCol.appendChild(seasonBlock(s));
+    spread.appendChild(mapCol);
+
+    var tableCol = document.createElement('div');
+    s.stages.forEach(function (st) {
+      tableCol.appendChild(stageBlock(s, st));
+    });
+    spread.appendChild(tableCol);
+
+    sec.appendChild(spread);
+    // Atlas draws from the basemap and the viewBox, never from layout, so the SVG
+    // does not have to be in the document yet — and drawing now rather than on a
+    // timeout means a ⌘P a moment after load cannot catch an empty map.
+    if (basemap) sectorMap(svg, s);
+    return sec;
+  }
+
+  function seasonBlock(s) {
+    var box = document.createElement('div');
+    var note = (notes && notes.sectors && notes.sectors[s.id]) || {};
+    box.appendChild(elem('div', 'bk__stage-h', 'SEASON & PERMITS'));
+    if (written(note.season)) {
+      box.appendChild(elem('p', 'bk__note',
+        written(note.permits) ? note.season + ' ' + note.permits : note.season));
+    } else {
+      box.appendChild(todo('Not written yet — season window for this sector.'));
+    }
+    if (written(note.season) && !written(note.permits)) {
+      box.appendChild(todo('Not written yet — permits for this sector.'));
+    }
+    if (written(note.note)) box.appendChild(elem('p', 'bk__fine', note.note));
+    return box;
+  }
+
+  function stageBlock(s, st) {
+    var box = elem('div', 'bk__stage');
+    if (s.stages.length > 1) {
+      box.appendChild(elem('div', 'bk__stage-h',
+        st.id + ' · ' + st.title + ' · ' + num(st.km) + ' km'));
+    } else {
+      box.appendChild(elem('div', 'bk__stage-h', 'WAYPOINTS'));
+    }
+
+    var table = elem('table', 'bk__table bk__hops');
+    head(table, [
+      { label: '#', num: true, width: '7%' },
+      { label: 'To' },
+      { label: 'km', num: true },
+      { label: 'h', num: true }
+    ]);
+    var tb = document.createElement('tbody');
+    for (var i = st.hopFrom; i <= st.hopTo; i++) {
+      var hop = tpl.hops[i];
+      var tr = document.createElement('tr');
+      tr.appendChild(elem('td', 'bk__num', String(i - st.hopFrom + 1)));
+
+      var to = elem('td', null, hop.to);
+      var poi = poiFor(hop.to);
+      if (poi) to.appendChild(elem('span', 'bk__poi', ' — ' + poi));
+      tr.appendChild(to);
+
+      tr.appendChild(elem('td', 'bk__num', num(hop.km)));
+      tr.appendChild(elem('td', 'bk__num', hop.hours.toFixed(1)));
+      tb.appendChild(tr);
+    }
+    table.appendChild(tb);
+    box.appendChild(table);
+    return box;
+  }
+
+  function renderSectors() {
+    tpl.sectors.forEach(function (s) {
+      el.sectorsAnchor.parentNode.insertBefore(sectorPage(s), el.sectorsAnchor);
+    });
+  }
+
+  /* ─── costs ───────────────────────────────────────────────────────────── */
+
+  // Every figure comes from Costs.project(), which derives per-night rates from
+  // route.json's published totals — this ride, not the template, which has no
+  // nights of its own. The hours-per-day assumption behind the day counts is
+  // printed in the caption, not used silently.
+  function renderCosts() {
+    var table = elem('table', 'bk__table');
+    var cap = elem('caption', null,
+      'What one rider paid, early 2025 — ' + rupee(costs.observed.total) + ' across ' +
+      costs.nights + ' nights — applied to the template’s shape.');
+    table.appendChild(cap);
+
+    head(table, [{ label: 'What' }, { label: 'Rupees', num: true }]);
+    var tb = document.createElement('tbody');
+    function row(label, value, strong) {
+      var tr = document.createElement('tr');
+      if (strong) tr.className = 'bk__strong';
+      tr.appendChild(elem('td', null, label));
+      tr.appendChild(elem('td', 'bk__num', value));
+      tb.appendChild(tr);
+    }
+
+    row('A bed, per night', rupee(costs.perNight.stay));
+    row('Fuel, food, everything else, per night', rupee(costs.perNight.other));
+    row('Per night, all in', rupee(costs.perNight.total), true);
+
+    costs.sectors.forEach(function (c) {
+      var s = tpl.sectors.filter(function (x) { return x.id === c.id; })[0];
+      row(c.id + ' · ' + (s ? s.title : '') + ' · ' + c.days + ' days', rupee(c.total));
+    });
+    row('The whole loop · ' + costs.days + ' riding days', rupee(costs.total), true);
+    row('What this ride actually cost · ' + costs.nights + ' nights',
+      rupee(costs.observed.total), true);
+
+    table.appendChild(tb);
+    el.costsTable.replaceChildren(table);
+
+    // The loop is longer than the ride and comes out cheaper. That needs saying on
+    // the same page, or the book reads as a promise it cannot keep.
+    el.costsCaveat.textContent =
+      'The ' + costs.days + '-day, ' + rupee(costs.total) + ' projection is riding time ' +
+      'only: days are estimated at ' + costs.hoursPerDay + ' hours a day with no rest ' +
+      'days built in. That is why the longer loop comes out below the ' +
+      rupee(costs.observed.total) + ' actually spent over ' + costs.nights + ' nights — ' +
+      'that ride included rest, weather and sightseeing days, and this figure has none. ' +
+      'Treat it as a floor, not a forecast. These are rates that were paid, not a quote, ' +
+      'and they carry no bike, no shipping, no flights and no repairs.';
+  }
+
+  /* ─── season calendar ─────────────────────────────────────────────────── */
+
+  function renderSeason() {
+    var t = el.seasonTable;
+    t.replaceChildren();
+    head(t, [
+      { label: 'Sector', width: '22%' },
+      { label: 'From → to', width: '22%' },
+      { label: 'When to ride' },
+      { label: 'Permits', width: '20%' }
+    ]);
+    var tb = document.createElement('tbody');
+    tpl.sectors.forEach(function (s) {
+      var note = (notes && notes.sectors && notes.sectors[s.id]) || {};
+      var tr = document.createElement('tr');
+      tr.appendChild(elem('td', null, s.id + ' · ' + s.title));
+      tr.appendChild(elem('td', null, s.from + ' → ' + s.to));
+
+      var season = document.createElement('td');
+      if (written(note.season)) season.textContent = note.season;
+      else season.appendChild(todo('Not written yet'));
+      tr.appendChild(season);
+
+      var permits = document.createElement('td');
+      if (written(note.permits)) permits.textContent = note.permits;
+      else permits.appendChild(todo('Not written yet'));
+      tr.appendChild(permits);
+
+      tb.appendChild(tr);
+    });
+    t.appendChild(tb);
+  }
+
+  /* ─── planning pages ──────────────────────────────────────────────────── */
+
+  function renderPlanner() {
+    var t = el.planner;
+    t.replaceChildren();
+    head(t, [
+      { label: 'Sector' },
+      { label: 'Riding days', num: true },
+      { label: 'Rest days', num: true },
+      { label: 'Start' },
+      { label: 'Finish' }
+    ]);
+    var tb = document.createElement('tbody');
+    tpl.sectors.forEach(function (s) {
+      var tr = document.createElement('tr');
+      tr.appendChild(elem('td', null, s.id + ' · ' + s.title));
+      tr.appendChild(elem('td', 'bk__num', costs ? String(daysFor(s.id)) : ''));
+      tr.appendChild(elem('td', 'bk__num', ''));
+      tr.appendChild(elem('td', null, ''));
+      tr.appendChild(elem('td', null, ''));
+      tb.appendChild(tr);
+    });
+    var tot = document.createElement('tr');
+    tot.className = 'bk__strong';
+    tot.appendChild(elem('td', null, 'Total'));
+    tot.appendChild(elem('td', 'bk__num', costs ? String(costs.days) : ''));
+    tot.appendChild(elem('td', 'bk__num', ''));
+    tot.appendChild(elem('td', null, ''));
+    tot.appendChild(elem('td', null, ''));
+    tb.appendChild(tot);
+    t.appendChild(tb);
+  }
+
+  function renderLog() {
+    var t = el.log;
+    t.replaceChildren();
+    head(t, [
+      { label: 'Date', width: '12%' },
+      { label: 'From' },
+      { label: 'To' },
+      { label: 'km', num: true, width: '9%' },
+      { label: 'Odo', num: true, width: '11%' },
+      { label: 'Spent', num: true, width: '11%' },
+      { label: 'Slept at', width: '18%' }
+    ]);
+    var tb = document.createElement('tbody');
+    for (var r = 0; r < 24; r++) {
+      var tr = document.createElement('tr');
+      for (var c = 0; c < 7; c++) tr.appendChild(elem('td', null, ''));
+      tb.appendChild(tr);
+    }
+    t.appendChild(tb);
+  }
+
+  function renderLines() {
+    el.lines.replaceChildren();
+    for (var i = 0; i < 16; i++) el.lines.appendChild(document.createElement('div'));
+  }
+
+  /* ─── the closing page ────────────────────────────────────────────────── */
+
+  var FILES = [
+    ['template.json', 'The loop: sectors, stages, every leg with its coordinates, distance and hours.'],
+    ['template-notes.json', 'The hand-written part: seasons, permits, points of interest. What is missing here is what prints as a dashed box.'],
+    ['route.json', 'The ride that was actually run: stops, nights and spend. The cost projection is derived from this.'],
+    ['basemap.json', 'Country outlines, for the maps.']
+  ];
+
+  function renderFiles() {
+    var t = el.files;
+    t.replaceChildren();
+    head(t, [{ label: 'File', width: '28%' }, { label: 'What is in it' }]);
+    var tb = document.createElement('tbody');
+    FILES.forEach(function (f) {
+      var tr = document.createElement('tr');
+      var a = document.createElement('a');
+      a.href = '/' + f[0];
+      a.textContent = '/' + f[0];
+      var td = document.createElement('td');
+      td.className = 'bk__mono';
+      td.appendChild(a);
+      tr.appendChild(td);
+      tr.appendChild(elem('td', null, f[1]));
+      tb.appendChild(tr);
+    });
+    t.appendChild(tb);
+
+    var bits = [];
+    if (tpl.source) bits.push('The loop was generated from ' + tpl.source + '.');
+    if (tpl.generated) {
+      bits.push('This book was built from data generated ' +
+        String(tpl.generated).slice(0, 10) + '.');
+    }
+    if (written(notes && notes.sourcing)) bits.push(notes.sourcing);
+    el.provenance.textContent = bits.join(' ');
+
+    if (!written(notes && notes.sourcing)) {
+      el.provenance.parentNode.insertBefore(
+        todo('Not written yet — how this loop was distilled, and from what.'),
+        el.provenance.nextSibling);
+    }
+  }
+
+  /* ─── boot ────────────────────────────────────────────────────────────── */
+
+  el.print.addEventListener('click', function () { window.print(); });
+
+  function req(url) {
+    return fetch(url, { cache: 'no-cache' }).then(function (r) {
+      if (!r.ok) throw new Error(url + ': HTTP ' + r.status);
+      return r.json();
+    });
+  }
+  function opt(url) {
+    return fetch(url).then(function (r) { return r.ok ? r.json() : null; })
+      .catch(function () { return null; });
+  }
+
+  Promise.all([
+    req('template.json'),
+    req('route.json'),
+    opt('template-notes.json'),
+    opt('basemap.json')
+  ]).then(function (res) {
+    tpl = res[0];
+    route = res[1];
+    notes = res[2] || {};
+    basemap = res[3];
+
+    costs = Costs.project(route, tpl, notes.hoursPerDay || 6);
+
+    el.loading.remove();
+    renderCover();
+    renderGlance();
+    renderSectorTable();
+    renderDiff();
+    if (basemap) masterMap(el.mapMaster);
+    renderSectors();
+    renderCosts();
+    renderSeason();
+    renderPlanner();
+    renderLog();
+    renderLines();
+    renderFiles();
+  }).catch(function (err) {
+    if (el.loading) el.loading.remove();
+    el.error.hidden = false;
+    console.error(err);
+  });
+})();
+</script>
+</body>
+</html>
