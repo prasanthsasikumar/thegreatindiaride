@@ -667,7 +667,10 @@ button { font: inherit; color: inherit; }
 
   var manifest = null, basemap = null;
   var legs = [], regionsFlat = [], flatClips = [];
-  var activeIdx = 0, lbPos = -1;
+  // activeIdx names the block you are reading; activeIdxs is every block sharing
+  // its row, which above 1400px is two of them. Both light on the map, because
+  // both are on screen and both are the same moment of the ride.
+  var activeIdx = 0, activeIdxs = [0], lbPos = -1;
   var expanded = {};
 
   // The lightbox builds a fresh <video> per clip, so unmuting used to last exactly
@@ -1467,22 +1470,44 @@ button { font: inherit; color: inherit; }
     if (mode === 'map') drawTiles(); else clearTiles();
   }
 
+  // Which blocks sit on the same row as this one. Two-up rows start level, so a
+  // majority vertical overlap with the shorter of the pair is the test; stacked
+  // blocks only ever touch at an edge and never qualify.
+  function rowMates(idx) {
+    var node = document.getElementById('region-' + idx);
+    if (!node) return [idx];
+    var box = node.getBoundingClientRect();
+    var set = [];
+    document.querySelectorAll('[data-region-idx]').forEach(function (n) {
+      var b = n.getBoundingClientRect();
+      var over = Math.min(b.bottom, box.bottom) - Math.max(b.top, box.top);
+      if (over > Math.min(b.height, box.height) * 0.5) set.push(+n.dataset.regionIdx);
+    });
+    set.sort(function (a, b) { return a - b; });
+    return set.length ? set : [idx];
+  }
+
   function syncMap() {
     mapStops.forEach(function (d) {
-      var on = +d.dataset.idx === activeIdx;
+      var on = activeIdxs.indexOf(+d.dataset.idx) !== -1;
       var sel = +d.dataset.stop === selStop;
       d.dataset.active = String(on);
       d.dataset.sel = String(sel);
       d.setAttribute('r', sel ? 5 : (on ? 4 : 2.6));
     });
-    var r = regionsFlat.filter(function (x) { return x.index === activeIdx; })[0];
-    if (r) { el.badge.hidden = false; el.badge.textContent = r.num + ' · ' + r.name; }
-    else el.badge.hidden = true;
+    var rs = activeIdxs.map(function (i) {
+      return regionsFlat.filter(function (x) { return x.index === i; })[0];
+    }).filter(Boolean);
+    if (rs.length) {
+      el.badge.hidden = false;
+      el.badge.textContent = rs[0].num + ' · ' + rs.map(function (x) { return x.name; }).join(' + ');
+    } else el.badge.hidden = true;
   }
 
   /* ─── navigation ────────────────────────────────────────────────────── */
   function jump(idx) {
     activeIdx = idx;
+    activeIdxs = rowMates(idx);
     syncMap(); syncStrip();
     if (!DESKTOP.matches) setExpanded(idx, true);
 
@@ -1506,7 +1531,12 @@ button { font: inherit; color: inherit; }
       document.querySelectorAll('[data-region-idx]').forEach(function (n) {
         if (n.getBoundingClientRect().top <= line) cur = +n.dataset.regionIdx;
       });
-      if (cur !== activeIdx) { activeIdx = cur; syncMap(); syncStrip(); }
+      var mates = rowMates(cur);
+      // Name the block you reach first when reading, not whichever the sweep
+      // happened to finish on — the right-hand one of a pair used to win.
+      if (mates[0] !== activeIdx || mates.length !== activeIdxs.length) {
+        activeIdx = mates[0]; activeIdxs = mates; syncMap(); syncStrip();
+      }
     });
   }, { passive: true });
 
