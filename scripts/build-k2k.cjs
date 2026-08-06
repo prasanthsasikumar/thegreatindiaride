@@ -1,7 +1,7 @@
 /*
  * build-k2k.cjs: writes k2k.json, the two lines of a Kanyakumari-to-Kashmir ride.
  *
- *   node build-k2k.cjs
+ *   node scripts/build-k2k.cjs
  *
  * K2K is the prestige pan-India route and the one this site's own loop already
  * contains most of. It is drawn here the way riders describe it and the way the
@@ -38,9 +38,9 @@
 
 const fs = require('fs');
 
-const TEMPLATE_FILE = 'template.json';
+const TEMPLATE_FILE = 'data/template.json';
 const CACHE_FILE = '.k2kcache.json';
-const OUT_FILE = 'k2k.json';
+const OUT_FILE = 'data/k2k.json';
 
 // Nominatim asks for a descriptive UA and max 1 req/sec. We respect both.
 const USER_AGENT = 'thegreatindiaride-k2k/1.0 (+https://thegreatindiaride.prasanthsasikumar.com)';

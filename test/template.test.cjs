@@ -1,6 +1,6 @@
 const { test } = require('node:test');
 const assert = require('node:assert');
-const { parseCsv, buildTemplate } = require('../build-template.cjs');
+const { parseCsv, buildTemplate } = require('../scripts/build-template.cjs');
 
 // A trimmed stand-in for the real sheet: five hops, one of them arriving at
 // Bengaluru, so a crossing has to be detected without the full 97 rows.

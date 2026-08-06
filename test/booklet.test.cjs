@@ -165,8 +165,8 @@ function render() {
   ctx.window = ctx;
   ctx.globalThis = ctx;
   vm.createContext(ctx);
-  vm.runInContext(fs.readFileSync(path.join(ROOT, 'atlas.js'), 'utf8'), ctx);
-  vm.runInContext(fs.readFileSync(path.join(ROOT, 'costs.js'), 'utf8'), ctx);
+  vm.runInContext(fs.readFileSync(path.join(ROOT, 'assets/atlas.js'), 'utf8'), ctx);
+  vm.runInContext(fs.readFileSync(path.join(ROOT, 'assets/costs.js'), 'utf8'), ctx);
   vm.runInContext(html.match(/<script>([\s\S]*?)<\/script>/)[1], ctx);
 
   // The page boots off Promise.all; the fetch stub resolves synchronously, so one
@@ -177,9 +177,9 @@ function render() {
   return rendered;
 }
 
-const TEMPLATE = JSON.parse(fs.readFileSync(path.join(ROOT, 'template.json'), 'utf8'));
-const NOTES = JSON.parse(fs.readFileSync(path.join(ROOT, 'template-notes.json'), 'utf8'));
-const RESEARCH = JSON.parse(fs.readFileSync(path.join(ROOT, 'research.json'), 'utf8'));
+const TEMPLATE = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/template.json'), 'utf8'));
+const NOTES = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/template-notes.json'), 'utf8'));
+const RESEARCH = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/research.json'), 'utf8'));
 
 test('the book boots without falling into its error state', async function () {
   const { byId } = await render();
@@ -504,7 +504,7 @@ test('the K2K page keeps the cited highway apart from the measured half', async 
   // ever stops naming itself as measured, the page reads as though somebody
   // measured NH-44 here. Nobody did.
   const { main } = await render();
-  const K2K = JSON.parse(fs.readFileSync(path.join(ROOT, 'k2k.json'), 'utf8'));
+  const K2K = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/k2k.json'), 'utf8'));
   const page = main.collect(function (n) { return n.id === 'bk-k2k'; })[0];
   assert.ok(page, 'the K2K page was rendered');
   assert.ok(hasClass(page, 'bk__page'), 'and it is a book page');

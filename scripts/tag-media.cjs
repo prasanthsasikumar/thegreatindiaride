@@ -1,7 +1,7 @@
 /*
  * tag-media.cjs: joins an Instagram data export against media/ and writes tags.json.
  *
- *   node tag-media.cjs <path-to-instagram-export>
+ *   node scripts/tag-media.cjs <path-to-instagram-export>
  *
  * The export is transient (Instagram expires the download after 4 days) and holds a
  * lot of unrelated personal data, so it stays outside the repo. This script reads the
@@ -35,8 +35,8 @@ const path = require('path');
 
 const EXPORT_DIR = process.argv[2];
 const CACHE_FILE = '.geocache.json';
-const OVERRIDES_FILE = 'overrides.json';
-const OUT_FILE = 'tags.json';
+const OVERRIDES_FILE = 'data/overrides.json';
+const OUT_FILE = 'data/tags.json';
 
 // Nominatim asks for a descriptive UA and max 1 req/sec. We respect both.
 const USER_AGENT = 'thegreatindiaride-tagger/1.0 (+https://thegreatindiaride.prasanthsasikumar.com)';
@@ -48,7 +48,7 @@ const CANDIDATES = 6;    // length of the shortlist offered in the UI dropdown
 const LOCAL_UTC_OFFSET_MIN = 330;
 
 if (!EXPORT_DIR) {
-  console.error('Usage: node tag-media.cjs <path-to-instagram-export>');
+  console.error('Usage: node scripts/tag-media.cjs <path-to-instagram-export>');
   process.exit(1);
 }
 

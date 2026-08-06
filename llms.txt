@@ -36,13 +36,13 @@ sheet routing around the Bangladesh border and is not a rideable day.
 
 All files are served from https://thegreatindiaride.prasanthsasikumar.com with CORS enabled. Fetch them directly.
 
-- [template.json](https://thegreatindiaride.prasanthsasikumar.com/template.json): The planned loop: five sectors, 97 hops, every waypoint with coordinates, distance and riding hours. This is the file to fork if you want to plan your own route.
-- [template-notes.json](https://thegreatindiaride.prasanthsasikumar.com/template-notes.json): The hand-written guidance: riding seasons, permits, points of interest. Entries reading TO WRITE are unwritten and render as a visible gap.
-- [route.json](https://thegreatindiaride.prasanthsasikumar.com/route.json): The ride as actually run: 93 nights, every place slept, and what was spent.
-- [research.json](https://thegreatindiaride.prasanthsasikumar.com/research.json): Field research into the xBhp "The Tourer" archive, India's oldest motorcycling forum, transcribed with its own caveats attached.
-- [k2k.json](https://thegreatindiaride.prasanthsasikumar.com/k2k.json): Kanyakumari to Kashmir as two lines, one cited and one measured, with the provenance of every coordinate.
-- [basemap.json](https://thegreatindiaride.prasanthsasikumar.com/basemap.json): Country outlines for the maps, from Natural Earth's India point-of-view file.
-- [manifest.json](https://thegreatindiaride.prasanthsasikumar.com/manifest.json): The media library: 222 clips from the ride, with capture time, region and caption.
+- [data/template.json](https://thegreatindiaride.prasanthsasikumar.com/data/template.json): The planned loop: five sectors, 97 hops, every waypoint with coordinates, distance and riding hours. This is the file to fork if you want to plan your own route.
+- [data/template-notes.json](https://thegreatindiaride.prasanthsasikumar.com/data/template-notes.json): The hand-written guidance: riding seasons, permits, points of interest. Entries reading TO WRITE are unwritten and render as a visible gap.
+- [data/route.json](https://thegreatindiaride.prasanthsasikumar.com/data/route.json): The ride as actually run: 93 nights, every place slept, and what was spent.
+- [data/research.json](https://thegreatindiaride.prasanthsasikumar.com/data/research.json): Field research into the xBhp "The Tourer" archive, India's oldest motorcycling forum, transcribed with its own caveats attached.
+- [data/k2k.json](https://thegreatindiaride.prasanthsasikumar.com/data/k2k.json): Kanyakumari to Kashmir as two lines, one cited and one measured, with the provenance of every coordinate.
+- [data/basemap.json](https://thegreatindiaride.prasanthsasikumar.com/data/basemap.json): Country outlines for the maps, from Natural Earth's India point-of-view file.
+- [data/manifest.json](https://thegreatindiaride.prasanthsasikumar.com/data/manifest.json): The media library: 222 clips from the ride, with capture time, region and caption.
 
 ## What this material does not claim
 

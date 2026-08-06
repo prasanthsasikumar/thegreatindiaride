@@ -13,11 +13,11 @@
 <meta property="og:url" content="https://thegreatindiaride.prasanthsasikumar.com/booklet.html">
 <meta property="og:title" content="The route book for the pan-India loop">
 <meta property="og:description" content="A printable route book for a pan-India motorcycle loop: sector maps, waypoint tables, what it costs, the permit calendar, and blank pages to plan on.">
-<meta property="og:image" content="https://thegreatindiaride.prasanthsasikumar.com/hero.jpg">
+<meta property="og:image" content="https://thegreatindiaride.prasanthsasikumar.com/assets/hero.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="alternate" type="text/markdown" href="/llms.txt" title="Plain-text summary of this site and its data">
-<link rel="icon" type="image/png" href="favicon.png">
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -239,51 +239,51 @@
    "distribution": [
     {
      "@type": "DataDownload",
-     "name": "template.json",
+     "name": "data/template.json",
      "description": "The planned loop: five sectors, 97 hops, every waypoint with coordinates, distance and riding hours. This is the file to fork if you want to plan your own route.",
-     "contentUrl": "https://thegreatindiaride.prasanthsasikumar.com/template.json",
+     "contentUrl": "https://thegreatindiaride.prasanthsasikumar.com/data/template.json",
      "encodingFormat": "application/json"
     },
     {
      "@type": "DataDownload",
-     "name": "template-notes.json",
+     "name": "data/template-notes.json",
      "description": "The hand-written guidance: riding seasons, permits, points of interest. Entries reading TO WRITE are unwritten and render as a visible gap.",
-     "contentUrl": "https://thegreatindiaride.prasanthsasikumar.com/template-notes.json",
+     "contentUrl": "https://thegreatindiaride.prasanthsasikumar.com/data/template-notes.json",
      "encodingFormat": "application/json"
     },
     {
      "@type": "DataDownload",
-     "name": "route.json",
+     "name": "data/route.json",
      "description": "The ride as actually run: 93 nights, every place slept, and what was spent.",
-     "contentUrl": "https://thegreatindiaride.prasanthsasikumar.com/route.json",
+     "contentUrl": "https://thegreatindiaride.prasanthsasikumar.com/data/route.json",
      "encodingFormat": "application/json"
     },
     {
      "@type": "DataDownload",
-     "name": "research.json",
+     "name": "data/research.json",
      "description": "Field research into the xBhp \"The Tourer\" archive, India's oldest motorcycling forum, transcribed with its own caveats attached.",
-     "contentUrl": "https://thegreatindiaride.prasanthsasikumar.com/research.json",
+     "contentUrl": "https://thegreatindiaride.prasanthsasikumar.com/data/research.json",
      "encodingFormat": "application/json"
     },
     {
      "@type": "DataDownload",
-     "name": "k2k.json",
+     "name": "data/k2k.json",
      "description": "Kanyakumari to Kashmir as two lines, one cited and one measured, with the provenance of every coordinate.",
-     "contentUrl": "https://thegreatindiaride.prasanthsasikumar.com/k2k.json",
+     "contentUrl": "https://thegreatindiaride.prasanthsasikumar.com/data/k2k.json",
      "encodingFormat": "application/json"
     },
     {
      "@type": "DataDownload",
-     "name": "basemap.json",
+     "name": "data/basemap.json",
      "description": "Country outlines for the maps, from Natural Earth's India point-of-view file.",
-     "contentUrl": "https://thegreatindiaride.prasanthsasikumar.com/basemap.json",
+     "contentUrl": "https://thegreatindiaride.prasanthsasikumar.com/data/basemap.json",
      "encodingFormat": "application/json"
     },
     {
      "@type": "DataDownload",
-     "name": "manifest.json",
+     "name": "data/manifest.json",
      "description": "The media library: 222 clips from the ride, with capture time, region and caption.",
-     "contentUrl": "https://thegreatindiaride.prasanthsasikumar.com/manifest.json",
+     "contentUrl": "https://thegreatindiaride.prasanthsasikumar.com/data/manifest.json",
      "encodingFormat": "application/json"
     }
    ]
@@ -1173,8 +1173,8 @@ td .bk__todo { margin-top: 0; }
 
 </main>
 
-<script src="atlas.js"></script>
-<script src="costs.js"></script>
+<script src="assets/atlas.js"></script>
+<script src="assets/costs.js"></script>
 <script>
 (function () {
   'use strict';
@@ -2191,12 +2191,12 @@ td .bk__todo { margin-top: 0; }
   /* ─── the closing page ────────────────────────────────────────────────── */
 
   var FILES = [
-    ['template.json', 'The loop: sectors, stages, every leg with its coordinates, distance and hours.'],
-    ['template-notes.json', 'The hand-written part: seasons, permits, points of interest. What is missing here is what prints as a dashed box.'],
-    ['route.json', 'The ride that was actually run: stops, nights and spend. The cost projection is derived from this.'],
-    ['basemap.json', 'Country outlines, for the maps.'],
-    ['k2k.json', 'Kanyakumari to Kashmir as two lines, one cited and one measured. Every point says where its coordinate came from.'],
-    ['research.json', 'The xBhp archive field research, transcribed. The photographs it cites are under /media/research and belong to the riders credited beside them.']
+    ['data/template.json', 'The loop: sectors, stages, every leg with its coordinates, distance and hours.'],
+    ['data/template-notes.json', 'The hand-written part: seasons, permits, points of interest. What is missing here is what prints as a dashed box.'],
+    ['data/route.json', 'The ride that was actually run: stops, nights and spend. The cost projection is derived from this.'],
+    ['data/basemap.json', 'Country outlines, for the maps.'],
+    ['data/k2k.json', 'Kanyakumari to Kashmir as two lines, one cited and one measured. Every point says where its coordinate came from.'],
+    ['data/research.json', 'The xBhp archive field research, transcribed. The photographs it cites are under /media/research and belong to the riders credited beside them.']
   ];
 
   function renderFiles() {
@@ -2325,17 +2325,17 @@ td .bk__todo { margin-top: 0; }
   }
 
   Promise.all([
-    req('template.json'),
-    req('route.json'),
-    opt('template-notes.json'),
-    opt('basemap.json'),
+    req('data/template.json'),
+    req('data/route.json'),
+    opt('data/template-notes.json'),
+    opt('data/basemap.json'),
     // Optional on purpose: the route pages must print whole with or without the
     // appendix, so a missing research.json costs the book its appendix and nothing
     // else.
-    opt('research.json'),
+    opt('data/research.json'),
     // Optional for the same reason: without it the book loses one page and nothing
     // else moves.
-    opt('k2k.json')
+    opt('data/k2k.json')
   ]).then(function (res) {
     tpl = res[0];
     route = res[1];

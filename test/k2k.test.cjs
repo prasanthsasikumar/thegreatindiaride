@@ -9,13 +9,13 @@ const ROOT = path.join(__dirname, '..');
 const read = function (f) { return fs.readFileSync(path.join(ROOT, f), 'utf8'); };
 const readJson = function (f) { return JSON.parse(read(f)); };
 
-const TEMPLATE = readJson('template.json');
-const RESEARCH = readJson('research.json');
+const TEMPLATE = readJson('data/template.json');
+const RESEARCH = readJson('data/research.json');
 
 // k2k.json is generated, so its absence is a real failure rather than a skip: the
 // page and the book both read it.
 test('k2k.json exists and carries both lines', function () {
-  const k = readJson('k2k.json');
+  const k = readJson('data/k2k.json');
   assert.ok(k.north, 'the northbound line');
   assert.ok(k.south, 'the southbound line');
   assert.ok(Array.isArray(k.north.points));
@@ -38,7 +38,7 @@ test('k2k.json exists and carries both lines', function () {
     'one point per measured leg, plus the leg it starts from');
 });
 
-const K2K = fs.existsSync(path.join(ROOT, 'k2k.json')) ? readJson('k2k.json') : { north: {}, south: {} };
+const K2K = fs.existsSync(path.join(ROOT, 'data/k2k.json')) ? readJson('data/k2k.json') : { north: {}, south: {} };
 const allPoints = [].concat(K2K.north.points || [], K2K.south.points || []);
 
 test('every point on both lines is a finite coordinate inside India', function () {
@@ -297,9 +297,9 @@ test('the stylesheet is what steps the other lines back, and puts them back afte
 });
 
 test('both pages read k2k.json rather than repeating its figures', function () {
-  assert.ok(PAGE.indexOf("'k2k.json'") >= 0, 'index.html fetches k2k.json');
+  assert.ok(PAGE.indexOf("'data/k2k.json'") >= 0, 'index.html fetches k2k.json');
   const book = read('booklet.html');
-  assert.ok(book.indexOf("'k2k.json'") >= 0, 'booklet.html fetches k2k.json');
+  assert.ok(book.indexOf("'data/k2k.json'") >= 0, 'booklet.html fetches k2k.json');
   // Neither page may hard-code the highway length: it is cited, and a citation that
   // exists in two places is a citation that will disagree with itself.
   assert.ok(PAGE.indexOf('3,745') < 0, 'index.html hard-codes the cited distance');
@@ -336,7 +336,7 @@ test('the cache this build writes is ignored, like the other geocode caches', fu
 const EM_DASH = '\u2014';
 
 test('nothing this task added uses an em dash: the files it owns outright', function () {
-  ['build-k2k.cjs', 'k2k.json', 'test/k2k.test.cjs'].forEach(function (f) {
+  ['scripts/build-k2k.cjs', 'data/k2k.json', 'test/k2k.test.cjs'].forEach(function (f) {
     assert.ok(read(f).indexOf(EM_DASH) < 0, f + ' contains an em dash');
   });
 });

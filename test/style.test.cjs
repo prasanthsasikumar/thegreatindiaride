@@ -52,7 +52,7 @@ const QUOTED_THREAD_TITLES = [
  * does not survive the next regeneration. The em dashes are therefore allowed, but
  * only inside a "caption" value: any other line in either file is in scope.
  */
-const CAPTION_ONLY = ['manifest.json', 'tags.json'];
+const CAPTION_ONLY = ['data/manifest.json', 'data/tags.json'];
 
 function trackedFiles() {
   const out = execFileSync('git', ['ls-files', '-z'], { cwd: ROOT, encoding: 'utf8' });
@@ -88,7 +88,7 @@ test('no tracked file carries an em dash', function () {
       return;                                   // unreadable is not a style problem
     }
     if (text.indexOf('\u0000') >= 0) return;    // binary that slipped the extension list
-    if (file === 'research.json') {
+    if (file === 'data/research.json') {
       QUOTED_THREAD_TITLES.forEach(function (t) {
         assert.ok(text.indexOf(t) >= 0,
           'the exception list names a thread title research.json no longer contains: ' + t);
@@ -130,8 +130,8 @@ function enDashTokens(text) {
 }
 
 test('every en dash in the transcribed files survives, character for character', function () {
-  const research = fs.readFileSync(path.join(ROOT, 'research.json'), 'utf8');
-  const notes = fs.readFileSync(path.join(ROOT, 'template-notes.json'), 'utf8');
+  const research = fs.readFileSync(path.join(ROOT, 'data/research.json'), 'utf8');
+  const notes = fs.readFileSync(path.join(ROOT, 'data/template-notes.json'), 'utf8');
 
   assert.deepStrictEqual(enDashTokens(research), [
     '0–2',
@@ -173,9 +173,9 @@ test('every en dash in the transcribed files survives, character for character',
  * here instead.
  */
 test('the ranges that moved out of research.json still print from their one home', function () {
-  const k2k = fs.readFileSync(path.join(ROOT, 'k2k.json'), 'utf8');
-  const notes = fs.readFileSync(path.join(ROOT, 'template-notes.json'), 'utf8');
-  const research = fs.readFileSync(path.join(ROOT, 'research.json'), 'utf8');
+  const k2k = fs.readFileSync(path.join(ROOT, 'data/k2k.json'), 'utf8');
+  const notes = fs.readFileSync(path.join(ROOT, 'data/template-notes.json'), 'utf8');
+  const research = fs.readFileSync(path.join(ROOT, 'data/research.json'), 'utf8');
 
   // 6,000–11,000 km: the real length of a K2K, on the K2K page, off k2k.json.
   const rw = JSON.parse(k2k).realWorld;

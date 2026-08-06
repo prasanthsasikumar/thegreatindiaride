@@ -4,15 +4,15 @@ const fs = require('fs');
 const path = require('path');
 
 const ROOT = path.join(__dirname, '..');
-const SEO = require(path.join(ROOT, 'build-seo.cjs'));
+const SEO = require(path.join(ROOT, 'scripts/build-seo.cjs'));
 
 function read(f) { return fs.readFileSync(path.join(ROOT, f), 'utf8'); }
 function json(f) { return JSON.parse(read(f)); }
 
-const TEMPLATE = json('template.json');
-const ROUTE = json('route.json');
-const NOTES = json('template-notes.json');
-const RESEARCH = json('research.json');
+const TEMPLATE = json('data/template.json');
+const ROUTE = json('data/route.json');
+const NOTES = json('data/template-notes.json');
+const RESEARCH = json('data/research.json');
 
 /*
  * build-seo.cjs writes four things that a reader never sees and a crawler reads first:
@@ -25,12 +25,12 @@ const RESEARCH = json('research.json');
  * data on disk and require the committed copy to match, so a rebuilt sheet that never
  * reached the crawler-facing files cannot ship.
  *
- * If one of these fails, the fix is `node build-seo.cjs`, not an edit to the artefact.
+ * If one of these fails, the fix is `node scripts/build-seo.cjs`, not an edit to the artefact.
  */
 
 test('robots.txt on disk is what the generator writes', function () {
   assert.strictEqual(read('robots.txt'), SEO.robots(),
-    'stale robots.txt: run node build-seo.cjs');
+    'stale robots.txt: run node scripts/build-seo.cjs');
 });
 
 test('robots.txt allows everything, names the AI crawlers, and declares the sitemap', function () {
@@ -67,7 +67,7 @@ test('llms.txt carries the current figures', function () {
   // Compared whole rather than sampled. Every number in it comes from the data files,
   // so any drift at all is a rebuild that did not happen.
   assert.strictEqual(read('llms.txt'), SEO.llms(TEMPLATE, ROUTE, NOTES, RESEARCH),
-    'stale llms.txt: run node build-seo.cjs');
+    'stale llms.txt: run node scripts/build-seo.cjs');
 });
 
 test('llms.txt states the gaps rather than only the figures', function () {
@@ -84,7 +84,7 @@ test('llms.txt states the gaps rather than only the figures', function () {
 function embedded(file) {
   const html = read(file);
   const a = html.indexOf(SEO.BEGIN);
-  assert.ok(a >= 0, file + ' has no ld+json block: run node build-seo.cjs');
+  assert.ok(a >= 0, file + ' has no ld+json block: run node scripts/build-seo.cjs');
   const b = html.indexOf(SEO.END, a);
   assert.ok(b >= 0, file + ': the ld+json block was opened and never closed');
   const block = html.slice(a, b);
@@ -96,13 +96,13 @@ function embedded(file) {
 test('the ld+json in index.html matches what the data files say today', function () {
   assert.strictEqual(embedded('index.html'),
     JSON.stringify(SEO.indexGraph(TEMPLATE, ROUTE), null, 1),
-    'stale ld+json in index.html: run node build-seo.cjs');
+    'stale ld+json in index.html: run node scripts/build-seo.cjs');
 });
 
 test('the ld+json in booklet.html matches what the data files say today', function () {
   assert.strictEqual(embedded('booklet.html'),
     JSON.stringify(SEO.bookletGraph(TEMPLATE, ROUTE, NOTES), null, 1),
-    'stale ld+json in booklet.html: run node build-seo.cjs');
+    'stale ld+json in booklet.html: run node scripts/build-seo.cjs');
 });
 
 test('both graphs describe one trip and one dataset, not two of each', function () {

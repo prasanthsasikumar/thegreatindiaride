@@ -6,7 +6,7 @@ const vm = require('node:vm');
 function loadCosts() {
   const ctx = {}; ctx.globalThis = ctx;
   vm.createContext(ctx);
-  vm.runInContext(fs.readFileSync('costs.js', 'utf8'), ctx);
+  vm.runInContext(fs.readFileSync('assets/costs.js', 'utf8'), ctx);
   return ctx.Costs;
 }
 

@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const vm = require('node:vm');
 
-const ATLAS = path.join(__dirname, '..', 'atlas.js');
+const ATLAS = path.join(__dirname, '..', 'assets/atlas.js');
 
 // atlas.js is a browser script, not a module. Load it into a sandbox with just enough
 // of a DOM stub to reach the pure helpers it exposes for testing.
@@ -45,7 +45,7 @@ function stubNode() {
 
 function makeAtlas() {
   const A = loadAtlas({ createElementNS: function () { return stubNode(); } });
-  const basemap = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'basemap.json'), 'utf8'));
+  const basemap = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data/basemap.json'), 'utf8'));
   const svg = stubSvg();
   const api = A.create(svg, basemap, { width: 420, height: 470, pad: 10 });
   api.drawBase();
@@ -97,7 +97,7 @@ test('focus(null) shows the whole map', function () {
 ['Kerala', 'Andhra Pradesh'].forEach(function (region) {
   test('focus frames ' + region + ', and keeps the map\'s own shape', function () {
     const m = makeAtlas();
-    const stops = require('../manifest.json').route.stops.filter(function (s) {
+    const stops = require('../data/manifest.json').route.stops.filter(function (s) {
       return s.region === region;
     });
     const lats = stops.map(function (s) { return s.lat; });

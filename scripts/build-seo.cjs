@@ -1,7 +1,7 @@
 /*
  * build-seo.cjs: writes the machine-readable front door.
  *
- *   node build-seo.cjs
+ *   node scripts/build-seo.cjs
  *
  * This material is meant to be found and reused, by people and by the crawlers that
  * answer people's questions. That needs four things, and all four are GENERATED here
@@ -52,13 +52,13 @@ const AI_AGENTS = [
 // this is the second audience for them, not a second copy of them, so if one changes
 // the other should be looked at.
 const DATA_FILES = [
-  ['template.json', 'The planned loop: five sectors, 97 hops, every waypoint with coordinates, distance and riding hours. This is the file to fork if you want to plan your own route.'],
-  ['template-notes.json', 'The hand-written guidance: riding seasons, permits, points of interest. Entries reading TO WRITE are unwritten and render as a visible gap.'],
-  ['route.json', 'The ride as actually run: 93 nights, every place slept, and what was spent.'],
-  ['research.json', 'Field research into the xBhp "The Tourer" archive, India\'s oldest motorcycling forum, transcribed with its own caveats attached.'],
-  ['k2k.json', 'Kanyakumari to Kashmir as two lines, one cited and one measured, with the provenance of every coordinate.'],
-  ['basemap.json', 'Country outlines for the maps, from Natural Earth\'s India point-of-view file.'],
-  ['manifest.json', 'The media library: 222 clips from the ride, with capture time, region and caption.'],
+  ['data/template.json', 'The planned loop: five sectors, 97 hops, every waypoint with coordinates, distance and riding hours. This is the file to fork if you want to plan your own route.'],
+  ['data/template-notes.json', 'The hand-written guidance: riding seasons, permits, points of interest. Entries reading TO WRITE are unwritten and render as a visible gap.'],
+  ['data/route.json', 'The ride as actually run: 93 nights, every place slept, and what was spent.'],
+  ['data/research.json', 'Field research into the xBhp "The Tourer" archive, India\'s oldest motorcycling forum, transcribed with its own caveats attached.'],
+  ['data/k2k.json', 'Kanyakumari to Kashmir as two lines, one cited and one measured, with the provenance of every coordinate.'],
+  ['data/basemap.json', 'Country outlines for the maps, from Natural Earth\'s India point-of-view file.'],
+  ['data/manifest.json', 'The media library: 222 clips from the ride, with capture time, region and caption.'],
 ];
 
 function read(p) { return JSON.parse(fs.readFileSync(p, 'utf8')); }
@@ -397,10 +397,10 @@ function inject(file, graph) {
 /* ─── main ───────────────────────────────────────────────────────────────── */
 
 function main() {
-  const tpl = read('template.json');
-  const route = read('route.json');
-  const notes = read('template-notes.json');
-  const research = read('research.json');
+  const tpl = read('data/template.json');
+  const route = read('data/route.json');
+  const notes = read('data/template-notes.json');
+  const research = read('data/research.json');
 
   const day = new Date().toISOString().slice(0, 10);
 

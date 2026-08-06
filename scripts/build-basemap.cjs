@@ -1,7 +1,7 @@
 /*
  * build-basemap.cjs: turns Natural Earth country boundaries into basemap.json.
  *
- *   node build-basemap.cjs ne_10m_admin_0_countries_ind.geojson
+ *   node scripts/build-basemap.cjs ne_10m_admin_0_countries_ind.geojson
  *
  * Source (public domain):
  *   https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_10m_admin_0_countries_ind.geojson
@@ -26,7 +26,7 @@
 const fs = require('fs');
 
 const SRC = process.argv[2];
-const OUT = 'basemap.json';
+const OUT = 'data/basemap.json';
 
 // India plus everything the ride touched or that frames it.
 const COUNTRIES = {
@@ -47,7 +47,7 @@ const MIN_RING = 6;       // points, after simplifying
 const MIN_SPAN = 0.6;     // degrees; drops specks and small islands
 
 if (!SRC || !fs.existsSync(SRC)) {
-  console.error('Usage: node build-basemap.cjs <ne_50m_admin_0_countries.geojson>');
+  console.error('Usage: node scripts/build-basemap.cjs <ne_50m_admin_0_countries.geojson>');
   process.exit(1);
 }
 

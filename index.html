@@ -16,11 +16,11 @@
 <meta property="og:url" content="https://thegreatindiaride.prasanthsasikumar.com/">
 <meta property="og:title" content="The Great India Ride: a pan-India motorcycle loop, published as a route template">
 <meta property="og:description" content="100 days around India on one motorcycle, told in the order it happened, and the loop behind it published as reusable route data anyone can fork.">
-<meta property="og:image" content="https://thegreatindiaride.prasanthsasikumar.com/hero.jpg">
+<meta property="og:image" content="https://thegreatindiaride.prasanthsasikumar.com/assets/hero.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="alternate" type="text/markdown" href="/llms.txt" title="Plain-text summary of this site and its data">
-<link rel="icon" type="image/png" href="favicon.png">
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -235,51 +235,51 @@
    "distribution": [
     {
      "@type": "DataDownload",
-     "name": "template.json",
+     "name": "data/template.json",
      "description": "The planned loop: five sectors, 97 hops, every waypoint with coordinates, distance and riding hours. This is the file to fork if you want to plan your own route.",
-     "contentUrl": "https://thegreatindiaride.prasanthsasikumar.com/template.json",
+     "contentUrl": "https://thegreatindiaride.prasanthsasikumar.com/data/template.json",
      "encodingFormat": "application/json"
     },
     {
      "@type": "DataDownload",
-     "name": "template-notes.json",
+     "name": "data/template-notes.json",
      "description": "The hand-written guidance: riding seasons, permits, points of interest. Entries reading TO WRITE are unwritten and render as a visible gap.",
-     "contentUrl": "https://thegreatindiaride.prasanthsasikumar.com/template-notes.json",
+     "contentUrl": "https://thegreatindiaride.prasanthsasikumar.com/data/template-notes.json",
      "encodingFormat": "application/json"
     },
     {
      "@type": "DataDownload",
-     "name": "route.json",
+     "name": "data/route.json",
      "description": "The ride as actually run: 93 nights, every place slept, and what was spent.",
-     "contentUrl": "https://thegreatindiaride.prasanthsasikumar.com/route.json",
+     "contentUrl": "https://thegreatindiaride.prasanthsasikumar.com/data/route.json",
      "encodingFormat": "application/json"
     },
     {
      "@type": "DataDownload",
-     "name": "research.json",
+     "name": "data/research.json",
      "description": "Field research into the xBhp \"The Tourer\" archive, India's oldest motorcycling forum, transcribed with its own caveats attached.",
-     "contentUrl": "https://thegreatindiaride.prasanthsasikumar.com/research.json",
+     "contentUrl": "https://thegreatindiaride.prasanthsasikumar.com/data/research.json",
      "encodingFormat": "application/json"
     },
     {
      "@type": "DataDownload",
-     "name": "k2k.json",
+     "name": "data/k2k.json",
      "description": "Kanyakumari to Kashmir as two lines, one cited and one measured, with the provenance of every coordinate.",
-     "contentUrl": "https://thegreatindiaride.prasanthsasikumar.com/k2k.json",
+     "contentUrl": "https://thegreatindiaride.prasanthsasikumar.com/data/k2k.json",
      "encodingFormat": "application/json"
     },
     {
      "@type": "DataDownload",
-     "name": "basemap.json",
+     "name": "data/basemap.json",
      "description": "Country outlines for the maps, from Natural Earth's India point-of-view file.",
-     "contentUrl": "https://thegreatindiaride.prasanthsasikumar.com/basemap.json",
+     "contentUrl": "https://thegreatindiaride.prasanthsasikumar.com/data/basemap.json",
      "encodingFormat": "application/json"
     },
     {
      "@type": "DataDownload",
-     "name": "manifest.json",
+     "name": "data/manifest.json",
      "description": "The media library: 222 clips from the ride, with capture time, region and caption.",
-     "contentUrl": "https://thegreatindiaride.prasanthsasikumar.com/manifest.json",
+     "contentUrl": "https://thegreatindiaride.prasanthsasikumar.com/data/manifest.json",
      "encodingFormat": "application/json"
     }
    ]
@@ -984,7 +984,7 @@ button { font: inherit; color: inherit; }
 
 <div class="top">
 <header class="hero" id="hero">
-  <img class="hero__img" src="hero.jpg" alt="" aria-hidden="true">
+  <img class="hero__img" src="assets/hero.jpg" alt="" aria-hidden="true">
   <div class="hero__veil"></div>
 
   <div class="hero__body">
@@ -1060,7 +1060,7 @@ button { font: inherit; color: inherit; }
   <main class="legs" id="legs">
     <p class="state-msg" id="loading" style="padding: 40px 0;">Loading the route…</p>
     <p class="state-msg" id="error" hidden style="padding: 40px 0;">
-      Couldn’t load the route. <a href="manifest.json">Open the manifest ↗</a>
+      Couldn’t load the route. <a href="data/manifest.json">Open the manifest ↗</a>
     </p>
 
     <section class="close" id="close" hidden>
@@ -1112,7 +1112,7 @@ button { font: inherit; color: inherit; }
 
 <p class="sr-only" role="status" aria-live="polite" id="live"></p>
 
-<script src="atlas.js"></script>
+<script src="assets/atlas.js"></script>
 <!-- costs.js is not loaded here any more. Its only caller on this page was the
      cost table inside the old template section. The module itself is untouched
      and booklet.html, which still prints that table, still loads it. -->
@@ -2313,17 +2313,17 @@ button { font: inherit; color: inherit; }
 
   /* ─── boot ──────────────────────────────────────────────────────────── */
   Promise.all([
-    fetch('manifest.json', { cache: 'no-cache' }).then(function (r) {
+    fetch('data/manifest.json', { cache: 'no-cache' }).then(function (r) {
       if (!r.ok) throw new Error('HTTP ' + r.status); return r.json();
     }),
-    fetch('basemap.json').then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; }),
+    fetch('data/basemap.json').then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; }),
     // Optional: without it the map draws the ridden line only, the planned-route
     // toggle has nothing to show, and the route book's figures stay hidden. The
     // book itself is a static link, so it opens either way.
-    fetch('template.json').then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; }),
+    fetch('data/template.json').then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; }),
     // Optional too: without it the map keeps its two lines and the K2K toggle
     // never appears.
-    fetch('k2k.json').then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; }),
+    fetch('data/k2k.json').then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; }),
   ]).then(function (res) {
     manifest = res[0];
     basemap = res[1];

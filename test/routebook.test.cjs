@@ -5,13 +5,10 @@ const path = require('path');
 const vm = require('node:vm');
 
 const ROOT = path.join(__dirname, '..');
-const SEO = require(path.join(ROOT, 'build-seo.cjs'));
+const SEO = require(path.join(ROOT, 'scripts/build-seo.cjs'));
 const PAGE = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
-const TEMPLATE = JSON.parse(fs.readFileSync(path.join(ROOT, 'template.json'), 'utf8'));
+const TEMPLATE = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/template.json'), 'utf8'));
 
-// index.html is one page-sized IIFE behind a fetch, so there is nothing to require.
-// Same cut-and-run approach the K2K tests use: lift a named function out by its
-// signature and its closing brace, and run the real source rather than a paraphrase.
 // The page with its generated ld+json block removed: what a human actually typed.
 function hand(html) {
   const a = html.indexOf(SEO.BEGIN);
@@ -21,6 +18,9 @@ function hand(html) {
   return html.slice(0, a) + html.slice(b + SEO.END.length);
 }
 
+// index.html is one page-sized IIFE behind a fetch, so there is nothing to require.
+// Same cut-and-run approach the K2K tests use: lift a named function out by its
+// signature and its closing brace, and run the real source rather than a paraphrase.
 function cut(from, to) {
   const a = PAGE.indexOf(from);
   assert.ok(a >= 0, 'could not find ' + JSON.stringify(from) + ' in index.html');
@@ -127,8 +127,8 @@ test('the page still boots when template.json is missing', function () {
  * the equivalent for index.html: run the page's own renderMap over the real atlas.js
  * and the real basemap, and look at what actually landed in the SVG.
  */
-const ATLAS_SRC = fs.readFileSync(path.join(ROOT, 'atlas.js'), 'utf8');
-const BASEMAP = JSON.parse(fs.readFileSync(path.join(ROOT, 'basemap.json'), 'utf8'));
+const ATLAS_SRC = fs.readFileSync(path.join(ROOT, 'assets/atlas.js'), 'utf8');
+const BASEMAP = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/basemap.json'), 'utf8'));
 
 function svgNode(tag) {
   return {
@@ -259,5 +259,5 @@ test('the K2K overlay outlived the essay that used to explain it', function () {
   assert.match(PAGE, /id="k2k-toggle"/, 'the map lost its K2K toggle');
   assert.match(PAGE, /drawRoute\(k2k\.north\.points/, 'the map lost the northbound line');
   assert.match(PAGE, /drawRoute\(k2k\.south\.points/, 'the map lost the southbound line');
-  assert.ok(PAGE.indexOf("'k2k.json'") > 0, 'the page no longer fetches k2k.json');
+  assert.ok(PAGE.indexOf("'data/k2k.json'") > 0, 'the page no longer fetches k2k.json');
 });

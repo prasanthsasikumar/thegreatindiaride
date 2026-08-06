@@ -3,8 +3,8 @@ const path = require('path');
 
 // Written by tag-media.cjs from an Instagram export: capture time, state, caption,
 // subtitle pairing. Optional: without it the manifest is exactly what it was before.
-const tags = fs.existsSync('./tags.json')
-  ? JSON.parse(fs.readFileSync('./tags.json', 'utf8')).files || {}
+const tags = fs.existsSync('./data/tags.json')
+  ? JSON.parse(fs.readFileSync('./data/tags.json', 'utf8')).files || {}
   : {};
 
 // Written by build-route.cjs from the trip sheet: the order regions were actually
@@ -128,7 +128,7 @@ manifest.stats.stateFromRoute = everything.filter(i => i.stateSource === 'route'
 manifest.stats.stateFromTiming = everything.filter(i => i.stateSource === 'time').length;
 manifest.stats.stateManual = everything.filter(i => i.stateSource === 'manual').length;
 
-fs.writeFileSync('manifest.json', JSON.stringify(manifest, null, 2));
+fs.writeFileSync('data/manifest.json', JSON.stringify(manifest, null, 2));
 console.log('✓ Manifest generated successfully!');
 console.log(`  Stories: ${manifest.stats.totalStories}`);
 console.log(`  Reels: ${manifest.stats.totalReels}`);

@@ -1,7 +1,7 @@
 /*
  * build-template.cjs: turns the itinerary sheet into template.json.
  *
- *   node build-template.cjs "/path/to/Pan India Trip  - Itinerary.csv"
+ *   node scripts/build-template.cjs "/path/to/Pan India Trip  - Itinerary.csv"
  *
  * This sheet is the PLANNED loop, not the ridden one. route.json is what actually
  * happened; this is the template it was drawn from, and the two differ on purpose,
@@ -216,10 +216,10 @@ function stagesFor(sector, hops, key) {
 function main() {
   const csv = process.argv[2];
   if (!csv) {
-    console.error('usage: node build-template.cjs "/path/to/Pan India Trip  - Itinerary.csv"');
+    console.error('usage: node scripts/build-template.cjs "/path/to/Pan India Trip  - Itinerary.csv"');
     process.exit(1);
   }
-  if (!fs.existsSync('template-notes.json')) {
+  if (!fs.existsSync('data/template-notes.json')) {
     console.error('template-notes.json is missing. The route book must not publish');
     console.error('without its season and permit notes. Create it first (see README).');
     process.exit(1);
@@ -254,7 +254,7 @@ function main() {
     }
   });
 
-  fs.writeFileSync('template.json', JSON.stringify(t, null, 1) + '\n');
+  fs.writeFileSync('data/template.json', JSON.stringify(t, null, 1) + '\n');
   console.log('template.json: ' + t.totals.hops + ' hops, ' + t.totals.km + ' km, ' +
               t.sectors.length + ' sectors, ' + t.totals.waypoints + ' unique waypoints');
 }

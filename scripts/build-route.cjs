@@ -1,7 +1,7 @@
 /*
  * build-route.cjs: turns the trip spreadsheet into route.json.
  *
- *   node build-route.cjs "/path/to/Pan India Trip  - Trip expenses.csv"
+ *   node scripts/build-route.cjs "/path/to/Pan India Trip  - Trip expenses.csv"
  *
  * The sheet is one row per night, in travel order, which is the only authoritative
  * record of the route. GPS fixes drift and upload timestamps lag by hours, but the
@@ -27,8 +27,8 @@ const STAY_CACHE = '.staycache.json';
 // night number -> real check-in date, taken from the rider's Booking.com and Agoda
 // confirmations. The sheet has no dates at all, and interpolating them evenly across
 // the trip was out by a median of 2 days and up to 4 through Nepal and Assam.
-const STAY_DATES = 'stay-dates.json';
-const OUT = 'route.json';
+const STAY_DATES = 'data/stay-dates.json';
+const OUT = 'data/route.json';
 
 // Rows that are in the sheet but not on the motorcycle route. Keeping them would
 // insert a phantom leg. TVM is the flight home mid-trip (out of Guwahati, on to
@@ -54,7 +54,7 @@ const TRANSIT = [
 ];
 
 if (!CSV || !fs.existsSync(CSV)) {
-  console.error('Usage: node build-route.cjs <trip-expenses.csv>');
+  console.error('Usage: node scripts/build-route.cjs <trip-expenses.csv>');
   process.exit(1);
 }
 if (!fs.existsSync(STOP_CACHE)) {
