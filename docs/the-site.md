@@ -171,7 +171,10 @@ fines, scam and theft, and nothing in the UI needs it. Keep the CSV outside the 
 
 ### The overview
 
-The hero's primary action plays the ride rather than scrolling it. The player walks
+The hero's primary action plays the ride rather than scrolling it, on the widths that
+can watch it: under 700px the CTA is hidden, because the map it drives sits below the
+fold there and the legs column is an accordion, so the player would narrate a page the
+reader cannot see. The route book pill leads on a phone. The player walks
 the region blocks in travel order, easing the map's viewBox to each one and driving
 `jump()`, which is the same single mover the scroll handler uses. Dwell is 2600ms a
 region; `prefers-reduced-motion` turns the viewBox easing off but not the player.

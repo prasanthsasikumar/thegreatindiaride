@@ -70,6 +70,19 @@ test('the hero offers the route book alongside the overview', function () {
   assert.match(acts, /class="hero__cta hero__cta--ghost"/);
 });
 
+test('the overview CTA is dropped on the phone, and the route book closes the gap', function () {
+  // The player drives a map that is below the fold on a phone and a legs column that
+  // is an accordion there, so it narrates a page the reader cannot watch. It stays in
+  // the markup for the width that can use it and goes out of the narrow layout.
+  const mobile = cut('@media (max-width: 700px) {', '\n}');
+  assert.match(mobile, /#overview-cta\s*\{\s*display:\s*none;/,
+    'the overview CTA is back on the phone');
+  // Without this the ghost pill still matches .hero__cta + .hero__cta and keeps a top
+  // margin with nothing above it, which opens a gap at the head of the actions.
+  assert.match(mobile, /#overview-cta \+ \.hero__cta\s*\{\s*margin-top:\s*0;/,
+    'the route book pill kept the margin meant for a stacked second pill');
+});
+
 test('the route book figures are read from template.json, never typed into the page', function () {
   // A number written into the markup is a number that will disagree with the book it
   // advertises the first time the sheet is rebuilt.

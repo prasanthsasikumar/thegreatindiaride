@@ -478,6 +478,14 @@ button { font: inherit; color: inherit; }
   /* Stacked, not side by side: two full-width pills cannot share a row, and a
      left margin on the second one would push it off the right edge. */
   .hero__cta + .hero__cta { margin: var(--space-3) 0 0; }
+  /* The overview is a desktop reading: it drives a map that on a phone sits below
+     the fold and a legs column that is an accordion, so the player narrates a page
+     the reader cannot see. The route book leads here instead. Hidden, not deleted,
+     because the same markup serves both widths. */
+  #overview-cta { display: none; }
+  /* With the first pill gone the second one is no longer stacked under anything,
+     and the margin above would open a gap at the top of the actions. */
+  #overview-cta + .hero__cta { margin-top: 0; }
   .hero__alt { margin: var(--space-3) auto 0; }
   .band { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .band > div { padding: var(--space-4) var(--space-4); }
