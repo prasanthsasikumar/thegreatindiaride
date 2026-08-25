@@ -24,31 +24,37 @@ constant and the count follows the width: 4 up on a phone, 8 on a wide desktop.
 On pointer devices a tile plays muted on hover, one at a time. Sound preference in the
 lightbox persists in localStorage.
 
-Both use one dark palette, declared as custom properties at the top of `index.html`
-and copied verbatim into `booklet.html`:
+Both use one dark palette, reskinned in Aug 2026 from the "Great India Ride" canvas
+(Claude Design project `dae94c43`), declared as custom properties at the top of
+`index.html` and copied verbatim into `booklet.html`:
 
 | token | value | |
 |---|---|---|
-| `--color-bg` | `#0f0f0f` | the page |
-| `--color-surface` | `#17171b` | cards, the pane |
-| `--color-text` | `#ffffff` | all text |
-| `--color-muted` | `#bcbcbc` | secondary text |
-| `--color-dim` | `#8a8a90` | labels, fine print |
-| `--color-accent` | `#8b5cf6` | violet: figures, the route, active marks |
-| `--color-accent-2` | `#ec4899` | pink: the live section, the eyebrow, the CTA sweep |
+| `--color-bg` | `#100e0c` | the page, warm near-black |
+| `--color-surface` | `#14110e` | cards, the pane, the stats band |
+| `--color-text` | `#ece5da` | body text |
+| `--color-head` | `#f5efe6` | headings |
+| `--color-muted` | `#c9c1b4` | secondary text |
+| `--color-dim` | `#a49b8d` | labels, fine print |
+| `--color-accent` | `#e8a13c` | amber: figures, eyebrows, active marks, the route book band |
+| `--color-accent-2` | `#d4643a` | vermilion: the ridden line on the map |
+| `--color-ink` | `#17110a` | text set on the amber accent, never `#fff` |
 
-Type is Space Grotesk throughout, with IBM Plex Mono for figures. The accent is used
-for marks and states, never for words, and there are no gradients.
+Type is Archivo throughout, a variable font with a width axis: display headings are
+upper-case at weight 800 and `font-stretch` 112 to 118%, everything else stays in
+sentence case. IBM Plex Mono carries figures and labels. The accent is used for
+marks and states, with one deliberate exception: the route book section is a full
+amber band with warm-ink text, which is where `--color-ink` exists. There are still
+no gradients.
 
 That is why `booklet.html`'s print styles are a deliberate palette **inversion** and
-not a pass-through: the screen is #0f0f0f and A4 is not, so its `@media print` block
+not a pass-through: the screen is #100e0c and A4 is not, so its `@media print` block
 reassigns those same tokens to paper and ink and every rule downstream follows.
 Restyling rule by rule would have to be redone for every rule written afterwards.
 
 The Hallmark banner at the top of `index.html`'s stylesheet still records the design
-this was derived from (`modernist`, Archivo, #f3f2f2 paper, #ec3013 accent). It is
-provenance and it is stale in exactly the way this paragraph used to be. Read the
-tokens, not the banner.
+this was derived from, plus a line for the amber reskin. It is provenance, not the
+current values. Read the tokens, not the banner.
 
 Clips are grouped into five narrative legs (Out of Trivandrum, Up the west coast,
 Into the Himalaya, Across the Northeast, Down the east coast home), then by region
