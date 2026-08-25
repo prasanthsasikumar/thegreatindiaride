@@ -118,6 +118,17 @@
   [headers.values]
     Cache-Control = "public, max-age=604800"
 
+# --- images under /assets: the hero and the icons, on every page view. A day in
+# cache plus a week of stale-while-revalidate, so a repeat visit on a slow
+# connection pays nothing and a replaced image under the same name still reaches
+# everyone within a day. NOT immutable, for exactly that replaceability. The two
+# script rules below come after this block, so they keep their shorter life. ---
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400, stale-while-revalidate=604800"
+
 # --- shared page scripts: loaded by both index.html and booklet.html, so a fix to
 # either one has to reach two pages. Short-lived like the data they render, rather
 # than left on the catch-all's hour. ---
