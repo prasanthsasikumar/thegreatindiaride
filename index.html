@@ -1066,6 +1066,102 @@ button { font: inherit; color: inherit; }
   /* The blanket rule above would leave the pan frozen at its end frame. */
   .hero__img { animation: none !important; object-position: 50% 42% !important; }
 }
+
+/* ══════════ BEGIN FOR SALE (temporary) ══════════
+   Listing block for the bike. To remove: delete this CSS block, the
+   <section id="forsale"> block in the body, the nav link marked FOR SALE,
+   and the assets/forsale/ directory. Nothing else references any of it. */
+.sale {
+  background: var(--color-surface);
+  border-bottom: var(--rule);
+  padding: clamp(40px, 6vw, 64px) var(--pad-x);
+}
+.sale__inner { display: grid; gap: clamp(28px, 4vw, 48px); }
+@media (min-width: 900px) { .sale__inner { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
+
+.sale__eyebrow {
+  font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.22em;
+  color: var(--color-accent); margin: 0 0 var(--space-3);
+}
+.sale__h {
+  margin: 0 0 var(--space-4); color: var(--color-head);
+  font-size: clamp(26px, 4vw, 40px); line-height: 1.04; letter-spacing: -0.01em;
+}
+.sale__lede { font-size: 16px; line-height: 1.6; max-width: 56ch; color: var(--color-muted); margin: 0; }
+
+.sale__facts {
+  /* Fixed tracks, not auto-fit: six cells into an auto-fit row lands four up
+     and two down, and the two empty slots read as a broken table. */
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px; margin: var(--space-6) 0 0; padding: 0;
+  background: var(--color-line); border: 1px solid var(--color-line);
+  border-radius: var(--radius);
+}
+.sale__facts > div { background: var(--color-raise); padding: 14px 16px; }
+.sale__facts dt {
+  font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--color-faint);
+}
+.sale__facts dd {
+  margin: 6px 0 0; font-family: var(--font-heading); font-weight: var(--fw-bold);
+  font-size: 17px; color: var(--color-head); font-variant-numeric: tabular-nums;
+}
+@media (min-width: 560px) { .sale__facts { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+
+.sale__sub {
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--color-dim);
+  margin: var(--space-8) 0 var(--space-3);
+}
+.sale__spec { list-style: none; margin: 0; padding: 0; columns: 2; column-gap: 28px; }
+.sale__spec li {
+  font-size: 14px; line-height: 1.5; color: var(--color-muted);
+  padding-left: 16px; text-indent: -16px; margin-bottom: 7px;
+  break-inside: avoid;
+}
+.sale__spec li::before { content: "· "; color: var(--color-accent); }
+@media (max-width: 520px) { .sale__spec { columns: 1; } }
+
+/* The one objection every caller raises, answered in the open rather than
+   waited out. It is the reason this block sits on this site at all: the ride
+   above it is the evidence. */
+.sale__note {
+  margin-top: var(--space-8); padding: 18px 20px;
+  border: 1px solid var(--color-line); border-left: 2px solid var(--color-accent);
+  border-radius: var(--radius); background: var(--color-raise);
+}
+.sale__note p { margin: 0; font-size: 14px; line-height: 1.65; color: var(--color-muted); }
+.sale__note p + p { margin-top: 10px; }
+.sale__note strong { color: var(--color-head); font-weight: var(--fw-bold); }
+
+.sale__acts { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-8); }
+.sale__btn {
+  display: inline-flex; align-items: center; gap: 8px; cursor: pointer;
+  font-family: var(--font-heading); font-weight: var(--fw-bold);
+  font-size: 15px; letter-spacing: 0.06em; text-decoration: none;
+  color: var(--color-ink); background: var(--color-accent);
+  border: 1px solid var(--color-accent); border-radius: var(--radius-sm);
+  padding: 15px 26px;
+}
+.sale__btn:hover { background: #f0af52; border-color: #f0af52; }
+.sale__btn--ghost { color: var(--color-head); background: transparent; border-color: var(--color-line-strong); }
+.sale__btn--ghost:hover { background: var(--color-raise); border-color: var(--color-text); }
+.sale__btn[hidden] { display: none; }
+.sale__hint { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; color: var(--color-faint); margin: var(--space-3) 0 0; }
+
+.sale__shots { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; align-content: start; }
+/* Three up once the section goes two column, so ten portrait frames stop running
+   a long way past the bottom of the text beside them. */
+@media (min-width: 900px) { .sale__shots { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.sale__shot { display: block; border-radius: var(--radius); overflow: hidden; background: var(--color-raise); }
+.sale__shot img { display: block; width: 100%; height: 100%; aspect-ratio: 3 / 4; object-fit: cover; }
+.sale__shot:hover img { opacity: 0.88; }
+/* The first frame is the clean one, so it takes both columns and reads as the
+   lead rather than as one of ten thumbnails. */
+.sale__shot:first-child { grid-column: 1 / -1; }
+.sale__shot:first-child img { aspect-ratio: 4 / 3; }
+.sale__cap { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; color: var(--color-faint); margin: var(--space-3) 0 0; grid-column: 1 / -1; }
+/* ══════════ END FOR SALE ══════════ */
 </style>
 </head>
 <body>
@@ -1081,6 +1177,7 @@ button { font: inherit; color: inherit; }
       <a href="#route">ROUTE</a>
       <a href="#routebook">ROUTE BOOK</a>
       <a href="#region-0">CLIPS</a>
+      <a href="#forsale">FOR SALE</a><!-- FOR SALE: delete with the listing -->
     </nav>
   </div>
 
@@ -1106,6 +1203,102 @@ button { font: inherit; color: inherit; }
   <div><div class="band__n" id="stat-clips">…</div><div class="band__l">Clips</div></div>
 </div>
 </div>
+
+
+<!-- ══════════ BEGIN FOR SALE (temporary) ══════════
+     To remove: delete this section, the CSS block marked FOR SALE in the
+     <style> above, the nav link marked FOR SALE in the hero, and the
+     assets/forsale/ directory. Nothing else on the page references them. -->
+<section class="sale" id="forsale" aria-labelledby="sale-h">
+  <div class="sale__inner">
+
+    <div class="sale__main">
+      <p class="sale__eyebrow">FOR SALE · TRIVANDRUM</p>
+      <h2 class="sale__h" id="sale-h">The bike that did all of this is for sale</h2>
+      <p class="sale__lede">
+        I live abroad and it is barely getting ridden now, which is a waste of a
+        motorcycle that has earned better. Everything below this line, every
+        kilometre on the map, was done on this bike.
+      </p>
+
+      <dl class="sale__facts">
+        <div><dt>Model</dt><dd>CFMoto 650MT</dd></div>
+        <div><dt>Year</dt><dd>2023</dd></div>
+        <div><dt>Odometer</dt><dd>34,000 km</dd></div>
+        <div><dt>This ride</dt><dd>18,000 km</dd></div>
+        <div><dt>Asking</dt><dd>₹2,80,000</dd></div>
+        <div><dt>Registered</dt><dd>Tamil Nadu</dd></div>
+      </dl>
+
+      <p class="sale__sub">WHAT IS ON IT</p>
+      <ul class="sale__spec">
+        <li>Wireless Apple CarPlay and Android Auto</li>
+        <li>Brand new touring spec tyres</li>
+        <li>New chain and sprocket</li>
+        <li>Upgraded high amp battery</li>
+        <li>GPS tracking, stays live through months of standing</li>
+        <li>Auxiliary lights</li>
+        <li>USB power, two front and one rear</li>
+        <li>Professionally done wiring</li>
+        <li>Radiator guard</li>
+        <li>Adjustable mirrors and windscreen</li>
+        <li>Quick release tank bag</li>
+        <li>Two side pannier bags</li>
+        <li>Seat cover and bike cover</li>
+        <li>Serviced every 4,000 to 5,000 km</li>
+      </ul>
+
+      <div class="sale__note">
+        <p><strong>Everyone asks the same two questions, so here they are answered up front.</strong></p>
+        <p><strong>Where do you service it?</strong> I did, myself, every 4,000 to
+        5,000 km across the whole ride. It is a parallel twin and the consumables
+        are generic. There is no CFMoto dealer in Kerala and I am not going to
+        pretend otherwise, the nearest are Chennai and Bengaluru, but the routine
+        work is well within any competent independent mechanic. I will hand over
+        the service manual and walk the buyer through everything I did.</p>
+        <p><strong>Will it break on you?</strong> It did not break on me. 18,000 km,
+        Kanyakumari to Ladakh to the Arunachal border and back down the east
+        coast, and it never once left me standing by the road. The map on this
+        page is the receipt.</p>
+      </div>
+
+      <div class="sale__acts">
+        <button type="button" class="sale__btn" id="sale-reveal">SHOW CONTACT NUMBER</button>
+        <a class="sale__btn" id="sale-call" href="tel:+919496202720" hidden>+91 94962 02720</a>
+        <a class="sale__btn sale__btn--ghost" id="sale-wa" href="https://wa.me/919496202720" target="_blank" rel="noopener" hidden>WHATSAPP ↗</a>
+      </div>
+      <p class="sale__hint">IN INDIA UNTIL OCTOBER · CAN DELIVER TO COIMBATORE OR CHENNAI</p>
+    </div>
+
+    <div class="sale__shots">
+      <a class="sale__shot" href="assets/forsale/bike-01.jpg" target="_blank" rel="noopener"><img src="assets/forsale/bike-01.jpg" alt="The 650MT front on, parked at home" loading="lazy" decoding="async" width="720" height="960"></a>
+      <a class="sale__shot" href="assets/forsale/bike-02.jpg" target="_blank" rel="noopener"><img src="assets/forsale/bike-02.jpg" alt="The bike beside a lake at sunset" loading="lazy" decoding="async" width="720" height="960"></a>
+      <a class="sale__shot" href="assets/forsale/bike-03.jpg" target="_blank" rel="noopener"><img src="assets/forsale/bike-03.jpg" alt="Loaded for touring under prayer flags at dusk" loading="lazy" decoding="async" width="720" height="960"></a>
+      <a class="sale__shot" href="assets/forsale/bike-04.jpg" target="_blank" rel="noopener"><img src="assets/forsale/bike-04.jpg" alt="Parked in front of a Mughal gateway in Lucknow" loading="lazy" decoding="async" width="720" height="960"></a>
+      <a class="sale__shot" href="assets/forsale/bike-05.jpg" target="_blank" rel="noopener"><img src="assets/forsale/bike-05.jpg" alt="Loaded and parked at a Himalayan viewpoint" loading="lazy" decoding="async" width="720" height="960"></a>
+      <a class="sale__shot" href="assets/forsale/bike-06.jpg" target="_blank" rel="noopener"><img src="assets/forsale/bike-06.jpg" alt="At the Welcome to Kohima gate in Nagaland" loading="lazy" decoding="async" width="720" height="960"></a>
+      <a class="sale__shot" href="assets/forsale/bike-07.jpg" target="_blank" rel="noopener"><img src="assets/forsale/bike-07.jpg" alt="On a tree lined road in the south" loading="lazy" decoding="async" width="720" height="960"></a>
+      <a class="sale__shot" href="assets/forsale/bike-08.jpg" target="_blank" rel="noopener"><img src="assets/forsale/bike-08.jpg" alt="On a river bridge in the hills" loading="lazy" decoding="async" width="720" height="960"></a>
+      <a class="sale__shot" href="assets/forsale/bike-09.jpg" target="_blank" rel="noopener"><img src="assets/forsale/bike-09.jpg" alt="Parked by the sea on a coastal highway" loading="lazy" decoding="async" width="720" height="960"></a>
+      <a class="sale__shot" href="assets/forsale/bike-10.jpg" target="_blank" rel="noopener"><img src="assets/forsale/bike-10.jpg" alt="Low angle, loaded for the road" loading="lazy" decoding="async" width="720" height="960"></a>
+      <p class="sale__cap">TAP ANY FRAME FOR FULL SIZE · ASK FOR CLOSE UPS OF ANYTHING SPECIFIC</p>
+    </div>
+
+  </div>
+
+  <script>
+  (function () {
+    var b = document.getElementById('sale-reveal');
+    if (!b) return;
+    b.addEventListener('click', function () {
+      b.hidden = true;
+      document.getElementById('sale-call').hidden = false;
+      document.getElementById('sale-wa').hidden = false;
+    });
+  })();
+  </script>
+</section>
+<!-- ══════════ END FOR SALE ══════════ -->
 
 <div class="shell">
 
